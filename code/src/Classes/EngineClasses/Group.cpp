@@ -5,21 +5,25 @@
 #include "Group.h"
 
 Group::Group() {
-    this->models = std::list<std::string>();
+    this->models = new std::list<std::string>();
 }
 
-void Group::insertModel(std::string model) {
-    this->models.push_back(model);
+void Group::insertModel(const std::string& model) {
+    this->models->push_back(model);
 }
 
 std::string Group::toString() {
     std::string res;
     res.append("Models:\n");
-    for(std::string elem : this->models)
+    for(const std::string& elem : *this->models)
     {
         res.append("\t");
         res.append(elem);
         res.append("\n");
     }
     return res;
+}
+
+Group::~Group(){
+    delete this->models;
 }

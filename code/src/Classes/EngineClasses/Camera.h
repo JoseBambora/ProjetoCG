@@ -1,3 +1,6 @@
+#ifndef PROJETOEXEC_CAMERA_H
+#define PROJETOEXEC_CAMERA_H
+
 #include <string>
 
 class Camera{
@@ -17,3 +20,5 @@ public:
     int profar;
     std::string toString() const;
 };
+
+#endif

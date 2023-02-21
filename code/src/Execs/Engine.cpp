@@ -1,7 +1,8 @@
 #include <string>
 #include <cstdio>
+#include <list>
 #include "../TinyXML/tinyxml2.h"
-#include "../Classes/World.h"
+#include "../Classes/EngineClasses/World.h"
 const std::string dir = "../../files/";
 
 using namespace tinyxml2;
@@ -79,10 +80,11 @@ int main(int argc, char** argv)
                 }
             }
         }
-        World w = World(width,height,px,py,pz,lx,ly,lz,cx,cy,cz,fov,near,far);
+        auto *w = new World(width,height,px,py,pz,lx,ly,lz,cx,cy,cz,fov,near,far);
         for(const std::string& str : modelsList)
-            w.addModel(str);
-        printf("%s\n",w.toString().c_str());
+            w->addModel(str);
+        printf("%s\n",w->toString().c_str());
+        delete w;
     }
     else
         printf("Invalid arguments");
