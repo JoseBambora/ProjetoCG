@@ -2,7 +2,7 @@
 // Created by josebambora on 18-02-2023.
 //
 
-#include "Camera.h"
+#include "../Header/Camera.h"
 
 Camera::Camera(int posx, int posy, int posz,
                int lax, int lay, int laz,

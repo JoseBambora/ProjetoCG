@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <list>
 #include "../TinyXML/tinyxml2.h"
-#include "../Classes/EngineClasses/World.h"
+#include "../Classes/EngineClasses/Header/World.h"
 const std::string dir = "../../files/";
 
 using namespace tinyxml2;

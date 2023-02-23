@@ -2,7 +2,7 @@
 // Created by josebambora on 18-02-2023.
 //
 
-#include "Group.h"
+#include "../Header/Group.h"
 
 Group::Group() {
     this->models = new std::list<std::string>();

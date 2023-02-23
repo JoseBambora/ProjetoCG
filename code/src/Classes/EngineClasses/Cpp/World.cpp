@@ -1,6 +1,6 @@
-#include "World.h"
-#include "Camera.h"
-#include "Group.h"
+#include "../Header/World.h"
+#include "../Header/Camera.h"
+#include "../Header/Group.h"
 
 World::World(int width, int height,
              int posx, int posy, int posz,

@@ -1,16 +1,16 @@
 #ifndef PROJETOEXEC_BOX_H
 #define PROJETOEXEC_BOX_H
+#include "Figure.h"
 
-class Box {
+class Box : public Figure{
 public:
-    const int boxCod = 2;
     float length = 0;
     float dimension = 0;
     static Box* Build(int argc, char** argv);
     void Write_File(const std::string& name);
-    void Read_File(std::ifstream file);
-    std::string toString() const;
-
+    static Box* Read_File(std::ifstream file);
+    std::string toString() override;
+    ~Box() override;
 };
 
 #endif

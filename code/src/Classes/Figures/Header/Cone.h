@@ -2,18 +2,20 @@
 #define PROJETOEXEC_CONE_H
 
 #include <string>
+#include "Figure.h"
 
-class Cone {
+
+class Cone : public Figure{
 public:
-    const int coneCod = 3;
     float radius = 0;
     float height = 0;
     int slices = 0;
     int stacks = 0;
     static Cone* Build(int argc, char** argv);
     void Write_File(const std::string& name);
-    void Read_File(std::ifstream file);
-    std::string toString() const;
+    static Cone* Read_File(std::ifstream file);
+    std::string toString() override;
+    ~Cone() override;
 };
 
 #endif
