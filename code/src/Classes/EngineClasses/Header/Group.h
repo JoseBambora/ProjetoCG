@@ -3,13 +3,16 @@
 
 #include <iostream>
 #include <list>
+class Figure;
+
 class Group {
 public:
     Group();
     void insertModel(const std::string&);
-    std::list<std::string> *models;
+    std::list<Figure*> *models;
     std::string toString();
     ~Group();
+    void drawModels(float,float,float);
 };
 
 #endif

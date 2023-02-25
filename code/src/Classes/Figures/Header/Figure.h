@@ -13,6 +13,7 @@ public:
     static Figure* ReadFile(const std::string& name);
     virtual std::string toString() = 0;
     virtual ~Figure()=default;
+    virtual void drawFigure(float,float,float);
 };
 
 

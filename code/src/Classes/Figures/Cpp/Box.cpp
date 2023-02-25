@@ -1,6 +1,8 @@
 #include <string>
 #include <fstream>
 #include "../Header/Box.h"
+#include "../Header/Plane.h"
+#include "GL/glut.h"
 
 const int Figure::codBox;
 
@@ -38,12 +40,34 @@ Box* Box::Read_File(std::ifstream file) {
 }
 
 std::string Box::toString() {
-    std::string res = "Box:\n";
-    res.append("\tLength: ");
+    std::string res = "\tBox:\n";
+    res.append("\t\tLength: ");
     res.append(std::to_string(this->length));
-    res.append("\n\tDimension: ");
+    res.append("\n\t\tDimension: ");
     res.append(std::to_string(this->dimension));
     return res;
+}
+
+void Box::drawFigure(float x, float y, float z) {
+    auto *pb = new Plane();
+    pb->length = this->length;
+    pb->dimension = this->dimension;
+    float lb = this->length/2;
+    float ls = (-1) * this->length/2;
+    if(y >= 0)
+        pb->drawFigure(lb,Plane::horizontal);
+    else
+        pb->drawFigure(ls,Plane::horizontal);
+    if(z >= 0)
+        pb->drawFigure(lb,Plane::frontal);
+    else
+        pb->drawFigure(ls,Plane::frontal);
+    if(x>= 0)
+        pb->drawFigure(lb,Plane::perfil);
+    else
+        pb->drawFigure(ls,Plane::perfil);
+
+    delete pb;
 }
 
 Box::~Box() = default;

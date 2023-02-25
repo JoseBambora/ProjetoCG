@@ -1,5 +1,6 @@
 #include <fstream>
 #include "../Header/Plane.h"
+#include "GL/glut.h"
 
 const int Figure::codPlane;
 
@@ -37,12 +38,83 @@ Plane* Plane::Read_File(std::ifstream file) {
 }
 
 std::string Plane::toString() {
-    std::string res = "Plane:\n";
-    res.append("\tLength: ");
+    std::string res = "\tPlane:\n";
+    res.append("\t\tLength: ");
     res.append(std::to_string(this->length));
-    res.append("\n\tDimension: ");
+    res.append("\n\t\tDimension: ");
     res.append(std::to_string(this->dimension));
     return res;
+}
+
+void Plane::drawFigure(float ori, int orientation) {
+    float d = this->dimension;
+    float l = this->length;
+    float nq = d * d;
+    float cxi = (-1) * l/2;
+    float cyi = l/2;
+    glColor3f(1,1,1);
+    glBegin(GL_LINES);
+    for(int i = 0; i < nq; i++)
+    {
+        float n1 = cxi+l/d;
+        float n2 = cyi-l/d;
+        switch(orientation)
+        {
+            case horizontal:
+                glVertex3f(cxi,ori,cyi);
+                glVertex3f(n1,ori,cyi);
+                glVertex3f(n1,ori,cyi);
+                glVertex3f(n1,ori,n2);
+                glVertex3f(n1,ori,n2);
+                glVertex3f(cxi,ori,cyi);
+                glVertex3f(cxi,ori,cyi);
+                glVertex3f(cxi,ori,n2);
+                glVertex3f(cxi,ori,n2);
+                glVertex3f(n1,ori,n2);
+                glVertex3f(n1,ori,n2);
+                glVertex3f(cxi,ori,cyi);
+                break;
+            case frontal:
+                glVertex3f(cxi,cyi,ori);
+                glVertex3f(n1,cyi,ori);
+                glVertex3f(n1,cyi,ori);
+                glVertex3f(n1,n2,ori);
+                glVertex3f(n1,n2,ori);
+                glVertex3f(cxi,cyi,ori);
+                glVertex3f(cxi,cyi,ori);
+                glVertex3f(cxi,n2,ori);
+                glVertex3f(cxi,n2,ori);
+                glVertex3f(n1,n2,ori);
+                glVertex3f(n1,n2,ori);
+                glVertex3f(cxi,cyi,ori);
+                break;
+            case perfil:
+                glVertex3f(ori,cxi,cyi);
+                glVertex3f(ori,n1,cyi);
+                glVertex3f(ori,n1,cyi);
+                glVertex3f(ori,n1,n2);
+                glVertex3f(ori,n1,n2);
+                glVertex3f(ori,cxi,cyi);
+                glVertex3f(ori,cxi,cyi);
+                glVertex3f(ori,cxi,n2);
+                glVertex3f(ori,cxi,n2);
+                glVertex3f(ori,n1,n2);
+                glVertex3f(ori,n1,n2);
+                glVertex3f(ori,cxi,cyi);
+                break;
+        }
+        cyi = n2;
+        if(cyi <= (-1) * l/2)
+        {
+            cxi += l/d;
+            cyi = l/2;
+        }
+    }
+    glEnd();
+}
+
+void Plane::drawFigure(float, float, float) {
+    drawFigure(0,horizontal);
 }
 
 Plane::~Plane() = default;

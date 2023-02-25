@@ -9,14 +9,16 @@ class Group;
 
 class World{
 public:
-    int width;
-    int height;
+    float width;
+    float height;
     Camera *camera;
     Group *group;
-    World(int, int, int, int, int, int, int, int, int, int, int, int, int, int);
+    World(float , float, float, float, float, float, float, float, float, float, float, float, float, float);
     void addModel(const std::string&);
     std::string toString();
     ~World();
+    void drawWorld();
+    static World *instance;
 };
 
 #endif

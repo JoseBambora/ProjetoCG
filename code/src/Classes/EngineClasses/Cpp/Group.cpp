@@ -3,27 +3,34 @@
 //
 
 #include "../Header/Group.h"
+#include "../../Figures/Header/Figure.h"
 
 Group::Group() {
-    this->models = new std::list<std::string>();
+    this->models = new std::list<Figure*>();
 }
 
 void Group::insertModel(const std::string& model) {
-    this->models->push_back(model);
+    this->models->push_back(Figure::ReadFile(model));
 }
 
 std::string Group::toString() {
     std::string res;
     res.append("Models:\n");
-    for(const std::string& elem : *this->models)
+    for(Figure* elem : *this->models)
     {
-        res.append("\t");
-        res.append(elem);
+        res.append(elem->toString());
         res.append("\n");
     }
     return res;
 }
 
 Group::~Group(){
+    for (Figure* elem : *this->models)
+        delete elem;
     delete this->models;
+}
+
+void Group::drawModels(float x, float y, float z) {
+    for (Figure* elem : *this->models)
+        elem->drawFigure(x,y,z);
 }

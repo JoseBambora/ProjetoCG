@@ -11,6 +11,7 @@ public:
     static Box* Read_File(std::ifstream file);
     std::string toString() override;
     ~Box() override;
+    void drawFigure(float,float,float) override;
 };
 
 #endif

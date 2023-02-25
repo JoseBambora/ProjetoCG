@@ -5,20 +5,21 @@
 
 class Camera{
 public:
-    Camera(int,int,int,int,int,int,int,int,int,int,int,int);
-    int posx;
-    int posy;
-    int posz;
-    int lax;
-    int lay;
-    int laz;
-    int upx;
-    int upy;
-    int upz;
-    int profov;
-    int pronear;
-    int profar;
+    Camera(float ,float,float,float,float,float,float,float,float,float,float,float);
+    float posx;
+    float posy;
+    float posz;
+    float lax;
+    float lay;
+    float laz;
+    float upx;
+    float upy;
+    float upz;
+    float profov;
+    float pronear;
+    float profar;
     std::string toString() const;
+    void posicionaCamara(int w, int h) const;
 };
 
 #endif

@@ -54,3 +54,7 @@ Figure *Figure::ReadFile(const std::string& name) {
     }
     return res;
 }
+
+void Figure::drawFigure(float, float, float) {
+
+}

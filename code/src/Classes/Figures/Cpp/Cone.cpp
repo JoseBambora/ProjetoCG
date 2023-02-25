@@ -1,5 +1,6 @@
 #include <fstream>
 #include "../Header/Cone.h"
+#include "GL/glut.h"
 
 const int Figure::codCone;
 
@@ -46,16 +47,19 @@ Cone* Cone::Read_File(std::ifstream file) {
 }
 
 std::string Cone::toString() {
-    std::string res = "Cone:\n";
-    res.append("\tRadius: ");
+    std::string res = "\tCone:\n";
+    res.append("\t\tRadius: ");
     res.append(std::to_string(this->radius));
-    res.append("\n\tHeight: ");
+    res.append("\n\t\tHeight: ");
     res.append(std::to_string(this->height));
-    res.append("\n\tSlices: ");
+    res.append("\n\t\tSlices: ");
     res.append(std::to_string(this->slices));
-    res.append("\n\tStacks: ");
+    res.append("\n\t\tStacks: ");
     res.append(std::to_string(this->stacks));
     return res;
 }
 
+void Cone::drawFigure(float x, float y, float z) {
+    glutWireCone (this->radius, this->height, this->slices, this->stacks);
+}
 Cone::~Cone() = default;

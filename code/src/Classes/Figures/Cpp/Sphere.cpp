@@ -1,5 +1,6 @@
 #include <fstream>
 #include "../Header/Sphere.h"
+#include "GL/glut.h"
 
 const int Figure::codSphere;
 
@@ -42,14 +43,17 @@ Sphere* Sphere::Read_File(std::ifstream file) {
 }
 
 std::string Sphere::toString()  {
-    std::string res = "Sphere:\n";
-    res.append("\tRadius: ");
+    std::string res = "\tSphere:\n";
+    res.append("\t\tRadius: ");
     res.append(std::to_string(this->radius));
-    res.append("\n\tSlices: ");
+    res.append("\n\t\tSlices: ");
     res.append(std::to_string(this->slices));
-    res.append("\n\tStacks: ");
+    res.append("\n\t\tStacks: ");
     res.append(std::to_string(this->stacks));
     return res;
 }
 
+void Sphere::drawFigure(float x, float y, float z) {
+    glutWireSphere(this->radius, this->slices, this->stacks);
+}
 Sphere::~Sphere() = default;

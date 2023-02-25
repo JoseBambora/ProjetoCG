@@ -15,6 +15,7 @@ public:
     static Sphere* Read_File(std::ifstream);
     std::string toString() override;
     ~Sphere() override;
+    void drawFigure(float,float,float) override;
 };
 
 #endif

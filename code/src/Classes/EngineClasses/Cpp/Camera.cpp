@@ -3,11 +3,12 @@
 //
 
 #include "../Header/Camera.h"
+#include "GL/glut.h"
 
-Camera::Camera(int posx, int posy, int posz,
-               int lax, int lay, int laz,
-               int upx, int upy, int upz,
-               int fov, int near, int far ) {
+Camera::Camera(float posx,float posy, float posz,
+               float lax, float lay,  float laz,
+               float upx, float upy,  float upz,
+               float fov, float near, float far ) {
     this->posx = posx;
     this->posy = posy;
     this->posz = posz;
@@ -54,4 +55,12 @@ std::string Camera::toString() const {
     res.append(std::to_string(this->profar));
     res.append("\n");
     return res;
+}
+
+void Camera::posicionaCamara(int w, int h) const {
+
+    gluLookAt(this->posx, this->posy, this->posz,
+              this->lax, this->lay, this->laz,
+              this->upx, this->upy, this->upz);
+    //gluPerspective(this->profov,(GLfloat)w/(GLfloat)h,this->pronear,this->profar);
 }
