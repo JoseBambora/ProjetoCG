@@ -53,9 +53,8 @@ void drawPyramid(std::vector<float> base, float x, float y, float z, bool direca
     glEnd();
 }
 
-// Draw the connection between 2 circunference (basically 2 triangles).
-// s1 and s2 have the coordinates of the points of both circunference.
-void drawSide(std::vector<float> cbaixo,std::vector<float> ccima, float cred, float cgreen, float cblue)
+
+void drawSide(std::vector<float> cbaixo,std::vector<float> ccima, float cred, float cgreen, float cblue, bool dentro)
 {
     glBegin(GL_TRIANGLES);
     glColor3f(cred, cgreen, cblue);
@@ -83,14 +82,40 @@ void drawSide(std::vector<float> cbaixo,std::vector<float> ccima, float cred, fl
             py4 = ccima.at(i+4);
             pz4 = ccima.at(i+5);
         }
-        glVertex3f(px1,py1,pz1);
-        glVertex3f(px3,py3,pz3);
-        glVertex3f(px2,py2,pz2);
+        if(!dentro)
+        {
+            glVertex3f(px1,py1,pz1);
+            glVertex3f(px3,py3,pz3);
+            glVertex3f(px2,py2,pz2);
 
-        glVertex3f(px4,py4,pz4);
-        glVertex3f(px2,py2,pz2);
-        glVertex3f(px3,py3,pz3);
+            glVertex3f(px4,py4,pz4);
+            glVertex3f(px2,py2,pz2);
+            glVertex3f(px3,py3,pz3);
+        }
+        else
+        {
+            glVertex3f(px1,py1,pz1);
+            glVertex3f(px2,py2,pz2);
+            glVertex3f(px3,py3,pz3);
+
+            glVertex3f(px4,py4,pz4);
+            glVertex3f(px3,py3,pz3);
+            glVertex3f(px2,py2,pz2);
+        }
         i += 2;
     }
     glEnd();
+}
+
+
+// Draw the connection between 2 circunference (basically 2 triangles).
+// s1 and s2 have the coordinates of the points of both circunference.
+void drawSideFora(std::vector<float> cbaixo,std::vector<float> ccima, float cred, float cgreen, float cblue)
+{
+    drawSide(cbaixo,ccima,cred,cgreen,cblue, false);
+}
+
+void drawSideDentro(std::vector<float> cbaixo,std::vector<float> ccima, float cred, float cgreen, float cblue)
+{
+    drawSide(cbaixo,ccima,cred,cgreen,cblue, true);
 }

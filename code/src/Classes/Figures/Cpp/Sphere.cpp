@@ -71,7 +71,7 @@ void Sphere::drawFigure() {
         float r = std::cos(alfa) * this->radius;
         std::vector<float> c = getPointsCircumference(0,yc,0,r,this->slices);
         if(i > 0)
-            drawSide(anterior,c,1.0f,1.0f,1.0f);
+            drawSideFora(anterior,c,1.0f,1.0f,1.0f);
         else
             primeira = c;
         alfa += aumento;

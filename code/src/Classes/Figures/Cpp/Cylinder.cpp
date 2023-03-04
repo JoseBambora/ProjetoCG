@@ -68,5 +68,5 @@ void Cylinder::drawFigure() {
     std::vector<float> basebaixo = getPointsCircumference(0,0,0,this->radius,this->slices);
     drawPyramid(basecima,0,this->height,0, true,1.0f,1.0f,1.0f);
     drawPyramid(basebaixo,0,0,0, false,1.0f,1.0f,1.0f);
-    drawSide(basebaixo,basecima,1.0f,1.0f,1.0f);
+    drawSideFora(basebaixo,basecima,1.0f,1.0f,1.0f);
 }

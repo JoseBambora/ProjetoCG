@@ -74,40 +74,25 @@ Donut::~Donut() {
 
 void Donut::drawFigure() {
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    // circunferência central
-    std::vector<float> cin = getPointsCircumference(0,0,0,this->radiusin,this->slices);
-    // circunferência exterior
-    std::vector<float> cout = getPointsCircumference(0,0,0,this->radiusout,this->slices);
-    // circunferência meio cima
     float raiointermedio = (this->radiusout-this->radiusin)/2;
-    std::vector<float> cmtop = getPointsCircumference(0,raiointermedio,0,raiointermedio,this->slices);
     // circunferência meio baixo
-    std::vector<float> cmdown = getPointsCircumference(0,-raiointermedio,0,raiointermedio,this->slices);
-    float aumento = M_PI_2/this->stacks;
-    float alfa = aumento;
-    std::vector<float> anteriorcimaint = cin;
-    std::vector<float> anteriorbaixoint = cin;
-    std::vector<float> anteriorcimaext = cout;
-    std::vector<float> anteriorbaixoext = cout;
-    for(int i = 0; i < this->stacks; i++)
+    std::vector<float> cmdown = getPointsCircumference(0,-raiointermedio,0,raiointermedio+this->radiusin,this->slices);
+    float aumento = M_PI/this->stacks;
+    float alfa = -M_PI_2;
+    std::vector<float> anteriorint = cmdown;
+    std::vector<float> anteriorext = cmdown;
+    for(int i = 0; i < this->stacks+1; i++)
     {
         float cosalfa = std::cos(alfa);
         float yc = std::sin(alfa) * raiointermedio;
         float rint = this->radiusin + (raiointermedio - cosalfa * raiointermedio);
         float rext = this->radiusin + (raiointermedio + cosalfa * raiointermedio);
-        std::vector<float> ccimaint = getPointsCircumference(0,yc,0,rint,this->slices);
-        std::vector<float> cbaixoint = getPointsCircumference(0,-yc,0,rint,this->slices);
-        std::vector<float> ccimaext = getPointsCircumference(0,yc,0,rext,this->slices);
-        std::vector<float> cbaixoext = getPointsCircumference(0,-yc,0,rext,this->slices);
+        std::vector<float> cint = getPointsCircumference(0,yc,0,rint,this->slices);
+        std::vector<float> cext = getPointsCircumference(0,yc,0,rext,this->slices);
         alfa += aumento;
-        drawSide(anteriorcimaint,ccimaint,1.0f,1.0f,1.0f);
-        drawSide(ccimaext,anteriorcimaext,1.0f,1.0f,1.0f);
-        drawSide(cbaixoint,anteriorbaixoint,1.0f,1.0f,1.0f);
-        drawSide(anteriorbaixoext,cbaixoext,1.0f,1.0f,1.0f);
-        anteriorbaixoint = cbaixoint;
-        anteriorbaixoext = cbaixoext;
-        anteriorcimaext = ccimaext;
-        anteriorcimaint = ccimaint;
+        drawSideDentro(anteriorint,cint,1.0f,1.0f,1.0f);
+        drawSideFora(anteriorext,cext,1.0f,1.0f,1.0f);
+        anteriorint = cint;
+        anteriorext = cext;
     }
-
 }

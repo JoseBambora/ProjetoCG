@@ -80,7 +80,7 @@ void Cone::drawFigure() {
         std::vector<float> circ = getPointsCircumference(0,y,0,raio,this->slices);
         y+= aumento;
         raio -= reduz;
-        drawSide(anterior,circ,1.0f,1.0f,1.0f);
+        drawSideFora(anterior,circ,1.0f,1.0f,1.0f);
         anterior = circ;
     }
     drawPyramid(anterior,0,this->height,0, false,1.0f,1.0f,1.0f);
