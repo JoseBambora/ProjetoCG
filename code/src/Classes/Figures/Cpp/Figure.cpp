@@ -4,6 +4,8 @@
 #include "../Header/Sphere.h"
 #include "../Header/Box.h"
 #include "../Header/Plane.h"
+#include "../Header/Donut.h"
+#include "../Header/Cylinder.h"
 
 // Build a figure, given the exec arguments
 // CAN BE NULL
@@ -21,6 +23,10 @@ Figure *Figure::Build(int argc, char **argv) {
             res = Cone::Build(argc,argv);
         else if(figure == "plane")
             res = Plane::Build(argc,argv);
+        else if(figure == "donut")
+            res = Donut::Build(argc,argv);
+        else if(figure == "cylinder")
+            res = Cylinder::Build(argc,argv);
         else
             printf("Invalid figure. Figure result: nullptr\n");
     }
@@ -48,6 +54,12 @@ Figure *Figure::ReadFile(const std::string& name) {
         case codCone:
             res = Cone::Read_File(std::move(file));
             break;
+        case codDonut:
+            res = Donut::Read_File(std::move(file));
+            break;
+        case codCylinder:
+            res = Cylinder::Read_File(std::move(file));
+            break;
         default:
             printf("Invalid file. Result figure = nullptr\n");
             res = nullptr;
@@ -55,6 +67,6 @@ Figure *Figure::ReadFile(const std::string& name) {
     return res;
 }
 
-void Figure::drawFigure(float, float, float) {
+void Figure::drawFigure() {
 
 }

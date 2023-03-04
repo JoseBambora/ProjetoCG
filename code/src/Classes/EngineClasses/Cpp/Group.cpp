@@ -30,7 +30,7 @@ Group::~Group(){
     delete this->models;
 }
 
-void Group::drawModels(float x, float y, float z) {
+void Group::drawModels() {
     for (Figure* elem : *this->models)
-        elem->drawFigure(x,y,z);
+        elem->drawFigure();
 }

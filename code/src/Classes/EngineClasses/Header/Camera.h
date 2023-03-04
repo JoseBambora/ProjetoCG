@@ -5,6 +5,7 @@
 
 class Camera{
 public:
+    static void processSpecialKeys(int key, int xx, int yy) ;
     Camera(float ,float,float,float,float,float,float,float,float,float,float,float);
     float posx;
     float posy;
@@ -18,6 +19,8 @@ public:
     float profov;
     float pronear;
     float profar;
+    static double beta;
+    static double alfa;
     std::string toString() const;
     void posicionaCamara(int w, int h) const;
 };

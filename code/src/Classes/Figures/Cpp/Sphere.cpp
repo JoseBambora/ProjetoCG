@@ -1,6 +1,10 @@
+#include <cmath>
 #include <fstream>
+#include <vector>
 #include "../Header/Sphere.h"
+#include "../Header/Basics.h"
 #include "GL/glut.h"
+#include <cmath>
 
 const int Figure::codSphere;
 
@@ -53,7 +57,29 @@ std::string Sphere::toString()  {
     return res;
 }
 
-void Sphere::drawFigure(float x, float y, float z) {
-    glutWireSphere(this->radius, this->slices, this->stacks);
+void Sphere::drawFigure() {
+    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+    // Circunferência do meio
+    std::vector<float> base = getPointsCircumference(0,0,0,this->radius,this->slices);
+    // Pensar em triangulas na circunferência (ver foto), sin e cos trabalham em radianos
+    float aumento = M_PI_2/this->stacks;
+    float alfa = aumento;
+    std::vector<float> anteriorcima = base;
+    std::vector<float> anteriorbaixo = base;
+    for(int i = 0; i < this->stacks;i++)
+    {
+        float yc = std::sin(alfa) * this->radius;
+        float r = std::cos(alfa) * this->radius;
+        std::vector<float> ccima = getPointsCircumference(0,yc,0,r,this->slices);
+        std::vector<float> cbaixo = getPointsCircumference(0,-yc,0,r,this->slices);
+        drawSide(anteriorcima,ccima,1.0f,1.0f,1.0f);
+        drawSide(cbaixo,anteriorbaixo,1.0f,1.0f,1.0f);
+        alfa += aumento;
+        anteriorbaixo = cbaixo;
+        anteriorcima = ccima;
+    }
+    drawPyramid(anteriorcima,0,this->radius,0, true,1.0f,1.0f,1.0f);
+    drawPyramid(anteriorbaixo,0,this->radius,0, false,1.0f,1.0f,1.0f);
 }
+
 Sphere::~Sphere() = default;

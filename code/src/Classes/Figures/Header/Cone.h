@@ -16,7 +16,7 @@ public:
     static Cone* Read_File(std::ifstream file);
     std::string toString() override;
     ~Cone() override;
-    void drawFigure(float,float,float) override;
+    void drawFigure() override;
 };
 
 #endif

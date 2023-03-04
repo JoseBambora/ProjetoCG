@@ -1,6 +1,8 @@
 #include <fstream>
+#include <vector>
 #include "../Header/Cone.h"
 #include "GL/glut.h"
+#include "../Header/Basics.h"
 
 const int Figure::codCone;
 
@@ -59,7 +61,29 @@ std::string Cone::toString() {
     return res;
 }
 
-void Cone::drawFigure(float x, float y, float z) {
-    glutWireCone (this->radius, this->height, this->slices, this->stacks);
+void Cone::drawFigure() {
+    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+    std::vector<float> base = getPointsCircumference(0,0,0,this->radius,this->slices);
+    // Desenha base, pirâmide com altura 0
+    drawPyramid(base,0,0,0, false,1.0f,1.0f,1.0f);
+    // Quantidade a reduzir com base no raio (semelhança de triângulos)
+    float reduz = this->radius * (this->height/this->stacks)/ this->height;
+    float raio = this->radius - reduz;
+    // circunferência anterior para conectar
+    std::vector<float> anterior = base;
+    // aumento do y das circunferências intermédias
+    float aumento = this->height/(float) this->stacks;
+    // Y das circunferências intermédias
+    float y = aumento;
+    for(int i = 0; i < this->stacks; i++)
+    {
+        std::vector<float> circ = getPointsCircumference(0,y,0,raio,this->slices);
+        y+= aumento;
+        raio -= reduz;
+        drawSide(anterior,circ,1.0f,1.0f,1.0f);
+        anterior = circ;
+    }
+    drawPyramid(anterior,0,this->height,0, false,1.0f,1.0f,1.0f);
+
 }
 Cone::~Cone() = default;

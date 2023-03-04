@@ -72,10 +72,7 @@ static void renderAllScene(void) {
     glVertex3f(0.0f, 0.0f, 100.0f);
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnd();
-    float cx = World::instance->camera->posx;
-    float cy = World::instance->camera->posy;
-    float cz = World::instance->camera->posz;
-    World::instance->group->drawModels(cx,cy,cz);
+    World::instance->group->drawModels();
     glutSwapBuffers();
 }
 
@@ -89,6 +86,7 @@ void World::drawWorld() {
     glutInitWindowPosition(0, 0);
     glutInitWindowSize(this->width, this->height);
     glutCreateWindow("Projeto CG - Grupo 20");
+    glutSpecialFunc(Camera::processSpecialKeys);
     glutReshapeFunc(changeSize);
     glutIdleFunc(renderAllScene);
     glutDisplayFunc(renderAllScene);

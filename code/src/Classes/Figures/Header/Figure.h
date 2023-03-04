@@ -9,11 +9,13 @@ public:
     static const int codBox = 2;
     static const int codCone = 3;
     static const int codSphere = 1;
+    static const int codDonut = 4;
+    static const int codCylinder = 5;
     static Figure* Build(int argc, char** argv);
     static Figure* ReadFile(const std::string& name);
     virtual std::string toString() = 0;
     virtual ~Figure()=default;
-    virtual void drawFigure(float,float,float);
+    virtual void drawFigure();
 };
 
 

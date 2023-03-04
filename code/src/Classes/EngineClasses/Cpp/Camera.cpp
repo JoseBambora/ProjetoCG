@@ -4,6 +4,10 @@
 
 #include "../Header/Camera.h"
 #include "GL/glut.h"
+#include <cmath>
+
+double Camera::beta = 0;
+double Camera::alfa = 0;
 
 Camera::Camera(float posx,float posy, float posz,
                float lax, float lay,  float laz,
@@ -57,10 +61,37 @@ std::string Camera::toString() const {
     return res;
 }
 
+void Camera::processSpecialKeys(int key, int xx, int yy) {
+    double c = M_PI / 18;
+    switch (key) {
+        case GLUT_KEY_LEFT:
+            alfa -= c;
+            break;
+        case GLUT_KEY_RIGHT:
+            alfa += c;
+            break;
+        case GLUT_KEY_UP:
+            beta += c;
+            if (beta > M_PI / 2) beta = M_PI_2;
+            break;
+        case GLUT_KEY_DOWN:
+            beta -= c;
+            if (beta < (-1) * M_PI / 2) beta = (-1) * M_PI_2;
+            break;
+    }
+    glutPostRedisplay();
+}
+
+
 void Camera::posicionaCamara(int w, int h) const {
+    //gluLookAt(this->posx*cos(beta)*sin(alfa), this->posy*sin(beta), this->posz*cos(beta)*cos(alfa),
+    //          this->lax, this->lay, this->laz,
+    //          this->upx, this->upy, this->upz);
 
     gluLookAt(this->posx, this->posy, this->posz,
               this->lax, this->lay, this->laz,
               this->upx, this->upy, this->upz);
-    //gluPerspective(this->profov,(GLfloat)w/(GLfloat)h,this->pronear,this->profar);
+
+     //gluPerspective(this->profov,(GLfloat)w/(GLfloat)h,this->pronear,this->profar);
 }
+

@@ -12,7 +12,7 @@ public:
     std::list<Figure*> *models;
     std::string toString();
     ~Group();
-    void drawModels(float,float,float);
+    void drawModels();
 };
 
 #endif
