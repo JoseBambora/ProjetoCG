@@ -1,5 +1,6 @@
 #include <vector>
 #include <cmath>
+#include <fstream>
 #include "../Header/Basics.h"
 #include "GL/glut.h"
 
@@ -118,4 +119,41 @@ void drawSideFora(std::vector<float> cbaixo,std::vector<float> ccima, float cred
 void drawSideDentro(std::vector<float> cbaixo,std::vector<float> ccima, float cred, float cgreen, float cblue)
 {
     drawSide(cbaixo,ccima,cred,cgreen,cblue, true);
+}
+
+std::vector<std::vector<float>> readPoints(std::ifstream file)
+{
+    std::vector<std::vector<float>> res =std::vector<std::vector<float>>();
+    size_t ss;
+    file.read((char *) &ss,sizeof(ss));
+    for(int i = 0; i < ss; i++)
+    {
+        size_t ss_;
+        file.read((char *) &ss_,sizeof(ss));
+        res.emplace_back();
+        for(int j = 0; j < ss_; j++)
+        {
+            float num;
+            file.read((char *) &num, sizeof(num));
+            res[i].push_back(num);
+        }
+    }
+    return res;
+}
+
+void writePoints(std::vector<std::vector<float>> circunferences, const std::string& name, int codigo)
+{
+    std::ofstream myfile;
+    myfile.open (name,std::ios::binary | std::fstream::out);
+    myfile.write((char *) &codigo,sizeof(codigo));
+    size_t ss = circunferences.size();
+    myfile.write((char *) &ss,sizeof(ss));
+    for(int i = 0; i < ss; i++)
+    {
+        size_t ss_ = circunferences[i].size();
+        myfile.write((char *) &ss_,sizeof(ss_));
+        for(int j = 0; j < ss_; j++)
+            myfile.write((char *) &(circunferences[i][j]),sizeof(circunferences[i][j]));
+    }
+    myfile.close();
 }

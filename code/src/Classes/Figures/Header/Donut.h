@@ -8,11 +8,10 @@
 #include "Figure.h"
 
 class Donut : public Figure{
+private:
+    void calculatePoints(float radiusin,float radiusout, int slices, int stacks);
 public:
-    float radiusin = 0;
-    float radiusout = 0;
-    int slices = 0;
-    int stacks = 0;
+    std::vector<std::vector<float>> superficielateral;
     static Donut* Build(int argc, char** argv);
     void Write_File(const std::string& name);
     static Donut* Read_File(std::ifstream);

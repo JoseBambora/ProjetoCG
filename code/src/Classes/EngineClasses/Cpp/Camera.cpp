@@ -84,14 +84,14 @@ void Camera::processSpecialKeys(int key, int xx, int yy) {
 
 
 void Camera::posicionaCamara(int w, int h) const {
-    // gluLookAt(this->posx*cos(beta)*sin(alfa), this->posy*sin(beta), this->posz*cos(beta)*cos(alfa),
-    //           this->lax, this->lay, this->laz,
-    //           this->upx, this->upy, this->upz);
+    //gluLookAt(10*cos(beta)*sin(alfa), 10*sin(beta), 10*cos(beta)*cos(alfa),
+    //          this->lax, this->lay, this->laz,
+    //          this->upx, this->upy, this->upz);
 
     gluLookAt(this->posx, this->posy, this->posz,
               this->lax, this->lay, this->laz,
               this->upx, this->upy, this->upz);
 
-     // gluPerspective(this->profov,(GLfloat)w/(GLfloat)h,this->pronear,this->profar);
+    // gluPerspective(this->profov,(GLfloat)w/(GLfloat)h,this->pronear,this->profar);
 }
 

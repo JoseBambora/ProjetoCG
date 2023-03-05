@@ -13,10 +13,11 @@ Cylinder *Cylinder::Build(int argc, char **argv) {
     auto *c = new Cylinder();
     if(argc == 6)
     {
-        c->radius = std::stof(argv[2]);
-        c->height = std::stof(argv[3]);
-        c->slices = std::stoi(argv[4]);
+        float radius = std::stof(argv[2]);
+        float height = std::stof(argv[3]);
+        int slices = std::stoi(argv[4]);
         std::string name = argv[5];
+        c->calculatePoints(radius,height,slices);
         c->Write_File(name);
     }
     else
@@ -24,37 +25,39 @@ Cylinder *Cylinder::Build(int argc, char **argv) {
     return c;
 }
 
+/**
+ * 1ª linha base de baixo
+ * 2ª linha base de cima
+ * 3ª linha coordenadas do centro da base de cima
+ */
+
 void Cylinder::Write_File(const std::string &name) {
-    std::ofstream myfile;
-    myfile.open (name,std::ios::binary | std::fstream::out);
-    myfile.write((char *) &Figure::codCylinder,sizeof(Figure::codCylinder));
-    myfile.write((char *) &radius,sizeof(radius));
-    myfile.write((char *) &height,sizeof(height));
-    myfile.write((char *) &slices,sizeof(slices));
-    myfile.close();
+    std::vector<std::vector<float>> c = std::vector<std::vector<float>>();
+    c.push_back(this->basebaixo);
+    c.push_back(this->basecima);
+    c.push_back(this->centrocima);
+    writePoints(c, name, Figure::codCylinder);
 }
 
 Cylinder *Cylinder::Read_File(std::ifstream file) {
     auto *res = new Cylinder();
-    float radius, height;
-    int slices;
-    file.read((char *) &radius, sizeof(radius));
-    file.read((char *) &height, sizeof(height));
-    file.read((char *) &slices, sizeof(slices));
-    res->radius = radius;
-    res->slices = slices;
-    res->height = height;
+    std::vector<std::vector<float>> bases = readPoints(std::move(file));
+    res->basebaixo = bases[0];
+    res->basecima = bases[1];
+    res->centrocima = bases[2];
     return res;
 }
 
 std::string Cylinder::toString() {
     std::string res = "\tCylinder:\n";
-    res.append("\t\tRadius: ");
-    res.append(std::to_string(this->radius));
-    res.append("\n\t\tHeight: ");
-    res.append(std::to_string(this->height));
-    res.append("\n\t\tSlices: ");
-    res.append(std::to_string(this->slices));
+    res.append("\t\tCentro Superior:");
+    res.append("(");
+    res.append(std::to_string(this->centrocima[0]));
+    res.append(",");
+    res.append(std::to_string(this->centrocima[1]));
+    res.append(",");
+    res.append(std::to_string(this->centrocima[2]));
+    res.append(")\n");
     return res;
 }
 
@@ -64,9 +67,17 @@ Cylinder::~Cylinder() {
 
 void Cylinder::drawFigure() {
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    std::vector<float> basecima = getPointsCircumference(0,this->height,0,this->radius,this->slices);
-    std::vector<float> basebaixo = getPointsCircumference(0,0,0,this->radius,this->slices);
-    drawPyramid(basecima,0,this->height,0, true,1.0f,1.0f,1.0f);
+    drawPyramid(basecima,centrocima[0],centrocima[1],centrocima[2], true,1.0f,1.0f,1.0f);
     drawPyramid(basebaixo,0,0,0, false,1.0f,1.0f,1.0f);
     drawSideFora(basebaixo,basecima,1.0f,1.0f,1.0f);
+}
+
+void Cylinder::calculatePoints(float radius, float height, int slices)
+{
+    this->basecima = getPointsCircumference(0,height,0,radius,slices);
+    this->basebaixo = getPointsCircumference(0,0,0,radius,slices);
+    this->centrocima = std::vector<float>();
+    centrocima.push_back(0);
+    centrocima.push_back(height);
+    centrocima.push_back(0);
 }

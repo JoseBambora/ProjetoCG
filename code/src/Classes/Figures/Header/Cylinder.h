@@ -10,10 +10,12 @@
 #include "Figure.h"
 
 class Cylinder :public Figure{
+private:
+    void calculatePoints(float radius,float height, int slices);
 public:
-    float radius = 0;
-    float height = 0;
-    int slices = 0;
+    std::vector<float> basecima;
+    std::vector<float> basebaixo;
+    std::vector<float> centrocima;
     static Cylinder* Build(int argc, char** argv);
     void Write_File(const std::string& name);
     static Cylinder* Read_File(std::ifstream file);

@@ -1,6 +1,7 @@
 #include <fstream>
 #include "../Header/Plane.h"
 #include "GL/glut.h"
+#include "../Header/Basics.h"
 
 const int Figure::codPlane;
 
@@ -8,8 +9,9 @@ Plane* Plane::Build(int argc, char **argv) {
     auto *p = new Plane();
     if(argc == 5)
     {
-        p->length = std::stof(argv[2]);
-        p->dimension = std::stof(argv[3]);
+        float length = std::stof(argv[2]);
+        int dimension = std::stoi(argv[3]);
+        p->calculatePoints(length,dimension,Plane::horizontal,Plane::negativo,0);
         std::string name = argv[4];
         p->Write_File(name);
     }
@@ -18,71 +20,40 @@ Plane* Plane::Build(int argc, char **argv) {
     return p;
 }
 
-void Plane::Write_File(const std::string& name) {
-    std::ofstream myfile;
-    myfile.open (name, std::ios::binary | std::fstream::out);
-    myfile.write((char *) &Figure::codPlane,sizeof(Figure::codPlane));
-    myfile.write((char *) &length,sizeof(length));
-    myfile.write((char *) &dimension,sizeof(dimension));
-    myfile.close();
+void Plane::Write_File(const std::string& name) const {
+    std::vector<std::vector<float>> write = std::vector<std::vector<float>>();
+    write.push_back(this->points);
+    writePoints(write, name, Figure::codPlane);
 }
 
 Plane* Plane::Read_File(std::ifstream file) {
     auto *res = new Plane();
-    float d1, d2;
-    file.read((char *) &d1, sizeof(d1));
-    file.read((char *) &d2, sizeof(d2));
-    res->length = d1;
-    res->dimension = d2;
+    std::vector<std::vector<float>> read = readPoints(std::move(file));
+    res->points = read[0];
     return res;
 }
 
 std::string Plane::toString() {
     std::string res = "\tPlane:\n";
-    res.append("\t\tLength: ");
-    res.append(std::to_string(this->length));
-    res.append("\n\t\tDimension: ");
-    res.append(std::to_string(this->dimension));
+    res.append("\t\tNúmero de pontos totais:");
+    res.append(std::to_string(this->points.size()));
     return res;
 }
 
-void Plane::drawFigure(float referencial, int orientation, bool isPlane, int direcao) {
-    float d = this->dimension;
-    float l = this->length;
-    int nq = (int) (d * d);
-    float cxi = (-1) * l/2;
-    float cyi = l/2;
-    std::vector<float> points;
-    switch(orientation)
-    {
-        case horizontal:
-            points = this->getPointsHorizontal(direcao,nq,cxi,cyi,referencial);
-            break;
-        case frontal:
-            points = this->getPointsFrontal(direcao,nq,cxi,cyi,referencial);
-            break;
-        case perfil:
-            points = this->getPointsPerfil(direcao,nq,cxi,cyi,referencial);
-            break;
-    }
+void Plane::drawFigure() {
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    if(isPlane)
-        glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
     glColor3f(1,1,1);
     glBegin(GL_TRIANGLES);
     for (int i = 0; i < points.size(); i+=3)
         glVertex3f(points[i],points[i+1],points[i+2]);
     glEnd();
+    glEnable(GL_CULL_FACE);
 }
 
-void Plane::drawFigure() {
-    drawFigure(0,horizontal, true, positivo);
-}
-
-std::vector<float> Plane::getPointsHorizontal(int direcao, int nq, float cxi, float czi, float ori) {
-    float d = this->dimension;
-    float l = this->length;
+std::vector<float> Plane::getPointsHorizontal(int d, float l, int direcao, int nq, float cxi, float czi, float ori) {
     std::vector<float> res = std::vector<float>();
+    float fixo = 0.005f * d;
     for(int i = 0; i < nq; i++)
     {
         // Vertices de baixo x (ver desenho)
@@ -150,11 +121,10 @@ std::vector<float> Plane::getPointsHorizontal(int direcao, int nq, float cxi, fl
                 res.push_back(ori);
                 res.push_back(n2);
 
-
                 break;
         }
         czi = n2;
-        if(czi <= (-1) * l/2)
+        if(czi - fixo <= (-1) * (l/2))
         {
             cxi += l/d;
             czi = l/2;
@@ -163,10 +133,9 @@ std::vector<float> Plane::getPointsHorizontal(int direcao, int nq, float cxi, fl
     return res;
 }
 
-std::vector<float> Plane::getPointsFrontal(int direcao, int nq, float cxi, float cyi, float ori) {
-    float d = this->dimension;
-    float l = this->length;
+std::vector<float> Plane::getPointsFrontal(int d, float l, int direcao, int nq, float cxi, float cyi, float ori) {
     std::vector<float> res = std::vector<float>();
+    float fixo = 0.005f * d;
     for(int i = 0; i < nq; i++)
     {
         // Vertices de baixo x (ver desenho)
@@ -236,7 +205,7 @@ std::vector<float> Plane::getPointsFrontal(int direcao, int nq, float cxi, float
                 break;
         }
         cyi = n2;
-        if(cyi <= (-1) * l/2)
+        if(cyi - fixo < (-1) * l/2)
         {
             cxi += l/d;
             cyi = l/2;
@@ -245,10 +214,9 @@ std::vector<float> Plane::getPointsFrontal(int direcao, int nq, float cxi, float
     return res;
 }
 
-std::vector<float> Plane::getPointsPerfil(int direcao, int nq, float czi, float cyi, float ori) {
-    float d = this->dimension;
-    float l = this->length;
+std::vector<float> Plane::getPointsPerfil(int d, float l, int direcao, int nq, float czi, float cyi, float ori) {
     std::vector<float> res = std::vector<float>();
+    float fixo = 0.005f * d;
     for(int i = 0; i < nq; i++)
     {
         // Vertices de baixo z (ver desenho)
@@ -318,12 +286,38 @@ std::vector<float> Plane::getPointsPerfil(int direcao, int nq, float czi, float 
                 break;
         }
         cyi = n2;
-        if(cyi <= (-1) * l/2)
+        if(cyi - fixo < (-1) * l/2)
         {
             czi += l/d;
             cyi = l/2;
         }
     }
+    return res;
+}
+
+void Plane::calculatePoints(float length, int dimension, int orientation, int direcao, float origin) {
+    int nq = dimension * dimension;
+    float cxi = (-1) * length/2;
+    float cyi = length/2;
+    switch(orientation)
+    {
+        case horizontal:
+            points = this->getPointsHorizontal(dimension,length, direcao,nq,cxi,cyi,origin);
+            break;
+        case frontal:
+            points = this->getPointsFrontal(dimension,length,direcao,nq,cxi,cyi,origin);
+            break;
+        case perfil:
+            points = this->getPointsPerfil(dimension,length,direcao,nq,cxi,cyi,origin);
+            break;
+    }
+}
+
+std::vector<float> Plane::calculatePointsStatic(float length, int dimension,int orientation, int referencial, float origin) {
+    auto *p = new Plane();
+    p->calculatePoints(length,dimension,orientation,referencial,origin);
+    std::vector<float> res = std::move(p->points);
+    delete p;
     return res;
 }
 

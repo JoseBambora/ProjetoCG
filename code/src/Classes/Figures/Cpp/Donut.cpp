@@ -18,10 +18,7 @@ Donut* Donut::Build(int argc, char **argv)
         int slices = std::stoi(argv[4]);
         int stacks = std::stoi(argv[5]);
         std::string name = argv[6];
-        res->radiusin = rin;
-        res->radiusout = rout;
-        res->stacks= stacks;
-        res->slices = slices;
+        res->calculatePoints(rin,rout,slices,stacks);
         res->Write_File(name);
     }
     else
@@ -30,41 +27,19 @@ Donut* Donut::Build(int argc, char **argv)
 }
 
 void Donut::Write_File(const std::string &name) {
-    std::ofstream myfile;
-    myfile.open (name,std::ios::binary | std::fstream::out);
-    myfile.write((char *) &Figure::codDonut,sizeof(Figure::codDonut));
-    myfile.write((char *) &radiusin,sizeof(radiusin));
-    myfile.write((char *) &radiusout,sizeof(radiusout));
-    myfile.write((char *) &slices,sizeof(slices));
-    myfile.write((char *) &stacks,sizeof(stacks));
-    myfile.close();
+    writePoints(this->superficielateral, name, Figure::codDonut);
 }
 
 Donut *Donut::Read_File(std::ifstream file) {
     auto *res = new Donut();
-    float rin,rout,altura;
-    int slices,stacks;
-    file.read((char *) &rin, sizeof(rin));
-    file.read((char *) &rout, sizeof(rout));
-    file.read((char *) &slices, sizeof(slices));
-    file.read((char *) &stacks, sizeof(stacks));
-    res->radiusin = rin;
-    res->radiusout = rout;
-    res->slices = slices;
-    res->stacks = stacks;
+    res->superficielateral = readPoints(std::move(file));
     return res;
 }
 
 std::string Donut::toString() {
     std::string res = "\tDonut:\n";
-    res.append("\t\tRadius Inside: ");
-    res.append(std::to_string(this->radiusin));
-    res.append("\n\t\tRadius Outside: ");
-    res.append(std::to_string(this->radiusout));
-    res.append("\n\t\tSlices: ");
-    res.append(std::to_string(this->slices));
-    res.append("\n\t\tStacks: ");
-    res.append(std::to_string(this->stacks));
+    res.append("\t\tNúmero circunferências laterais:");
+    res.append(std::to_string(this->superficielateral.size()));
     return res;
 }
 
@@ -74,25 +49,37 @@ Donut::~Donut() {
 
 void Donut::drawFigure() {
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    float raiointermedio = (this->radiusout-this->radiusin)/2;
-    // circunferência meio baixo
-    std::vector<float> cmdown = getPointsCircumference(0,-raiointermedio,0,raiointermedio+this->radiusin,this->slices);
-    float aumento = M_PI/this->stacks;
-    float alfa = -M_PI_2;
-    std::vector<float> anteriorint = cmdown;
-    std::vector<float> anteriorext = cmdown;
-    for(int i = 0; i < this->stacks+1; i++)
+    std::vector<float> anteriorint = this->superficielateral[0];
+    std::vector<float> anteriorext = this->superficielateral[0];
+    for(int i = 1; i < this->superficielateral.size(); i+=2)
     {
-        float cosalfa = std::cos(alfa);
-        float yc = std::sin(alfa) * raiointermedio;
-        float rint = this->radiusin + (raiointermedio - cosalfa * raiointermedio);
-        float rext = this->radiusin + (raiointermedio + cosalfa * raiointermedio);
-        std::vector<float> cint = getPointsCircumference(0,yc,0,rint,this->slices);
-        std::vector<float> cext = getPointsCircumference(0,yc,0,rext,this->slices);
-        alfa += aumento;
+        std::vector<float> cint = this->superficielateral[i];
+        std::vector<float> cext = this->superficielateral[i+1];
         drawSideDentro(anteriorint,cint,1.0f,1.0f,1.0f);
         drawSideFora(anteriorext,cext,1.0f,1.0f,1.0f);
         anteriorint = cint;
         anteriorext = cext;
+    }
+}
+
+void Donut::calculatePoints(float radiusin, float radiusout, int slices, int stacks)
+{
+    float raiointermedio = (radiusout-radiusin)/2;
+    std::vector<float> cmdown = getPointsCircumference(0,-raiointermedio,0,raiointermedio+radiusin,slices);
+    this->superficielateral = std::vector<std::vector<float>>();
+    this->superficielateral.push_back(cmdown);
+    float aumento = M_PI/stacks;
+    float alfa = -M_PI_2;
+    for(int i = 0; i < stacks+1; i++)
+    {
+        float cosalfa = std::cos(alfa);
+        float yc = std::sin(alfa) * raiointermedio;
+        float rint = radiusin + (raiointermedio - cosalfa * raiointermedio);
+        float rext = radiusin + (raiointermedio + cosalfa * raiointermedio);
+        std::vector<float> cint = getPointsCircumference(0,yc,0,rint,slices);
+        std::vector<float> cext = getPointsCircumference(0,yc,0,rext,slices);
+        this->superficielateral.push_back(cint);
+        this->superficielateral.push_back(cext);
+        alfa += aumento;
     }
 }

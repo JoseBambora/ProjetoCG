@@ -6,10 +6,12 @@
 
 
 class Sphere : public Figure{
+private:
+    void calculatePoints(float radius, int slices, int stacks);
 public:
-    float radius = 0;
-    int slices = 0;
-    int stacks = 0;
+    std::vector<std::vector<float>> superficielateral;
+    std::vector<float> verticesuperior;
+    std::vector<float> verticeinferior;
     static Sphere* Build(int argc, char** argv);
     void Write_File(const std::string& name);
     static Sphere* Read_File(std::ifstream);

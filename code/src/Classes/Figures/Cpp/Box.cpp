@@ -2,6 +2,8 @@
 #include <fstream>
 #include "../Header/Box.h"
 #include "../Header/Plane.h"
+#include "GL/glut.h"
+#include "../Header/Basics.h"
 
 const int Figure::codBox;
 
@@ -9,9 +11,10 @@ Box* Box::Build(int argc, char **argv) {
     Box *b = new Box();
     if(argc == 5)
     {
-        b->length = std::stof(argv[2]);
-        b->dimension = std::stof(argv[3]);
+        float length = std::stof(argv[2]);
+        float dimension = std::stof(argv[3]);
         std::string name = argv[4];
+        b->calculatePoints(length,dimension);
         b->Write_File(name);
     }
     else
@@ -20,45 +23,45 @@ Box* Box::Build(int argc, char **argv) {
 }
 
 void Box::Write_File(const std::string& name) {
-    std::ofstream myfile;
-    myfile.open (name, std::ios::binary | std::fstream::out);
-    myfile.write((char *) &Figure::codBox,sizeof(Figure::codBox));
-    myfile.write((char *) &length,sizeof(length));
-    myfile.write((char *) &dimension,sizeof(dimension));
-    myfile.close();
+    writePoints(this->points, name, Figure::codBox);
 }
 
 Box* Box::Read_File(std::ifstream file) {
     Box *res = new Box();
-    float d1, d2;
-    file.read((char *) &d1, sizeof(d1));
-    file.read((char *) &d2, sizeof(d2));
-    res->length = d1;
-    res->dimension = d2;
+    res->points = readPoints(std::move(file));
     return res;
 }
 
 std::string Box::toString() {
     std::string res = "\tBox:\n";
-    res.append("\t\tLength: ");
-    res.append(std::to_string(this->length));
-    res.append("\n\t\tDimension: ");
-    res.append(std::to_string(this->dimension));
     return res;
 }
 
 void Box::drawFigure() {
+
+    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+    glColor3f(1,1,1);
+    glBegin(GL_TRIANGLES);
+    for(int j = 0; j < points.size(); j++)
+    {
+        std::vector<float> drawPoints = this->points[j];
+        for (int i = 0; i < drawPoints.size(); i+=3)
+            glVertex3f(drawPoints[i],drawPoints[i+1],drawPoints[i+2]);
+    }
+    glEnd();
+}
+
+void Box::calculatePoints(float length, int dimension) {
     auto *pb = new Plane();
-    pb->length = this->length;
-    pb->dimension = this->dimension;
-    float lb = this->length/2;
-    float ls = (-1) * this->length/2;
-    pb->drawFigure(lb,Plane::horizontal, false,Plane::negativo);
-    pb->drawFigure(ls,Plane::horizontal, false,Plane::positivo);
-    pb->drawFigure(lb,Plane::frontal,false,Plane::positivo);
-    pb->drawFigure(ls,Plane::frontal,false,Plane::negativo);
-    pb->drawFigure(lb,Plane::perfil,false,Plane::negativo);
-    pb->drawFigure(ls,Plane::perfil,false,Plane::positivo);
+    float lb = length/2;
+    float ls = (-1) * length/2;
+    this->points = std::vector<std::vector<float>>();
+    points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::horizontal,Plane::negativo,lb));
+    points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::horizontal,Plane::positivo,ls));
+    points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::frontal,Plane::positivo,lb));
+    points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::frontal,Plane::negativo,ls));
+    points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::perfil,Plane::negativo,lb));
+    points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::perfil,Plane::positivo,ls));
     delete pb;
 }
 

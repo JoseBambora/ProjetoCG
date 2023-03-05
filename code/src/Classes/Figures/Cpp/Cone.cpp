@@ -6,14 +6,35 @@
 
 const int Figure::codCone;
 
+void Cone::calculatePoints(float radius, float height, int slices, int stacks)
+{
+    this->base = getPointsCircumference(0,0,0,radius,slices);
+    float reduz = radius * (height/(float) stacks)/ height;
+    float raio = radius - reduz;
+    float aumento = height/(float) stacks;
+    float y = aumento;
+    this->superficielateral = std::vector<std::vector<float>>();
+    for(int i = 0; i < stacks; i++)
+    {
+        this->superficielateral.push_back(getPointsCircumference(0,y,0,raio,slices));
+        y+= aumento;
+        raio -= reduz;
+    }
+    this->coordsTopo = std::vector<float>();
+    coordsTopo.push_back(0);
+    coordsTopo.push_back(height);
+    coordsTopo.push_back(0);
+}
+
 Cone* Cone::Build(int argc, char **argv) {
     Cone *c = new Cone();
     if(argc == 7)
     {
-        c->radius = std::stof(argv[2]);
-        c->height = std::stof(argv[3]);
-        c->slices = std::stoi(argv[4]);
-        c->stacks = std::stoi(argv[5]);
+        float radius = std::stof(argv[2]);
+        float height = std::stof(argv[3]);
+        int slices = std::stoi(argv[4]);
+        int stacks = std::stoi(argv[5]);
+        c->calculatePoints(radius,height,slices,stacks);
         std::string name = argv[6];
         c->Write_File(name);
     }
@@ -22,68 +43,54 @@ Cone* Cone::Build(int argc, char **argv) {
     return c;
 }
 
+/**
+ * 1ª linha - coodenadas da base
+ * n linhas - circunferências laterais
+ * ultima linha - coordenadas vertice topo
+ */
 void Cone::Write_File(const std::string &name) {
-    std::ofstream myfile;
-    myfile.open (name,std::ios::binary | std::fstream::out);
-    myfile.write((char *) &Figure::codCone,sizeof(Figure::codCone));
-    myfile.write((char *) &radius,sizeof(radius));
-    myfile.write((char *) &height,sizeof(height));
-    myfile.write((char *) &slices,sizeof(slices));
-    myfile.write((char *) &stacks,sizeof(stacks));
-    myfile.close();
+    std::vector<std::vector<float>> write = this->superficielateral;
+    write.insert(write.begin(),this->base);
+    write.push_back(this->coordsTopo);
+    writePoints(write, name, Figure::codCone);
 }
 
 Cone* Cone::Read_File(std::ifstream file) {
     Cone *res = new Cone();
-    float d3,d4;
-    int d5,d6;
-    file.read((char *) &d3, sizeof(d3));
-    file.read((char *) &d4, sizeof(d4));
-    file.read((char *) &d5, sizeof(d5));
-    file.read((char *) &d6, sizeof(d6));
-    res->radius = d3;
-    res->height = d4;
-    res->slices = d5;
-    res->stacks = d6;
+    std::vector<std::vector<float>> read = readPoints(std::move(file));
+    res->base = read[0];
+    res->superficielateral = std::vector<std::vector<float>>(read.begin()+1, read.end()-1);
+    res->coordsTopo = read[read.size()-1];
     return res;
 }
 
 std::string Cone::toString() {
     std::string res = "\tCone:\n";
-    res.append("\t\tRadius: ");
-    res.append(std::to_string(this->radius));
-    res.append("\n\t\tHeight: ");
-    res.append(std::to_string(this->height));
-    res.append("\n\t\tSlices: ");
-    res.append(std::to_string(this->slices));
-    res.append("\n\t\tStacks: ");
-    res.append(std::to_string(this->stacks));
+    res.append("\t\tVertice Superior:");
+    res.append("(");
+    res.append(std::to_string(this->coordsTopo[0]));
+    res.append(",");
+    res.append(std::to_string(this->coordsTopo[1]));
+    res.append(",");
+    res.append(std::to_string(this->coordsTopo[2]));
+    res.append(")\n");
+    res.append("\t\tNúmero circunferências laterais:");
+    res.append(std::to_string(this->superficielateral.size()));
     return res;
 }
 
 void Cone::drawFigure() {
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    std::vector<float> base = getPointsCircumference(0,0,0,this->radius,this->slices);
-    // Desenha base, pirâmide com altura 0
+    //this->calculatePoints();
     drawPyramid(base,0,0,0, false,1.0f,1.0f,1.0f);
-    // Quantidade a reduzir com base no raio (semelhança de triângulos)
-    float reduz = this->radius * (this->height/this->stacks)/ this->height;
-    float raio = this->radius - reduz;
-    // circunferência anterior para conectar
     std::vector<float> anterior = base;
-    // aumento do y das circunferências intermédias
-    float aumento = this->height/(float) this->stacks;
-    // Y das circunferências intermédias
-    float y = aumento;
-    for(int i = 0; i < this->stacks; i++)
+    for(int i = 0; i < this->superficielateral.size()-1; i++)
     {
-        std::vector<float> circ = getPointsCircumference(0,y,0,raio,this->slices);
-        y+= aumento;
-        raio -= reduz;
-        drawSideFora(anterior,circ,1.0f,1.0f,1.0f);
-        anterior = circ;
+        drawSideFora(anterior,superficielateral[i],1.0f,1.0f,1.0f);
+        anterior = superficielateral[i];
     }
-    drawPyramid(anterior,0,this->height,0, false,1.0f,1.0f,1.0f);
+    std::vector<float> topo = this->superficielateral[this->superficielateral.size()-1];
+    drawPyramid(anterior,topo[0],topo[1],topo[2], true,1.0f,1.0f,1.0f);
 
 }
 Cone::~Cone() = default;
