@@ -39,18 +39,6 @@ World::~World() {
     delete this->camera;
 }
 
-void changeSize(int w, int h)
-{
-    if (h == 0)
-        h = 1;
-    float ratio = w * 1.0f / h;
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glViewport(0, 0, w, h);
-    gluPerspective(45.0f, ratio, 1.0f, 1000.0f);
-    glMatrixMode(GL_MODELVIEW);
-}
-
 static void renderAllScene(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -87,7 +75,7 @@ void World::drawWorld() {
     glutInitWindowSize(this->width, this->height);
     glutCreateWindow("Projeto CG - Grupo 20");
     glutSpecialFunc(Camera::processSpecialKeys);
-    glutReshapeFunc(changeSize);
+    glutReshapeFunc(Camera::changeSize);
     glutIdleFunc(renderAllScene);
     glutDisplayFunc(renderAllScene);
     glEnable(GL_DEPTH_TEST);
@@ -95,4 +83,3 @@ void World::drawWorld() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glutMainLoop();
 }
-

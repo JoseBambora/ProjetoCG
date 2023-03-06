@@ -8,6 +8,9 @@
 
 double Camera::beta = 0;
 double Camera::alfa = 0;
+float Camera::profar;
+float Camera::pronear;
+float Camera::profov;
 
 Camera::Camera(float posx,float posy, float posz,
                float lax, float lay,  float laz,
@@ -22,9 +25,9 @@ Camera::Camera(float posx,float posy, float posz,
     this->upx = upx;
     this->upy = upy;
     this->upz = upz;
-    this->profov = fov;
-    this->pronear = near;
-    this->profar = far;
+    profov = fov;
+    pronear = near;
+    profar = far;
 }
 
 std::string Camera::toString() const {
@@ -91,7 +94,16 @@ void Camera::posicionaCamara(int w, int h) const {
     gluLookAt(this->posx, this->posy, this->posz,
               this->lax, this->lay, this->laz,
               this->upx, this->upy, this->upz);
+}
 
-    // gluPerspective(this->profov,(GLfloat)w/(GLfloat)h,this->pronear,this->profar);
+void Camera::changeSize(int w, int h) {
+    if (h == 0)
+        h = 1;
+    float ratio = w * 1.0f / h;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glViewport(0, 0, w, h);
+    gluPerspective(profov, ratio, pronear, profar);
+    glMatrixMode(GL_MODELVIEW);
 }
 
