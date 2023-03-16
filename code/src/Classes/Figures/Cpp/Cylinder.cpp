@@ -49,15 +49,15 @@ Cylinder *Cylinder::Read_File(std::ifstream file) {
 }
 
 std::string Cylinder::toString() {
-    std::string res = "\tCylinder:\n";
-    res.append("\t\tCentro Superior:");
-    res.append("(");
-    res.append(std::to_string(this->centrocima[0]));
-    res.append(",");
-    res.append(std::to_string(this->centrocima[1]));
-    res.append(",");
-    res.append(std::to_string(this->centrocima[2]));
-    res.append(")\n");
+    std::string res = "Cylinder";
+    // res.append("\t\tCentro Superior:");
+    // res.append("(");
+    // res.append(std::to_string(this->centrocima[0]));
+    // res.append(",");
+    // res.append(std::to_string(this->centrocima[1]));
+    // res.append(",");
+    // res.append(std::to_string(this->centrocima[2]));
+    // res.append(")\n");
     return res;
 }
 

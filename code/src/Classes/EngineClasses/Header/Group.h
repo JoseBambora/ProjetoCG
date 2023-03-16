@@ -4,15 +4,16 @@
 #include <iostream>
 #include <list>
 class Figure;
+class ListTree;
+class Transform;
 
 class Group {
 public:
-    Group();
-    void insertModel(const std::string&);
-    std::list<Figure*> *models;
+    Group(ListTree *tree);
+    ListTree *tree;
     std::string toString();
     ~Group();
-    void drawModels();
+    void execute();
 };
 
 #endif

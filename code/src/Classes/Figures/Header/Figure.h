@@ -3,7 +3,9 @@
 
 #include <string>
 
-class Figure {
+#include "../../EngineClasses/Header/Node.h"
+
+class Figure : public Node{
 public:
     static const int codPlane = 0;
     static const int codBox = 2;
@@ -13,9 +15,11 @@ public:
     static const int codCylinder = 5;
     static Figure* Build(int argc, char** argv);
     static Figure* ReadFile(const std::string& name);
-    virtual std::string toString() = 0;
+    virtual std::string toString() override = 0;
     virtual ~Figure()=default;
     virtual void drawFigure();
+    void undo() override;
+    void apply() override;
 };
 
 

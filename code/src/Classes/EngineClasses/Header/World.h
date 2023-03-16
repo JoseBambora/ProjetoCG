@@ -6,15 +6,14 @@
 
 class Camera;
 class Group;
-
+class ListTree;
 class World{
 public:
     float width;
     float height;
     Camera *camera;
     Group *group;
-    World(float , float, float, float, float, float, float, float, float, float, float, float, float, float);
-    void addModel(const std::string&);
+    World(float , float, float, float, float, float, float, float, float, float, float, float, float, float, ListTree*);
     std::string toString();
     ~World();
     void drawWorld();

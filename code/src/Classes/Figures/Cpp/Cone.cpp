@@ -65,17 +65,17 @@ Cone* Cone::Read_File(std::ifstream file) {
 }
 
 std::string Cone::toString() {
-    std::string res = "\tCone:\n";
-    res.append("\t\tVertice Superior:");
-    res.append("(");
-    res.append(std::to_string(this->coordsTopo[0]));
-    res.append(",");
-    res.append(std::to_string(this->coordsTopo[1]));
-    res.append(",");
-    res.append(std::to_string(this->coordsTopo[2]));
-    res.append(")\n");
-    res.append("\t\tNúmero circunferências laterais:");
-    res.append(std::to_string(this->superficielateral.size()));
+    std::string res = "Cone";
+    // res.append("\t\tVertice Superior:");
+    // res.append("(");
+    // res.append(std::to_string(this->coordsTopo[0]));
+    // res.append(",");
+    // res.append(std::to_string(this->coordsTopo[1]));
+    // res.append(",");
+    // res.append(std::to_string(this->coordsTopo[2]));
+    // res.append(")\n");
+    // res.append("\t\tNúmero circunferências laterais:");
+    // res.append(std::to_string(this->superficielateral.size()));
     return res;
 }
 

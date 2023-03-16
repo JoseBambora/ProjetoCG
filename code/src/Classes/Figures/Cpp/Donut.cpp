@@ -37,9 +37,9 @@ Donut *Donut::Read_File(std::ifstream file) {
 }
 
 std::string Donut::toString() {
-    std::string res = "\tDonut:\n";
-    res.append("\t\tNúmero circunferências laterais:");
-    res.append(std::to_string(this->superficielateral.size()));
+    std::string res = "Donut";
+    // res.append("\t\tNúmero circunferências laterais:");
+    // res.append(std::to_string(this->superficielateral.size()));
     return res;
 }
 

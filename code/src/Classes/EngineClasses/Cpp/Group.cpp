@@ -1,36 +1,20 @@
-//
-// Created by josebambora on 18-02-2023.
-//
-
 #include "../Header/Group.h"
 #include "../../Figures/Header/Figure.h"
+#include "../../Transformations/Header/Transform.h"
+#include "../Header/ListTree.h"
 
-Group::Group() {
-    this->models = new std::list<Figure*>();
-}
-
-void Group::insertModel(const std::string& model) {
-    this->models->push_back(Figure::ReadFile(model));
+Group::Group(ListTree * tree) {
+    this->tree = tree;
 }
 
 std::string Group::toString() {
-    std::string res;
-    res.append("Models:\n");
-    for(Figure* elem : *this->models)
-    {
-        res.append(elem->toString());
-        res.append("\n");
-    }
-    return res;
+    return this->tree->toString();
 }
 
 Group::~Group(){
-    for (Figure* elem : *this->models)
-        delete elem;
-    delete this->models;
+    delete this->tree;
 }
 
-void Group::drawModels() {
-    for (Figure* elem : *this->models)
-        elem->drawFigure();
+void Group::execute() {
+    this->tree->execute();
 }

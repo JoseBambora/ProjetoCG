@@ -9,16 +9,13 @@ World::World(float width, float height,
              float posx, float posy, float posz,
              float lax, float lay,float laz,
              float upx, float upy,float upz,
-             float fov, float near,float far) {
+             float fov, float near,float far,
+             ListTree * tree) {
     this->camera = new Camera(posx,posy,posz,lax,lay,laz,upx,upy,upz,fov,near,far);
     this->width = width;
     this->height = height;
-    this->group = new Group();
+    this->group = new Group(tree);
     instance = this;
-}
-
-void World::addModel(const std::string& model) {
-    this->group->insertModel(model);
 }
 
 std::string World::toString()
@@ -60,7 +57,7 @@ static void renderAllScene(void) {
     glVertex3f(0.0f, 0.0f, 100.0f);
     glColor3f(1.0f, 1.0f, 1.0f);
     glEnd();
-    World::instance->group->drawModels();
+    World::instance->group->execute();
     glutSwapBuffers();
 }
 

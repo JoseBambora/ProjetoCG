@@ -34,9 +34,9 @@ Plane* Plane::Read_File(std::ifstream file) {
 }
 
 std::string Plane::toString() {
-    std::string res = "\tPlane:\n";
-    res.append("\t\tNúmero de pontos totais:");
-    res.append(std::to_string(this->points.size()));
+    std::string res = "Plane:";
+    // res.append("\t\tNúmero de pontos totais:");
+    // res.append(std::to_string(this->points.size()));
     return res;
 }
 

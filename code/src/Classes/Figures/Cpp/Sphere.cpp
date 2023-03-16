@@ -47,25 +47,25 @@ Sphere* Sphere::Read_File(std::ifstream file) {
 }
 
 std::string Sphere::toString()  {
-    std::string res = "\tSphere:\n";
-    res.append("\t\tVertice Superior:");
-    res.append("(");
-    res.append(std::to_string(this->verticesuperior[0]));
-    res.append(",");
-    res.append(std::to_string(this->verticesuperior[1]));
-    res.append(",");
-    res.append(std::to_string(this->verticesuperior[2]));
-    res.append(")\n");
-    res.append("\t\tVertice Inferior:");
-    res.append("(");
-    res.append(std::to_string(this->verticeinferior[0]));
-    res.append(",");
-    res.append(std::to_string(this->verticeinferior[1]));
-    res.append(",");
-    res.append(std::to_string(this->verticeinferior[2]));
-    res.append(")\n");
-    res.append("\t\tNúmero circunferências laterais:");
-    res.append(std::to_string(this->superficielateral.size()));
+    std::string res = "Sphere:";
+    // res.append("\t\tVertice Superior:");
+    // res.append("(");
+    // res.append(std::to_string(this->verticesuperior[0]));
+    // res.append(",");
+    // res.append(std::to_string(this->verticesuperior[1]));
+    // res.append(",");
+    // res.append(std::to_string(this->verticesuperior[2]));
+    // res.append(")\n");
+    // res.append("\t\tVertice Inferior:");
+    // res.append("(");
+    // res.append(std::to_string(this->verticeinferior[0]));
+    // res.append(",");
+    // res.append(std::to_string(this->verticeinferior[1]));
+    // res.append(",");
+    // res.append(std::to_string(this->verticeinferior[2]));
+    // res.append(")\n");
+    // res.append("\t\tNúmero circunferências laterais:");
+    // res.append(std::to_string(this->superficielateral.size()));
     return res;
 }
 

@@ -33,7 +33,7 @@ Box* Box::Read_File(std::ifstream file) {
 }
 
 std::string Box::toString() {
-    std::string res = "\tBox:\n";
+    std::string res = "Box";
     return res;
 }
 

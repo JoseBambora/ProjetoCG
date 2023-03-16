@@ -70,3 +70,11 @@ Figure *Figure::ReadFile(const std::string& name) {
 void Figure::drawFigure() {
 
 }
+
+void Figure::apply() {
+    drawFigure();
+}
+
+void Figure::undo() {
+
+}
