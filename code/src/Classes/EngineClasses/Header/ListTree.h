@@ -24,6 +24,8 @@ public:
     ~ListTree();
     std::string toString();
     void execute();
+    bool empty();
+    void emptyNode();
 };
 
 

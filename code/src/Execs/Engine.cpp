@@ -85,6 +85,8 @@ void trataGrupo(XMLElement *group, ListTree*tree)
                 trataModels(child,tree);
             else if(std::string(child->Value()) == "group")
             {
+                if(tree->empty())
+                    tree->emptyNode();
                 trataGrupo(child,tree);
                 tree->closeLevel();
             }

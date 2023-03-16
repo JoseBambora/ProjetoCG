@@ -106,3 +106,13 @@ ListTree::~ListTree() {
     }
     delete this->sons;
 }
+
+bool ListTree::empty() {
+    return !this->node;
+}
+
+void ListTree::emptyNode() {
+    this->node = new DefaultNode();
+    this->level = 1;
+    this->sons = new std::vector<ListTree*>();
+}
