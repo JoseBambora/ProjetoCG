@@ -47,9 +47,8 @@ tinyxml2::XMLElement* createCamera()
     return camera;
 }
 
-tinyxml2::XMLElement* createTransform(const std::vector<std::string>& transformations, int sx, int sy, int sz, int tx, int ty, int tz)
+tinyxml2::XMLElement* createTransform(const std::vector<std::string>& transformations, float sx, float sy, float sz, int tx, int ty, int tz, int angle, int rx, int ry, int rz)
 {
-    int angle = 50, rx = 0, ry = 1, rz = 0;
     tinyxml2::XMLElement* transform = doc.NewElement("transform");
     for(const std::string& t : transformations)
     {
@@ -82,7 +81,7 @@ tinyxml2::XMLElement* createTransform(const std::vector<std::string>& transforma
     return transform;
 }
 
-tinyxml2::XMLElement* createModel(bool saturno)
+tinyxml2::XMLElement* createModel()
 {
     tinyxml2::XMLComment* comment = doc.NewComment("generator sphere 1 15 15 ../files/sphere.3d");
     tinyxml2::XMLElement* models = doc.NewElement("models");
@@ -90,66 +89,151 @@ tinyxml2::XMLElement* createModel(bool saturno)
     planet->SetAttribute("file", modelsphre.c_str());
     planet->LinkEndChild(comment);
     models->InsertEndChild(planet);
-    if(saturno)
-    {
-        tinyxml2::XMLElement* anel = doc.NewElement("model");
-        comment = doc.NewComment("generator donut 1.5 1.75 15 5 ../files/donut.3d");
-        anel->SetAttribute("file", modeldonut.c_str());
-        anel->LinkEndChild(comment);
-        models->InsertEndChild(anel);
-    }
     return models;
 }
 
-std::vector<int> planetScales()
+std::vector<float> planetScales()
 {
-    std::vector<int> scales = std::vector<int>();
+    // 0.383    0.949    1    0.2724    0.532    11.21    9.45    4.01    3.88
+    std::vector<float> scales = std::vector<float>();
     // Mercury
     scales.push_back(1); scales.push_back(1); scales.push_back(1);
     // Venus
     scales.push_back(3); scales.push_back(3); scales.push_back(3);
     // Earth
     scales.push_back(4); scales.push_back(4); scales.push_back(4);
-    // Venus
+    // Mars
     scales.push_back(2); scales.push_back(2); scales.push_back(2);
     // Jupiter
-    scales.push_back(8); scales.push_back(8); scales.push_back(8);
+    scales.push_back(11.21f); scales.push_back(11.21f); scales.push_back(11.21f);
     // Saturn
-    scales.push_back(7); scales.push_back(7); scales.push_back(7);
+    scales.push_back(9.45f); scales.push_back(9.45f); scales.push_back(9.45f);
     // Uranus
-    scales.push_back(5); scales.push_back(5); scales.push_back(5);
-    // Neptune
     scales.push_back(6); scales.push_back(6); scales.push_back(6);
+    // Neptune
+    scales.push_back(5); scales.push_back(5); scales.push_back(5);
     return scales;
+}
+
+tinyxml2::XMLElement* createMoon(float sx, float sy, float sz)
+{
+    std::vector<std::string> t2 = std::vector<std::string>();
+    t2.emplace_back("translate");
+    t2.emplace_back("scale");
+    tinyxml2::XMLElement *moon = doc.NewElement("group");
+    tinyxml2::XMLElement* moonTransform = createTransform(t2,std::abs(sx/4),std::abs(sy/4),std::abs(sz/4),(int) sx + 3,(int) sy + 3,(int) sz + 3,0,0,0,0);
+    moon->InsertEndChild(moonTransform);
+    moon->InsertEndChild(createModel());
+    return moon;
+}
+
+tinyxml2::XMLElement* createAnel()
+{
+    std::vector<std::string> scaleVector = std::vector<std::string>();
+    scaleVector.emplace_back("scale");
+    tinyxml2::XMLElement* group = doc.NewElement("group");
+    tinyxml2::XMLElement* scale = createTransform(scaleVector,1,0.01f,1,0,0,0,0,0,0,0);
+    tinyxml2::XMLElement* models = doc.NewElement("models");
+    tinyxml2::XMLElement* anel = doc.NewElement("model");
+    tinyxml2::XMLComment* comment = doc.NewComment("generator donut 1.5 1.75 15 5 ../files/donut.3d");
+    anel->SetAttribute("file", modeldonut.c_str());
+    anel->LinkEndChild(comment);
+    models->InsertEndChild(anel);
+    group->InsertEndChild(scale);
+    group->InsertEndChild(models);
+    return group;
 }
 
 tinyxml2::XMLElement* createWorld()
 {
-    std::vector<int> scales = planetScales();
+    std::vector<float> scales = planetScales();
     std::vector<std::string> t1 = std::vector<std::string>();
     t1.emplace_back("rotate");
     std::vector<std::string> t2 = std::vector<std::string>();
     t2.emplace_back("translate");
     t2.emplace_back("scale");
+    std::vector<std::string> t3 = std::vector<std::string>();
+    t3.emplace_back("translate");
+    t3.emplace_back("rotate");
+    t3.emplace_back("scale");
+    std::vector<std::string> t4 = std::vector<std::string>();
+    t4.emplace_back("translate");
+    std::vector<std::string> t5 = std::vector<std::string>();
+    t5.emplace_back("scale");
+    std::vector<std::string> t6 = std::vector<std::string>();
+    t6.emplace_back("rotate");
+    t6.emplace_back("scale");
     tinyxml2::XMLElement* mainGroup = doc.NewElement("group");
     tinyxml2::XMLElement* sun = doc.NewElement("group");
     tinyxml2::XMLElement* planets = doc.NewElement("group");
-    sun->InsertEndChild(createTransform(t2,10,10,10,0,0,0));
-    sun->InsertEndChild(createModel(false));
+    sun->InsertEndChild(createTransform(t2,50,50,50,0,0,0,0,0,0,0));
+    sun->InsertEndChild(createModel());
     mainGroup->InsertEndChild(sun);
     mainGroup->InsertEndChild(planets);
     int j = 0;
-    int tx = 15, tz = 15,ty = 0;
+    int tx = 60, tz = 60,ty = 0;
     for(int i = 1; i < 9; i++)
     {
-        tinyxml2::XMLElement* transform = createTransform(t1,0,0,0,0,0,0);
-        tinyxml2::XMLElement* planet = doc.NewElement("group");
-        tinyxml2::XMLElement* planetTransform = createTransform(t2,scales[j],scales[j+1],scales[j+2],tx,ty,tz);
-        tinyxml2::XMLElement* planetModel = createModel(i == 6);
+        tinyxml2::XMLElement* transform = createTransform(t1,0,0,0,0,0,0,50,0,1,0);
+
+        tinyxml2::XMLElement* planetGroup = doc.NewElement("group");
+        tinyxml2::XMLElement* planetGroupTranslate = createTransform(t4,0,0,0,tx,ty,tz,0,0,0,0);
+
+        tinyxml2::XMLElement* planetTransform;
+        if(i!= 7)
+            planetTransform = createTransform(t5,scales[j],scales[j+1],scales[j+2],0,0,0,0,0,0,0);
+        else
+            planetTransform = createTransform(t6,scales[j],scales[j+1],scales[j+2],0,0,0,90,0,0,1);
+
+        tinyxml2::XMLElement *planet = doc.NewElement("group");
+        tinyxml2::XMLElement* planetModel = createModel();
+
         planet->InsertEndChild(planetTransform);
         planet->InsertEndChild(planetModel);
+        if(i == 6 || i == 7)
+            planet->InsertEndChild(createAnel());
+
+        planetGroup->InsertEndChild(planetGroupTranslate);
+        if (i > 2)
+        {
+            float sx = scales[j];
+            float sy = scales[j+1];
+            float sz = scales[j+2];
+            switch (i)
+            {
+                case 3:
+                    planetGroup->InsertEndChild(createMoon(sx,sy,sz));
+                    break;
+                case 4:
+                    planetGroup->InsertEndChild(createMoon(sx,sy,sz));
+                    planetGroup->InsertEndChild(createMoon(-sx,sy,sz));
+                    break;
+                case 5:
+                    planetGroup->InsertEndChild(createMoon(sx,sy,sz));
+                    planetGroup->InsertEndChild(createMoon(-sx,-sy,sz));
+                    planetGroup->InsertEndChild(createMoon(sx,sy,-sz));
+                    planetGroup->InsertEndChild(createMoon(sx,-sy,sz));
+                    planetGroup->InsertEndChild(createMoon(-sx,-sy,-sz));
+                    break;
+                case 6:
+                    planetGroup->InsertEndChild(createMoon(sx,sy,sz));
+                    planetGroup->InsertEndChild(createMoon(-sx,sy,-sz));
+                    planetGroup->InsertEndChild(createMoon(sx,sy,-sz));
+                    planetGroup->InsertEndChild(createMoon(sx,-sy,sz));
+                    break;
+                case 7:
+                case 8:
+                    planetGroup->InsertEndChild(createMoon(sx,-sy,sz));
+                    planetGroup->InsertEndChild(createMoon(-sx,sy,sz));
+                    planetGroup->InsertEndChild(createMoon(sx,sy,-sz));
+                    break;
+                default:
+                    break;
+            }
+        }
+        planetGroup->InsertEndChild(planet);
         planets->InsertEndChild(transform);
-        planets->InsertEndChild(planet);
+        planets->InsertEndChild(planetGroup);
         if(i < 8)
         {
             tinyxml2::XMLElement* otherPlanets = doc.NewElement("group");
@@ -157,8 +241,8 @@ tinyxml2::XMLElement* createWorld()
             planets = otherPlanets;
         }
         j+=3;
-        tx+=15;
-        tz+=15;
+        tx+=30;
+        tz+=30;
     }
     return mainGroup;
 }
