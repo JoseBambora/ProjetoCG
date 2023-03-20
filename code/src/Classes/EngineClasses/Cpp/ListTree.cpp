@@ -4,7 +4,6 @@
 #include "../../Transformations/Header/Transform.h"
 
 ListTree::ListTree() {
-    this->tree = -1;
     this->level = -1;
     this->node = nullptr;
     this->sons = nullptr;
@@ -12,7 +11,6 @@ ListTree::ListTree() {
 
 
 ListTree::ListTree(Node * node) {
-    this->tree = -1;
     this->level = 0;
     this->node = node;
     this->sons = nullptr;
@@ -38,8 +36,7 @@ void ListTree::addNode(Node* node)
     {
         ListTree *add = this;
         for(int n = 0; n < level-1; n++)
-            add = add->sons->at(add->tree);
-        add->tree+=1;
+            add = add->sons->back();
         add->sons->push_back(new ListTree(node));
     }
 }
@@ -58,7 +55,7 @@ void ListTree::openLevel() {
     this->level+=1;
     while(add->sons != nullptr)
     {
-        add = add->sons->at(add->tree);
+        add = add->sons->back();
     }
     add->sons = new std::vector<ListTree*>();
 }

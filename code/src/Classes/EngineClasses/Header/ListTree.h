@@ -9,7 +9,6 @@ class Node;
 class ListTree {
 private:
     int level;
-    int tree;
     Node *node;
     std::vector<ListTree*> *sons;
     std::string toString(int,int);
