@@ -10,6 +10,7 @@
 
 class DefaultNode : public Node{
 public:
+    void load() override;
     void undo() override;
     void apply() override;
     std::string toString() override;

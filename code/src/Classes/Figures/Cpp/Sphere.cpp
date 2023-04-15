@@ -69,23 +69,6 @@ std::string Sphere::toString()  {
     return res;
 }
 
-void Sphere::drawFigure() {
-    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    std::vector<float> anterior;
-    std::vector<float> primeira;
-    for(int i = 0; i < this->superficielateral.size();i++)
-    {
-        std::vector<float> c = this->superficielateral[i];
-        if(i > 0)
-            drawSideFora(anterior,c,1.0f,1.0f,1.0f);
-        else
-            primeira = c;
-        anterior = c;
-    }
-    drawPyramid(anterior,this->verticesuperior[0],this->verticesuperior[1],this->verticesuperior[2], true,1.0f,1.0f,1.0f);
-    drawPyramid(primeira,this->verticeinferior[0],this->verticeinferior[1],this->verticeinferior[2], false,1.0f,1.0f,1.0f);
-}
-
 void Sphere::calculatePoints(float radius, int slices, int stacks)
 {
     this->superficielateral = std::vector<std::vector<float>>();
@@ -107,6 +90,25 @@ void Sphere::calculatePoints(float radius, int slices, int stacks)
     verticeinferior.push_back(0);
     verticeinferior.push_back(-radius);
     verticeinferior.push_back(0);
+}
+
+void Sphere::loadVBO() {
+    auto * allPoints = new std::vector<float>();
+    std::vector<float> anterior;
+    std::vector<float> primeira;
+    for(int i = 0; i < this->superficielateral.size();i++)
+    {
+        std::vector<float> c = this->superficielateral[i];
+        if(i > 0)
+            connectSideFora(allPoints,anterior,c);
+        else
+            primeira = c;
+        anterior = c;
+    }
+    connectPyramid(allPoints,anterior,this->verticesuperior[0],this->verticesuperior[1],this->verticesuperior[2], false);
+    connectPyramid(allPoints,primeira,this->verticeinferior[0],this->verticeinferior[1],this->verticeinferior[2], true);
+    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    delete allPoints;
 }
 
 Sphere::~Sphere() = default;

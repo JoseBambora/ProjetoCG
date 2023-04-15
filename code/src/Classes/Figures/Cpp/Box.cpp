@@ -37,20 +37,6 @@ std::string Box::toString() {
     return res;
 }
 
-void Box::drawFigure() {
-
-    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    glColor3f(1,1,1);
-    glBegin(GL_TRIANGLES);
-    for(int j = 0; j < points.size(); j++)
-    {
-        std::vector<float> drawPoints = this->points[j];
-        for (int i = 0; i < drawPoints.size(); i+=3)
-            glVertex3f(drawPoints[i],drawPoints[i+1],drawPoints[i+2]);
-    }
-    glEnd();
-}
-
 void Box::calculatePoints(float length, int dimension) {
     auto *pb = new Plane();
     float lb = length/2;
@@ -63,6 +49,23 @@ void Box::calculatePoints(float length, int dimension) {
     points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::perfil,Plane::negativo,lb));
     points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::perfil,Plane::positivo,ls));
     delete pb;
+}
+
+void Box::loadVBO() {
+    auto * allPoints = new std::vector<float>();
+    for(int j = 0; j < points.size(); j++)
+    {
+        std::vector<float> drawPoints = this->points[j];
+        for (int i = 0; i < drawPoints.size(); i+=3)
+        {
+            allPoints->push_back(drawPoints[i]);
+            allPoints->push_back(drawPoints[i+1]);
+            allPoints->push_back(drawPoints[i+2]);
+        }
+    }
+    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    delete allPoints;
+
 }
 
 Box::~Box() = default;

@@ -40,17 +40,6 @@ std::string Plane::toString() {
     return res;
 }
 
-void Plane::drawFigure() {
-    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    glDisable(GL_CULL_FACE);
-    glColor3f(1,1,1);
-    glBegin(GL_TRIANGLES);
-    for (int i = 0; i < points.size(); i+=3)
-        glVertex3f(points[i],points[i+1],points[i+2]);
-    glEnd();
-    glEnable(GL_CULL_FACE);
-}
-
 std::vector<float> Plane::getPointsHorizontal(int d, float l, int direcao, int nq, float cxi, float czi, float ori) {
     std::vector<float> res = std::vector<float>();
     float fixo = 0.005f * d;
@@ -319,6 +308,18 @@ std::vector<float> Plane::calculatePointsStatic(float length, int dimension,int 
     std::vector<float> res = std::move(p->points);
     delete p;
     return res;
+}
+
+void Plane::loadVBO() {
+    auto * allPoints = new std::vector<float>();
+    for (int i = 0; i < points.size(); i+=3)
+    {
+        allPoints->push_back(points[i]);
+        allPoints->push_back(points[i+1]);
+        allPoints->push_back(points[i+2]);
+    }
+    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    delete allPoints;
 }
 
 Plane::~Plane() = default;

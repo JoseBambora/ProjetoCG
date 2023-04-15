@@ -79,18 +79,19 @@ std::string Cone::toString() {
     return res;
 }
 
-void Cone::drawFigure() {
-    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    //this->calculatePoints();
-    drawPyramid(base,0,0,0, false,1.0f,1.0f,1.0f);
+void Cone::loadVBO() {
+    auto * allPoints = new std::vector<float>();
+    connectPyramid(allPoints,base,0,0,0, true);
     std::vector<float> anterior = base;
     for(int i = 0; i < this->superficielateral.size()-1; i++)
     {
-        drawSideFora(anterior,superficielateral[i],1.0f,1.0f,1.0f);
+        connectSideFora(allPoints,anterior,superficielateral[i]);
         anterior = superficielateral[i];
     }
     std::vector<float> topo = this->superficielateral[this->superficielateral.size()-1];
-    drawPyramid(anterior,topo[0],topo[1],topo[2], true,1.0f,1.0f,1.0f);
-
+    connectPyramid(allPoints,anterior,topo[0],topo[1],topo[2], false);
+    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    delete allPoints;
 }
+
 Cone::~Cone() = default;

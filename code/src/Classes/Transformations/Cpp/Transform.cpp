@@ -39,3 +39,7 @@ std::string Transform::toString() {
 void Transform::addTranformation(Transformation *t) {
     this->lista->push_back(t);
 }
+
+void Transform::load() {
+
+}

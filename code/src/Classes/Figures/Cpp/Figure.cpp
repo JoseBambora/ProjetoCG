@@ -6,6 +6,7 @@
 #include "../Header/Plane.h"
 #include "../Header/Donut.h"
 #include "../Header/Cylinder.h"
+#include "../Header/Basics.h"
 
 // Build a figure, given the exec arguments
 // CAN BE NULL
@@ -68,13 +69,14 @@ Figure *Figure::ReadFile(const std::string& name) {
 }
 
 void Figure::drawFigure() {
-
+    drawVBO(vertices,verticeCount,1.0f,1.0f,1.0f);
 }
+void Figure::apply() {drawFigure();}
+void Figure::undo() {}
+void Figure::load() { loadVBO();}
+void Figure::loadVBO() {}
 
-void Figure::apply() {
-    drawFigure();
-}
-
-void Figure::undo() {
-
+void Figure::loadVertices(unsigned int * res) {
+    this->verticeCount = res[0];
+    this->vertices = res[1];
 }

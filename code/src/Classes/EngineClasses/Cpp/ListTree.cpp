@@ -77,6 +77,18 @@ void ListTree::execute() {
     this->node->undo();
 }
 
+
+void ListTree::loadInfo() {
+    this->node->load();
+    if(this->sons)
+    {
+        for(ListTree *n : *this->sons)
+        {
+            n->loadInfo();
+        }
+    }
+}
+
 std::string ListTree::toString(int tabs,int level) {
     std::string res = '(' + this->node->toString() + ',' + std::to_string(level) + ')';
     if(this->sons != nullptr)

@@ -22,7 +22,7 @@ public:
     static Plane* Read_File(std::ifstream file);
     std::string toString() override;
     ~Plane() override;
-    void drawFigure() override;
+    void loadVBO() override;
     static std::vector<float> calculatePointsStatic(float length, int dimension, int orientation, int referencial, float origin);
 };
 

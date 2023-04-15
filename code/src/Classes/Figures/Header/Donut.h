@@ -17,7 +17,7 @@ public:
     static Donut* Read_File(std::ifstream);
     std::string toString() override;
     ~Donut() override;
-    void drawFigure() override;
+    void loadVBO() override;
 };
 
 #endif //PROJETOEXEC_DONUT_H

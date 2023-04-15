@@ -47,21 +47,6 @@ Donut::~Donut() {
 
 }
 
-void Donut::drawFigure() {
-    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    std::vector<float> anteriorint = this->superficielateral[0];
-    std::vector<float> anteriorext = this->superficielateral[0];
-    for(int i = 1; i < this->superficielateral.size(); i+=2)
-    {
-        std::vector<float> cint = this->superficielateral[i];
-        std::vector<float> cext = this->superficielateral[i+1];
-        drawSideDentro(anteriorint,cint,1.0f,1.0f,1.0f);
-        drawSideFora(anteriorext,cext,1.0f,1.0f,1.0f);
-        anteriorint = cint;
-        anteriorext = cext;
-    }
-}
-
 void Donut::calculatePoints(float radiusin, float radiusout, int slices, int stacks)
 {
     float raiointermedio = (radiusout-radiusin)/2;
@@ -82,4 +67,21 @@ void Donut::calculatePoints(float radiusin, float radiusout, int slices, int sta
         this->superficielateral.push_back(cext);
         alfa += aumento;
     }
+}
+
+void Donut::loadVBO() {
+    auto * allPoints = new std::vector<float>();
+    std::vector<float> anteriorint = this->superficielateral[0];
+    std::vector<float> anteriorext = this->superficielateral[0];
+    for(int i = 1; i < this->superficielateral.size(); i+=2)
+    {
+        std::vector<float> cint = this->superficielateral[i];
+        std::vector<float> cext = this->superficielateral[i+1];
+        connectSideDentro(allPoints,anteriorint,cint);
+        connectSideFora(allPoints,anteriorext,cext);
+        anteriorint = cint;
+        anteriorext = cext;
+    }
+    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    delete allPoints;
 }

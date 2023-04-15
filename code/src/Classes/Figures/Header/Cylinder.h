@@ -21,7 +21,7 @@ public:
     static Cylinder* Read_File(std::ifstream file);
     std::string toString() override;
     ~Cylinder() override;
-    void drawFigure() override;
+    void loadVBO() override;
 };
 
 

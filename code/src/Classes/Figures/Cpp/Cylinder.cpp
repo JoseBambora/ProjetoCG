@@ -65,13 +65,6 @@ Cylinder::~Cylinder() {
 
 }
 
-void Cylinder::drawFigure() {
-    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    drawPyramid(basecima,centrocima[0],centrocima[1],centrocima[2], true,1.0f,1.0f,1.0f);
-    drawPyramid(basebaixo,0,0,0, false,1.0f,1.0f,1.0f);
-    drawSideFora(basebaixo,basecima,1.0f,1.0f,1.0f);
-}
-
 void Cylinder::calculatePoints(float radius, float height, int slices)
 {
     this->basecima = getPointsCircumference(0,height,0,radius,slices);
@@ -80,4 +73,13 @@ void Cylinder::calculatePoints(float radius, float height, int slices)
     centrocima.push_back(0);
     centrocima.push_back(height);
     centrocima.push_back(0);
+}
+
+void Cylinder::loadVBO() {
+    auto * allPoints = new std::vector<float>();
+    connectPyramid(allPoints,basecima,centrocima[0],centrocima[1],centrocima[2], false);
+    connectPyramid(allPoints,basebaixo,0,0,0, true);
+    connectSideFora(allPoints,basebaixo,basecima);
+    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    delete allPoints;
 }

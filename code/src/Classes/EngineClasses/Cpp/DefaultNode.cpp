@@ -15,3 +15,7 @@ void DefaultNode::apply() {
 std::string DefaultNode::toString() {
     return "";
 }
+
+void DefaultNode::load() {
+
+}

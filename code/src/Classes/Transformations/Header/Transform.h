@@ -11,6 +11,7 @@ public:
     std::string toString() override;
     void undo() override;
     void apply() override;
+    void load() override;
     void addTranformation(Transformation* t);
     ~Transform();
 

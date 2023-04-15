@@ -23,6 +23,7 @@ public:
     ~ListTree();
     std::string toString();
     void execute();
+    void loadInfo();
     bool empty();
     void emptyNode();
 };

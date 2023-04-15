@@ -7,6 +7,8 @@
 
 class Figure : public Node{
 public:
+    unsigned int vertices;
+    unsigned int verticeCount;
     static const int codPlane = 0;
     static const int codBox = 2;
     static const int codCone = 3;
@@ -17,9 +19,12 @@ public:
     static Figure* ReadFile(const std::string& name);
     virtual std::string toString() override = 0;
     virtual ~Figure()=default;
-    virtual void drawFigure();
+    void drawFigure();
+    virtual void loadVBO();
+    void load() override;
     void undo() override;
     void apply() override;
+    void loadVertices(unsigned int*);
 };
 
 

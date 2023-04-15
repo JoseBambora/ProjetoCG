@@ -8,6 +8,7 @@ class Node {
 public:
     virtual void undo() = 0;
     virtual void apply() = 0;
+    virtual void load() = 0;
     virtual std::string toString() = 0;
 };
 
