@@ -6,6 +6,62 @@ tinyxml2::XMLDocument doc;
 std::string modelsphre = "../files/sphere.3d";
 std::string modeldonut = "../files/donut.3d";
 
+tinyxml2::XMLElement* GenerateCatmullRomCircle(float radius,float time) {
+    /*
+    float p0[3] = {radius,0, 0};
+    float p1[3] = {radius,0, radius * (4.0f / 3.0f)};
+    float p2[3] = {radius * (4.0f / 3.0f),0, radius};
+    float p3[3] = {0,0, radius};
+    float p4[3] = {-radius * (4.0f / 3.0f),0, radius};
+    float p5[3] = {-radius,0, radius * (4.0f / 3.0f)};
+    float p6[3] = {-radius,0, 0};
+    float p7[3] = {-radius,0, -radius * (4.0f / 3.0f)};
+    float p8[3] = {-radius * (4.0f / 3.0f),0, -radius};
+    float p9[3] = {0,0, -radius};
+    float p10[3] = {radius * (4.0f / 3.0f),0, -radius};
+    float p11[3] = {radius,0, -radius * (4.0f / 3.0f)};
+    float p[12][3] = {
+            {p0[0],p0[1],p0[2]},
+            {p1[0],p1[1],p1[2]},
+            {p2[0],p2[1],p2[2]},
+            {p3[0],p3[1],p3[2]},
+            {p4[0],p4[1],p4[2]},
+            {p5[0],p5[1],p5[2]},
+            {p6[0],p6[1],p6[2]},
+            {p7[0],p7[1],p7[2]},
+            {p8[0],p8[1],p8[2]},
+            {p9[0],p9[1],p9[2]},
+            {p10[0],p10[1],p10[2]},
+            {p11[0],p11[1],p11[2]}
+    };
+     */
+    float p[4][3] = {
+            {-radius,0,0},
+            {0,0,radius},
+            {radius,0,0},
+            {0,0,-radius}
+    };
+
+    tinyxml2::XMLElement* orbita = doc.NewElement("translate");
+    orbita->SetAttribute("time",time);
+    orbita->SetAttribute("align","True");
+    for(int i = 0; i < 4; i++)
+    {
+        tinyxml2::XMLElement* ponto1 = doc.NewElement("point");
+        ponto1->SetAttribute("x",p[i][0]);
+        ponto1->SetAttribute("y",p[i][1]);
+        ponto1->SetAttribute("z",p[i][2]);
+        orbita->InsertEndChild(ponto1);
+    }
+    return orbita;
+}
+tinyxml2::XMLElement* GenerateCatmullRomCircleTransform(float radius,float time) {
+    tinyxml2::XMLElement* transform = doc.NewElement("transform");
+    tinyxml2::XMLElement* orbita = GenerateCatmullRomCircle(radius,time);
+    transform->InsertEndChild(orbita);
+    return transform;
+}
+
 tinyxml2::XMLElement* createWindow()
 {
     int width = 1000, height = 1000;
@@ -81,9 +137,9 @@ tinyxml2::XMLElement* createTransform(const std::vector<std::string>& transforma
     return transform;
 }
 
-tinyxml2::XMLElement* createModel()
+tinyxml2::XMLElement* createModel(std::string name)
 {
-    tinyxml2::XMLComment* comment = doc.NewComment("generator sphere 1 15 15 ../files/sphere.3d");
+    tinyxml2::XMLComment* comment = doc.NewComment(("generator sphere 1 15 15 ../files/sphere.3d " + name).c_str());
     tinyxml2::XMLElement* models = doc.NewElement("models");
     tinyxml2::XMLElement* planet = doc.NewElement("model");
     planet->SetAttribute("file", modelsphre.c_str());
@@ -122,8 +178,9 @@ tinyxml2::XMLElement* createMoon(float sx, float sy, float sz)
     t2.emplace_back("scale");
     tinyxml2::XMLElement *moon = doc.NewElement("group");
     tinyxml2::XMLElement* moonTransform = createTransform(t2,std::abs(sx/4),std::abs(sy/4),std::abs(sz/4),(int) sx + 3,(int) sy + 3,(int) sz + 3,0,0,0,0);
+    moonTransform->InsertEndChild(GenerateCatmullRomCircle(sx/4,100));
     moon->InsertEndChild(moonTransform);
-    moon->InsertEndChild(createModel());
+    moon->InsertEndChild(createModel("Moon"));
     return moon;
 }
 
@@ -143,6 +200,7 @@ tinyxml2::XMLElement* createAnel()
     group->InsertEndChild(models);
     return group;
 }
+
 
 tinyxml2::XMLElement* createWorld()
 {
@@ -167,7 +225,7 @@ tinyxml2::XMLElement* createWorld()
     tinyxml2::XMLElement* sun = doc.NewElement("group");
     tinyxml2::XMLElement* planets = doc.NewElement("group");
     sun->InsertEndChild(createTransform(t2,50,50,50,0,0,0,0,0,0,0));
-    sun->InsertEndChild(createModel());
+    sun->InsertEndChild(createModel("Sol"));
     mainGroup->InsertEndChild(sun);
     mainGroup->InsertEndChild(planets);
     int j = 0;
@@ -177,7 +235,8 @@ tinyxml2::XMLElement* createWorld()
         tinyxml2::XMLElement* transform = createTransform(t1,0,0,0,0,0,0,50,0,1,0);
 
         tinyxml2::XMLElement* planetGroup = doc.NewElement("group");
-        tinyxml2::XMLElement* planetGroupTranslate = createTransform(t4,0,0,0,tx,ty,tz,0,0,0,0);
+        planetGroup->InsertEndChild(GenerateCatmullRomCircleTransform(tx,10));
+        // tinyxml2::XMLElement* planetGroupTranslate = createTransform(t4,0,0,0,tx,ty,tz,0,0,0,0,false,0);
 
         tinyxml2::XMLElement* planetTransform;
         if(i!= 7)
@@ -186,14 +245,14 @@ tinyxml2::XMLElement* createWorld()
             planetTransform = createTransform(t6,scales[j],scales[j+1],scales[j+2],0,0,0,90,0,0,1);
 
         tinyxml2::XMLElement *planet = doc.NewElement("group");
-        tinyxml2::XMLElement* planetModel = createModel();
+        tinyxml2::XMLElement* planetModel = createModel("Planeta");
 
         planet->InsertEndChild(planetTransform);
         planet->InsertEndChild(planetModel);
         if(i == 6 || i == 7)
             planet->InsertEndChild(createAnel());
 
-        planetGroup->InsertEndChild(planetGroupTranslate);
+        //planetGroup->InsertEndChild(planetGroupTranslate);
         if (i > 2)
         {
             float sx = scales[j];

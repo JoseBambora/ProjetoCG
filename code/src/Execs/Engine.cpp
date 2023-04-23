@@ -10,6 +10,7 @@
 #include "../Classes/Transformations/Header/Translate.h"
 #include "../Classes/Transformations/Header/Transform.h"
 #include "../Classes/Figures/Header/Figure.h"
+#include "../Classes/EngineClasses/Header/CatmullRom.h"
 const std::string dir = "../../files/";
 
 using namespace tinyxml2;
@@ -27,6 +28,23 @@ void trataModels(XMLElement *models , ListTree * tree)
     }
 }
 
+std::vector<float>* readPoints(XMLElement *translate)
+{
+    auto* res = new std::vector<float>();
+    XMLElement *point = translate->FirstChildElement("point");
+    while (point)
+    {
+        float x = std::stof(point->Attribute("x"));
+        float y = std::stof(point->Attribute("y"));
+        float z = std::stof(point->Attribute("z"));
+        res->push_back(x);
+        res->push_back(y);
+        res->push_back(z);
+        point = point->NextSiblingElement("point");
+    }
+    return res;
+}
+
 void trataTransform(XMLElement *transform, ListTree *tree)
 {
     XMLElement *child = transform->FirstChildElement();
@@ -40,10 +58,21 @@ void trataTransform(XMLElement *transform, ListTree *tree)
             Transformation *t = nullptr;
             if(std::string(child->Value()) == "translate")
             {
-                float x = std::stof(child->Attribute("x"));
-                float y = std::stof(child->Attribute("y"));
-                float z = std::stof(child->Attribute("z"));
-                t = new Translate(x,y,z);
+                if(child->Attribute("x"))
+                {
+                    float x = std::stof(child->Attribute("x"));
+                    float y = std::stof(child->Attribute("y"));
+                    float z = std::stof(child->Attribute("z"));
+                    t = new Translate(x,y,z);
+                }
+                else
+                {
+                    printf("entrou\n");
+                    float time = std::stof(child->Attribute("time"));
+                    bool align = strcmp(child->Attribute("align"),"True") == 0;
+                    std::vector<float> *points = readPoints(child);
+                    t = new CatmullRom(points,time,align);
+                }
                 transformacao->addTranformation(t);
             }
             else if(std::string(child->Value()) == "rotate")
