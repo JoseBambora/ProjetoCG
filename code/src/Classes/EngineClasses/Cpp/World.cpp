@@ -78,5 +78,6 @@ void World::drawWorld() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    this->group->load();
     glutMainLoop();
 }

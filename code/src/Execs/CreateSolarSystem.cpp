@@ -7,7 +7,7 @@ std::string modelsphre = "../files/sphere.3d";
 std::string modeldonut = "../files/donut.3d";
 
 tinyxml2::XMLElement* GenerateCatmullRomCircle(float radius,float time) {
-    float raux = radius;
+    float raux = radius*0.75;
     float p[8][3] = {
             {-radius,0,0},
             {-raux,0,raux},

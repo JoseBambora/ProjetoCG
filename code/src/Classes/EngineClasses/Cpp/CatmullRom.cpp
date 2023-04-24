@@ -107,6 +107,8 @@ void CatmullRom::applyTransformations() {
     //     this->lastime = time;
     // }
     this->aux += 1/(this->time*350);
+    if(this->aux > 1)
+        this->aux = 0;
 }
 
 void CatmullRom::apply() {
@@ -117,8 +119,3 @@ void CatmullRom::apply() {
 std::string CatmullRom::toString() {
     return "CatmullRom curva";
 }
-
-/**
-* Adicionar à ListTree, apply -> renderCatmullRomCurve + applyTransformations
-* Undo -> glPopMatrix()
-*/

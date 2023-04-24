@@ -10,7 +10,6 @@ private:
     int POINT_COUNT;
     // float p[POINT_COUNT][3] = {{-1,-1,0},{-1,1,0},{1,1,0},{0,0,0},{1,-1,0}};
     float **p;
-    int lastime = 0;
     float time;
     bool align;
     float Y[3] = {0,-1,0};

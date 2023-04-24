@@ -13,6 +13,7 @@ public:
     ListTree *tree;
     std::string toString();
     ~Group();
+    void load();
     void execute();
 };
 

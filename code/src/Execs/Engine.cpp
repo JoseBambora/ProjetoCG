@@ -194,6 +194,7 @@ int main(int argc, char** argv)
             XMLElement *group = pRootElement->FirstChildElement("group");
             trataGrupo(group,tree);
         }
+        doc.Clear();
         printf("%s\n",tree->toString().c_str());
         auto *w = new World(width,height,px,py,pz,lx,ly,lz,cx,cy,cz,fov,near,far,tree);
         printf("%s\n",w->toString().c_str());

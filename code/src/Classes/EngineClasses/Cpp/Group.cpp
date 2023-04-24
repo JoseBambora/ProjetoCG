@@ -16,9 +16,13 @@ Group::~Group(){
     delete this->tree;
 }
 
-void Group::execute() {
+void Group::load()
+{
     glewInit();
     glEnableClientState(GL_VERTEX_ARRAY);
     this->tree->loadInfo();
+}
+
+void Group::execute() {
     this->tree->execute();
 }
