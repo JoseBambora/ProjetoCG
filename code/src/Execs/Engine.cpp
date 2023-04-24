@@ -1,6 +1,7 @@
 #include <string>
 #include <cstdio>
 #include <list>
+#include <regex>
 #include "../TinyXML/tinyxml2.h"
 #include "../Classes/EngineClasses/Header/World.h"
 #include "../Classes/EngineClasses/Header/ListTree.h"
@@ -47,6 +48,7 @@ std::vector<float>* readPoints(XMLElement *translate)
 
 void trataTransform(XMLElement *transform, ListTree *tree)
 {
+    std::regex boolReg("[Tt][Rr][Uu][Ee]");
     XMLElement *child = transform->FirstChildElement();
     auto *transformacao = new Transform();
     bool b = true;
@@ -69,7 +71,7 @@ void trataTransform(XMLElement *transform, ListTree *tree)
                 {
                     printf("entrou\n");
                     float time = std::stof(child->Attribute("time"));
-                    bool align = strcmp(child->Attribute("align"),"True") == 0;
+                    bool align = std::regex_match(child->Attribute("align"),boolReg);
                     std::vector<float> *points = readPoints(child);
                     t = new CatmullRom(points,time,align);
                 }

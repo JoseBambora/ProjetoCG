@@ -18,7 +18,7 @@ void getNumbers(std::istringstream iss, std::vector<T>* points)
     }
 }
 
-void readInfoPatch(int *numpatchs, int *controlpoints,std::vector<int>* indices,std::vector<float>* points, const std::string& filename)
+void readInfoPatch(int *numpatchs, int *controlpoints,std::vector<std::vector<int>>* indices,std::vector<std::vector<float>>* points, const std::string& filename)
 {
     std::ifstream infile(filename);
     std::string line;
@@ -30,11 +30,19 @@ void readInfoPatch(int *numpatchs, int *controlpoints,std::vector<int>* indices,
         if(i == 0)
             iss >> np;
         else if (i <= np)
-            getNumbers(std::move(iss),indices);
+        {
+            std::vector<int> indexadd;
+            getNumbers(std::move(iss),&indexadd);
+            indices->push_back(indexadd);
+        }
         else if (i == np + 1)
             iss >> cp;
         else
-            getNumbers(std::move(iss),points);
+        {
+            std::vector<float> pointAdd;
+            getNumbers(std::move(iss),&pointAdd);
+            points->push_back(pointAdd);
+        }
     }
     *numpatchs = np;
     *controlpoints = cp;
@@ -44,16 +52,96 @@ Bezier::Bezier(const char *filename) {
     std::string file = filename;
     int numpatchs;
     int controlpoints;
-    std::vector<int> indices;
-    std::vector<float> points;
+    std::vector<std::vector<int>> indices;
+    std::vector<std::vector<float>> points;
     readInfoPatch(&numpatchs,&controlpoints,&indices,&points,file);
     this->calculaPoints(indices,points);
-    // pointscurve, pontos de cada curva.
-    //
-    printf("Construtor por fazer curva bezier");
-
 }
 
+
+void Bezier::calculaPoints( std::vector<std::vector<int>> indices, std::vector<std::vector<float>> points) {
+    // separar em x y z
+    // seila = M * V (4x4 * 4x1 = 4x1)
+    // seila2x = px * seila (4x4 * 4x1 = 4x1)
+    // seila2y = py * seila (4x4 * 4x1 = 4x1)
+    // seila2z = pz * seila (4x4 * 4x1 = 4x1)
+    // seila2x = M * seila2x (4x4 * 4x1 = 4x1)
+    // seila2y = M * seila2y (4x4 * 4x1 = 4x1)
+    // seila2z = M * seila2z (4x4 * 4x1 = 4x1)
+    // resx = U * seila2x = (1x4 * 4x1 = 1)
+    // resy = U * seila2y = (1x4 * 4x1 = 1)
+    // resz = U * seila2z = (1x4 * 4x1 = 1)
+    // res = (resx, resy, resz)
+    // this->pointsConnections->push_back(res)
+    // Pescorrer os pontos e desenhar strips
+    this->pointsConnections = new std::vector<std::vector<float>>();
+    float px[4][4];
+    float py[4][4];
+    float pz[4][4];
+    float m[4][4];
+    bezierMatrixM(m);
+    printf("Calculou M corretamente\n");
+    // for(int k = 0; k < 4; k++)
+    //     printf("%.2f %.2f %.2f %.2f\n",m[k][0],m[k][1],m[k][2],m[k][3]);
+    for(int i = 0; i < indices.size(); i++)
+    {
+        std::vector<int> indexline = indices[i];
+        std::vector<std::vector<float>> p0;
+        std::vector<std::vector<float>> p1;
+        std::vector<std::vector<float>> p2;
+        std::vector<std::vector<float>> p3;
+        for(int j = 0; j < 4; j++)
+        {
+            // printf("p0: %.2f %.2f %.2f\n", points[indexline[j]][0],points[indexline[j]][1],points[indexline[j]][2]);
+            // printf("p1: %.2f %.2f %.2f\n", points[indexline[j+4]][0],points[indexline[j+4]][1],points[indexline[j+4]][2]);
+            // printf("p2: %.2f %.2f %.2f\n", points[indexline[j+8]][0],points[indexline[j+8]][1],points[indexline[j+8]][2]);
+            // printf("p3: %.2f %.2f %.2f\n", points[indexline[j+12]][0],points[indexline[j+12]][1],points[indexline[j+12]][2]);
+            p0.push_back(points[indexline[j]]);
+            p1.push_back(points[indexline[j+4]]);
+            p2.push_back(points[indexline[j+8]]);
+            p3.push_back(points[indexline[j+12]]);
+        }
+        bezierMatrixPoints(p0,p1,p2,p3,px,py,pz);
+        printf("Calculou pontos p0 p1 p2 p3 corretamente\n");
+        float uvalor = 0;
+        float u[4];
+        for(int primeiras = 0; primeiras < lim; primeiras++)
+        {
+            float vvalor = 0;
+            float v[4];
+            bezierMatrixUV(uvalor,u);
+            for(int segundas = 0; segundas < lim; segundas++)
+            {
+                bezierMatrixUV(vvalor,v);
+                vvalor += (float) 1/lim;
+                float res1[4];
+                multMatrixVector(m,v,res1);
+                float resx1[4];
+                float resy1[4];
+                float resz1[4];
+                multMatrixVector(px,res1,resx1);
+                multMatrixVector(py,res1,resy1);
+                multMatrixVector(pz,res1,resz1);
+                float resx2[4];
+                float resy2[4];
+                float resz2[4];
+                multMatrixVector(m,resx1,resx2);
+                multMatrixVector(m,resy1,resy2);
+                multMatrixVector(m,resz1,resz2);
+                float resx3 = multiplicaVetores(u,resx2);
+                float resy3 = multiplicaVetores(u,resy2);
+                float resz3 = multiplicaVetores(u,resz2);
+                std::vector<float> point;
+                point.push_back(resx3);
+                point.push_back(resy3);
+                point.push_back(resz3);
+                this->pointsConnections->push_back(point);
+            }
+            uvalor += (float) 1/lim;
+        }
+    }
+    //this->reorganizaPontos();
+}
 Bezier *Bezier::Build(int argc, char **argv) {
     printf("Função Build a fazer curva bezier");
     return nullptr;
@@ -77,36 +165,33 @@ std::string Bezier::toString() {
 void Bezier::loadVBO() {
     glPushMatrix();
     glRotatef(-90,1,0,0);
-
-    /*
-    for(int j = this->curvasreais; j < this->pointsCurve->size(); j++)
-    {
-        glBegin(GL_LINE_LOOP);
-        std::vector<std::vector<float>> curva = this->pointsCurve->at(j);
-        for(int i = 0; i < curva.size(); i++)
-        {
-            // printf(" (%d,%d) %.2f %.2f %.2f\n",j,i,curva.at(i)[0],curva.at(i)[1],curva.at(i)[2]);
-            glVertex3f(curva.at(i)[0],curva.at(i)[1],curva.at(i)[2]);
-        }
-        for(int i = curva.size()-1; i>=0 ; i--)
-        {
-            glVertex3f(curva.at(i)[0],curva.at(i)[1],curva.at(i)[2]);
-        }
-        glEnd();
-    }
-    */
-    glBegin(GL_TRIANGLE_STRIP);
+    glBegin(GL_LINE_STRIP);
     for(int j = 0; j < this->pointsConnections->size();j++)
     {
-        printf("%.2f %.2f %.2f\n",this->pointsConnections->at(j)[0],this->pointsConnections->at(j)[1],this->pointsConnections->at(j)[2]);
+        // int j2 = j + lim;
+        // int j3 = j2 + lim;
+        // int j4 = j3 + lim;
+        printf("%.2f %.2f %.2f | ",this->pointsConnections->at(j)[0],this->pointsConnections->at(j)[1],this->pointsConnections->at(j)[2]);
         glVertex3f(this->pointsConnections->at(j)[0],this->pointsConnections->at(j)[1],this->pointsConnections->at(j)[2]);
+        // if((j / this->lim) % 4 != 3 && j+this->lim < this->pointsConnections->size())
+        //     glVertex3f(this->pointsConnections->at(j+this->lim)[0],this->pointsConnections->at(j+this->lim)[1],this->pointsConnections->at(j+this->lim)[2]);
+        if(j % this->lim == this->lim-1)
+        {
+            glEnd();
+            glBegin(GL_LINE_STRIP);
+        }
+        // glVertex3f(this->pointsConnections->at(j2)[0],this->pointsConnections->at(j2)[1],this->pointsConnections->at(j2)[2]);
+        // glVertex3f(this->pointsConnections->at(j3)[0],this->pointsConnections->at(j3)[1],this->pointsConnections->at(j3)[2]);
+        //glVertex3f(this->pointsConnections->at(j4)[0],this->pointsConnections->at(j4)[1],this->pointsConnections->at(j4)[2]);
+
+        // if(j > 0)
+        //     glVertex3f(this->pointsConnections->at(j)[0],this->pointsConnections->at(j)[1],this->pointsConnections->at(j)[2]);
     }
     glEnd();
-
     glPopMatrix();
 }
 
-void Bezier::calculaPoints(std::vector<int> indices, std::vector<float> points) {
+void calculaPoints2(std::vector<int> indices, std::vector<float> points) {
 
     /*
     // grau 1 : coordenadas pontos
@@ -211,6 +296,7 @@ void Bezier::aplicaFormula(std::vector<float> p1, std::vector<float> p2, std::ve
     somaVetores(paux0,paux1,paux2,paux3,res);
 }
 
+/*
 void Bezier::calculaCurva(std::vector<float> p1, std::vector<float> p2, std::vector<float> p3, std::vector<float> p4) {
     std::vector<std::vector<float>> curva;
     int aux = 6;
@@ -223,6 +309,7 @@ void Bezier::calculaCurva(std::vector<float> p1, std::vector<float> p2, std::vec
     }
     pointsCurve->push_back(curva);
 }
+*/
 
 void Bezier::connectPoints(std::vector<std::vector<float>> curva1,std::vector<std::vector<float>> curva2,bool ordem) {
     std::vector<float> p1; std::vector<float> p2;
@@ -295,5 +382,20 @@ void Bezier::calculapuv(float *u, float *v,std::vector<std::vector<float>> point
                 {p33[0],p33[1],p33[2]}
             }
     };
+}
 
+void Bezier::reorganizaPontos() {
+    this->pointsCurve = new std::vector<std::vector<float>>();
+    int iteracoes = 3 * this->pointsConnections->size() / 4;
+    for(int j = 0; j < this->pointsConnections->size();j++)
+    {
+        for(int i = 0; i < 3 && j < this->pointsConnections->size()-this->lim; i++)
+        {
+            std::vector<float> cima = this->pointsConnections->at(j);
+            std::vector<float> baixo = this->pointsConnections->at(this->lim+j);
+            this->pointsCurve->push_back(cima);
+            this->pointsCurve->push_back(baixo);
+            j++;
+        }
+    }
 }

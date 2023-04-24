@@ -44,7 +44,6 @@ void CatmullRom::getGlobalCatmullRomPoint(float gt, float *pos, float *deriv)
     float t = gt * POINT_COUNT; // this is the real global t
     int index = floor(t);    // which segment
     t = t - index;              // where within  the segment
-
     // indices store the points
     int indices[4];
     indices[0] = (index + POINT_COUNT-1)%POINT_COUNT;
@@ -88,18 +87,26 @@ void CatmullRom::applyTransformations() {
     auto *deriv = new float[3];
     getGlobalCatmullRomPoint(this->aux, pos, deriv);
     glTranslatef(pos[0], pos[1], pos[2]);
-
-    float X[3] = {deriv[0], deriv[1], deriv[2]};
-    float m[16];
-    normalize(X);
-    float Z[3];
-    crossnormalize(X, Y, Z);
-    crossnormalize(Z, X, Y);
-    buildRotMatrix(X, Y, Z, m);
-    glMultMatrixf(m);
+    if(this->align)
+    {
+        float X[3] = {deriv[0], deriv[1], deriv[2]};
+        float m[16];
+        normalize(X);
+        float Z[3];
+        crossnormalize(X, Y, Z);
+        crossnormalize(Z, X, Y);
+        buildRotMatrix(X, Y, Z, m);
+        glMultMatrixf(m);
+    }
     delete[] pos;
     delete[] deriv;
-    this->aux += this->time/10000;
+    // int time = glutGet(GLUT_ELAPSED_TIME) / 1000;
+    // if(time > this->lastime)
+    // {
+    //     this->aux += 1/this->time;
+    //     this->lastime = time;
+    // }
+    this->aux += 1/(this->time*350);
 }
 
 void CatmullRom::apply() {
