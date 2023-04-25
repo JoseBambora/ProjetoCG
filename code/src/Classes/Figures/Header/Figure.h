@@ -15,11 +15,13 @@ public:
     static const int codSphere = 1;
     static const int codDonut = 4;
     static const int codCylinder = 5;
+    static const int codBezierPatch = 6;
     static Figure* Build(int argc, char** argv);
     static Figure* ReadFile(const std::string& name);
     virtual std::string toString() override = 0;
     virtual ~Figure()=default;
-    void drawFigure();
+
+    virtual void drawFigure();
     virtual void loadVBO();
     void load() override;
     void undo() override;

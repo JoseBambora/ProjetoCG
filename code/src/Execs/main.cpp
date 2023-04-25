@@ -1,6 +1,6 @@
 #include "../Classes/Figures/Header/Bezier.h"
 #include <GL/glut.h>
-Bezier b = Bezier("../teapot.patch");
+Bezier b = Bezier("../teapot.patch",10);
 #include <cmath>
 float alfa;
 float beta;
@@ -76,7 +76,7 @@ void renderScene(void) {
     glColor3f(1,1,1);
 
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    b.loadVBO();
+    b.drawFigure();
     glutSwapBuffers();
 }
 int main(int argc, char** argv)

@@ -6,6 +6,7 @@
 #include "../Header/Plane.h"
 #include "../Header/Donut.h"
 #include "../Header/Cylinder.h"
+#include "../Header/Bezier.h"
 #include "../Header/Basics.h"
 
 // Build a figure, given the exec arguments
@@ -28,6 +29,8 @@ Figure *Figure::Build(int argc, char **argv) {
             res = Donut::Build(argc,argv);
         else if(figure == "cylinder")
             res = Cylinder::Build(argc,argv);
+        else if(figure == "patch")
+            res = Bezier::Build(argc,argv);
         else
             printf("Invalid figure. Figure result: nullptr\n");
     }
@@ -38,6 +41,7 @@ Figure *Figure::Build(int argc, char **argv) {
 // CAN BE NULL
 Figure *Figure::ReadFile(const std::string& name) {
     int cod;
+    printf("entrou\n");
     Figure *res;
     std::ifstream file;
     file.open(name, std::ios::binary);
@@ -60,6 +64,9 @@ Figure *Figure::ReadFile(const std::string& name) {
             break;
         case codCylinder:
             res = Cylinder::Read_File(std::move(file));
+            break;
+        case codBezierPatch:
+            res = Bezier::Read_File(std::move(file));
             break;
         default:
             printf("Invalid file. Result figure = nullptr\n");

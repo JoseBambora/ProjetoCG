@@ -2,7 +2,6 @@
 #include <fstream>
 #include "../Header/Box.h"
 #include "../Header/Plane.h"
-#include "GL/glut.h"
 #include "../Header/Basics.h"
 
 const int Figure::codBox;

@@ -159,6 +159,7 @@ void writePoints(std::vector<std::vector<float>> circunferences, const std::stri
     myfile.close();
 }
 
+
 void connectPyramid(std::vector<float> *allPoints,std::vector<float> base, float x, float y, float z, bool direcao)
 {
     for (int i = 0; i < base.size() - 3; i+=3) {
