@@ -5,10 +5,15 @@
 
 #include <vector>
 #include "Figure.h"
+#include <GL/glew.h>
 
 class Bezier : public Figure {
 private:
+    GLuint *allVertices;
+    int sizeVertices;
     int lim;
+    void getAllPoints(std::vector<std::vector<std::vector<float>>>* allPoints);
+    void loadAllPoints(std::vector<std::vector<std::vector<float>>>* allPoints);
     void calculaPoints(std::vector<std::vector<int>>,std::vector<std::vector<float>>);
     void desenhaPatch(std::vector<std::vector<float>> patch);
     std::vector<std::vector<std::vector<float>>>* pointsCurve;

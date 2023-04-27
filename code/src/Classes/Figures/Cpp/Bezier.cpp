@@ -2,7 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <cmath>
-#include <GL/glut.h>
+#include <GL/glew.h>
 #include "../Header/Basics.h"
 #include "../Header/Bezier.h"
 #include "../../EngineClasses/Header/MatrixOperations.h"
@@ -241,8 +241,59 @@ std::string Bezier::toString() {
     return "Curva Bezier";
 }
 
+void Bezier::getAllPoints(std::vector<std::vector<std::vector<float>>>* allPoints)
+{
+    for(std::vector<std::vector<float>> patch : *this->pointsCurve)
+    {
+        std::vector<std::vector<float>> points;
+        int num = this->lim + 1;
+        std::vector<std::vector<float>> repeat(patch.begin() + num, patch.end());
+        for(int j = 0; j < repeat.size();j++)
+        {
+            std::vector<float> point = patch[j];
+            std::vector<float> point2 = repeat[j];
+            points.push_back(point2);
+            points.push_back(point);
+        }
+        allPoints->push_back(points);
+    }
+}
+
+void Bezier::loadAllPoints(std::vector<std::vector<std::vector<float>>>* allPoints)
+{
+    int num = this->lim + 1;
+    int numlinhas = this->lim * allPoints->size();
+    printf("%d\n",numlinhas);
+    this->verticeCount = (this->lim+1)*2;
+    this->allVertices = new GLuint[numlinhas];
+    glGenBuffers(numlinhas, this->allVertices);
+    this->sizeVertices = numlinhas;
+    int index = 0;
+    for(int i = 0; i < allPoints->size(); i++)
+    {
+        std::vector<std::vector<float>> patch = allPoints->at(i);
+        std::vector<float> points;
+        for(int j = 0; j < patch.size(); j++)
+        {
+            std::vector<float>point = patch[j];
+            points.push_back(point[0]);
+            points.push_back(point[1]);
+            points.push_back(point[2]);
+            if(j%2 != 0 && j % num == num-1)
+            {
+                glBindBuffer(GL_ARRAY_BUFFER, this->allVertices[index]);
+                glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(float), points.data(), GL_STATIC_DRAW);
+                points.clear();
+                index++;
+            }
+        }
+    }
+}
 
 void Bezier::loadVBO() {
+    std::vector<std::vector<std::vector<float>>> allPoints;
+    getAllPoints(&allPoints);
+    loadAllPoints(&allPoints);
 }
 
 Bezier::Bezier() {
@@ -251,9 +302,15 @@ Bezier::Bezier() {
 }
 
 void Bezier::drawFigure() {
+    glPushMatrix();
+    glRotatef(-90,1,0,0);
+    glColor3f(1,1,1);
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    for(std::vector<std::vector<float>> patch : *this->pointsCurve)
+    for(int i = 0; i < sizeVertices; i++)
     {
-        desenhaPatch(patch);
+        glBindBuffer(GL_ARRAY_BUFFER, allVertices[i]);
+        glVertexPointer(3, GL_FLOAT, 0, 0);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, verticeCount);
     }
+    glPopMatrix();
 }

@@ -5,6 +5,7 @@
 
 CatmullRom::CatmullRom(std::vector<float> *points,float time, bool align)
 {
+    this->last_time = 0;
     this->aux = 0;
     this->time = time;
     this->align = align;
@@ -100,15 +101,10 @@ void CatmullRom::applyTransformations() {
     }
     delete[] pos;
     delete[] deriv;
-    // int time = glutGet(GLUT_ELAPSED_TIME) / 1000;
-    // if(time > this->lastime)
-    // {
-    //     this->aux += 1/this->time;
-    //     this->lastime = time;
-    // }
-    this->aux += 1/(this->time*350);
-    if(this->aux > 1)
-        this->aux = 0;
+    int current_time = glutGet(GLUT_ELAPSED_TIME);
+    float occor = ((float) current_time-last_time)/1000;
+    this->last_time = current_time;
+    this->aux += occor / this->time;
 }
 
 void CatmullRom::apply() {

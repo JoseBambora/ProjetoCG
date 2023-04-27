@@ -5,9 +5,12 @@
 
 class Rotate : public Transformation {
 private:
-    float angle,x,y,z;
+    float numero,x,y,z;
+    bool angle;
+    float occor;
+    int last_time;
 public:
-    Rotate(float,float,float,float);
+    Rotate(float,float,float,float,bool);
     std::string toString() override;
     void apply() override;
     ~Rotate() override;

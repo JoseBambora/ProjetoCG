@@ -8,6 +8,7 @@ class CatmullRom : public Transformation{
 private:
     float aux;
     int POINT_COUNT;
+    int last_time;
     // float p[POINT_COUNT][3] = {{-1,-1,0},{-1,1,0},{1,1,0},{0,0,0},{1,-1,0}};
     float **p;
     float time;

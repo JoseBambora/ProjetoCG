@@ -8,16 +8,28 @@ std::string Rotate::toString() {
 
 void Rotate::apply() {
     glPushMatrix();
-    glRotatef(this->angle,this->x,this->y,this->z);
+    if(this->angle)
+        glRotatef(this->numero,this->x,this->y,this->z);
+    else
+    {
+        int current_time = glutGet(GLUT_ELAPSED_TIME);
+        this->occor+= ((float) current_time-last_time)/1000;
+        this->last_time = current_time;
+        float var = (360 / this->numero) * this->occor;
+        glRotatef(var,this->x,this->y,this->z);
+    }
 }
 
 Rotate::~Rotate() {
 
 }
 
-Rotate::Rotate(float angle, float x, float y, float z) {
+Rotate::Rotate(float numero, float x, float y, float z, bool angle) {
+    this->numero = numero;
+    this->occor = 0;
     this->angle = angle;
     this->x = x;
     this->y = y;
     this->z = z;
+    this->last_time = 0;
 }

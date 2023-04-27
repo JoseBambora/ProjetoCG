@@ -79,11 +79,22 @@ void trataTransform(XMLElement *transform, ListTree *tree)
             }
             else if(std::string(child->Value()) == "rotate")
             {
-                float x = std::stof(child->Attribute("x"));
-                float y = std::stof(child->Attribute("y"));
-                float z = std::stof(child->Attribute("z"));
-                float angle = std::stof(child->Attribute("angle"));
-                t = new Rotate(angle,x,y,z);
+                if(child->Attribute("angle"))
+                {
+                    float x = std::stof(child->Attribute("x"));
+                    float y = std::stof(child->Attribute("y"));
+                    float z = std::stof(child->Attribute("z"));
+                    float angle = std::stof(child->Attribute("angle"));
+                    t = new Rotate(angle,x,y,z, true);
+                }
+                else
+                {
+                    float x = std::stof(child->Attribute("x"));
+                    float y = std::stof(child->Attribute("y"));
+                    float z = std::stof(child->Attribute("z"));
+                    float time = std::stof(child->Attribute("time"));
+                    t = new Rotate(time,x,y,z, false);
+                }
                 transformacao->addTranformation(t);
             }
             else if(std::string(child->Value()) == "scale")
