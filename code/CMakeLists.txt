@@ -11,6 +11,10 @@ add_executable(generator src/Execs/Generator.cpp src/Classes/Figures/Cpp/Cone.cp
 add_executable(teste src/TinyXML/tinyxml2.cpp src/Classes/EngineClasses/Cpp/World.cpp src/Classes/EngineClasses/Header/World.h src/Classes/EngineClasses/Cpp/Camera.cpp src/Classes/EngineClasses/Header/Camera.h src/Classes/EngineClasses/Cpp/Group.cpp src/Classes/EngineClasses/Header/Group.h src/Classes/Figures/Cpp/Cone.cpp src/Classes/Figures/Header/Cone.h src/Classes/Figures/Cpp/Box.cpp src/Classes/Figures/Header/Box.h src/Classes/Figures/Cpp/Sphere.cpp src/Classes/Figures/Header/Sphere.h src/Classes/Figures/Cpp/Plane.cpp src/Classes/Figures/Header/Plane.h src/Classes/Figures/Cpp/Figure.cpp src/Classes/Figures/Header/Figure.h src/Classes/Figures/Cpp/Basics.cpp src/Classes/Figures/Header/Basics.h src/Classes/Figures/Cpp/Donut.cpp src/Classes/Figures/Header/Donut.h src/Classes/Figures/Cpp/Cylinder.cpp src/Classes/Figures/Header/Cylinder.h src/Classes/EngineClasses/Cpp/ListTree.cpp src/Classes/EngineClasses/Header/ListTree.h src/Classes/Transformations/Cpp/Rotate.cpp src/Classes/Transformations/Header/Rotate.h src/Classes/Transformations/Cpp/Translate.cpp src/Classes/Transformations/Header/Translate.h src/Classes/Transformations/Cpp/Scale.cpp src/Classes/Transformations/Header/Scale.h src/Classes/Transformations/Cpp/Transformation.cpp src/Classes/Transformations/Header/Transformation.h src/Classes/Transformations/Cpp/Transform.cpp src/Classes/Transformations/Header/Transform.h src/Classes/EngineClasses/Cpp/DefaultNode.cpp src/Classes/EngineClasses/Header/DefaultNode.h src/Classes/Transformations/Header/CatmullRom.h src/Classes/Transformations/Cpp/CatmullRom.cpp src/Classes/EngineClasses/Header/MatrixOperations.h src/Classes/EngineClasses/Cpp/MatrixOperations.cpp src/Classes/Transformations/Header/CatmullRom.h src/Classes/Figures/Header/Bezier.h src/Classes/Figures/Cpp/Bezier.cpp src/Execs/main.cpp)
 add_executable(generatexml src/Execs/CreateSolarSystem.cpp src/TinyXML/tinyxml2.cpp)
 
+find_package(OpenGL REQUIRED)
+include_directories(${OpenGL_INCLUDE_DIRS})
+link_directories(${OpenGL_LIBRARY_DIRS})
+add_definitions(${OpenGL_DEFINITIONS})
 
 if  (WIN32)
 
@@ -30,7 +34,18 @@ if  (WIN32)
     endif (NOT EXISTS "${TOOLKITS_FOLDER}/devil/IL/il.h" OR NOT EXISTS "${TOOLKITS_FOLDER}/devil/devIL.lib")
 
     include_directories(${TOOLKITS_FOLDER}/glut ${TOOLKITS_FOLDER}/glew ${TOOLKITS_FOLDER}/devil)
-    target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES}
+
+    target_link_libraries(engine ${OPENGL_LIBRARIES}
+            ${TOOLKITS_FOLDER}/glut/glut32.lib
+            ${TOOLKITS_FOLDER}/devil/devIL.lib
+            ${TOOLKITS_FOLDER}/glew/glew32.lib )
+
+    target_link_libraries(generator ${OPENGL_LIBRARIES}
+            ${TOOLKITS_FOLDER}/glut/glut32.lib
+            ${TOOLKITS_FOLDER}/devil/devIL.lib
+            ${TOOLKITS_FOLDER}/glew/glew32.lib )
+
+    target_link_libraries(teste ${OPENGL_LIBRARIES}
             ${TOOLKITS_FOLDER}/glut/glut32.lib
             ${TOOLKITS_FOLDER}/devil/devIL.lib
             ${TOOLKITS_FOLDER}/glew/glew32.lib )
@@ -46,11 +61,6 @@ if  (WIN32)
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
 else (WIN32) #Linux and Mac
-
-    find_package(OpenGL REQUIRED)
-    include_directories(${OpenGL_INCLUDE_DIRS})
-    link_directories(${OpenGL_LIBRARY_DIRS})
-    add_definitions(${OpenGL_DEFINITIONS})
 
     if(NOT OPENGL_FOUND)
         message(ERROR " OPENGL not found!")
@@ -74,12 +84,3 @@ else (WIN32) #Linux and Mac
     endif(NOT GLUT_FOUND)
 
 endif(WIN32)
-
-
-
-
-
-
-
-
-
