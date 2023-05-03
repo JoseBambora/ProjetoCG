@@ -69,7 +69,6 @@ void trataTransform(XMLElement *transform, ListTree *tree)
                 }
                 else
                 {
-                    printf("entrou\n");
                     float time = std::stof(child->Attribute("time"));
                     bool align = std::regex_match(child->Attribute("align"),boolReg);
                     std::vector<float> *points = readPoints(child);
@@ -206,7 +205,6 @@ int main(int argc, char** argv)
             trataGrupo(group,tree);
         }
         doc.Clear();
-        printf("%s\n",tree->toString().c_str());
         auto *w = new World(width,height,px,py,pz,lx,ly,lz,cx,cy,cz,fov,near,far,tree);
         printf("%s\n",w->toString().c_str());
         w->drawWorld();

@@ -41,7 +41,6 @@ Figure *Figure::Build(int argc, char **argv) {
 // CAN BE NULL
 Figure *Figure::ReadFile(const std::string& name) {
     int cod;
-    printf("entrou\n");
     Figure *res;
     std::ifstream file;
     file.open(name, std::ios::binary);

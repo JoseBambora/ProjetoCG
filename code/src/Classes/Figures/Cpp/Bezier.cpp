@@ -263,7 +263,6 @@ void Bezier::loadAllPoints(std::vector<std::vector<std::vector<float>>>* allPoin
 {
     int num = this->lim + 1;
     int numlinhas = this->lim * allPoints->size();
-    printf("%d\n",numlinhas);
     this->verticeCount = (this->lim+1)*2;
     this->allVertices = new GLuint[numlinhas];
     glGenBuffers(numlinhas, this->allVertices);
