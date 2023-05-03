@@ -1,6 +1,9 @@
 #include "../Classes/Figures/Header/Bezier.h"
 #include <GL/glut.h>
 Bezier b = Bezier("../teapot.patch",10);
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 float alfa;
 float beta;

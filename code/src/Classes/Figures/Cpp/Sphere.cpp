@@ -3,6 +3,9 @@
 #include <vector>
 #include "../Header/Sphere.h"
 #include "../Header/Basics.h"
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#endif
 #include "GL/glut.h"
 
 const int Figure::codSphere;

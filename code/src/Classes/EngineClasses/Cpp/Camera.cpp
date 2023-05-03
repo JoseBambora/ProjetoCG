@@ -4,6 +4,9 @@
 
 #include "../Header/Camera.h"
 #include "GL/glut.h"
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 
 double Camera::beta = 0;
