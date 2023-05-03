@@ -53,7 +53,7 @@ tinyxml2::XMLElement* createCamera()
     int cx = 600, cy = 600, cz = 600;
     int lx = 0, ly = 0, lz = 0;
     int ux = 0, uy = 1, uz = 0;
-    int fov = 60, near = 1, far = 1500;
+    int fov = 60, near = 1, far = 1750;
     tinyxml2::XMLElement* camera = doc.NewElement("camera");
     tinyxml2::XMLElement* position = doc.NewElement("position");
     tinyxml2::XMLElement* lookat = doc.NewElement("lookat");

@@ -2,7 +2,7 @@
 #define PROJETOEXEC_CATMULLROM_H
 
 #include <vector>
-#include "../../Transformations/Header/Transformation.h"
+#include "Transformation.h"
 
 class CatmullRom : public Transformation{
 private:

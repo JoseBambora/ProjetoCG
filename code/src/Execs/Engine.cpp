@@ -11,7 +11,7 @@
 #include "../Classes/Transformations/Header/Translate.h"
 #include "../Classes/Transformations/Header/Transform.h"
 #include "../Classes/Figures/Header/Figure.h"
-#include "../Classes/EngineClasses/Header/CatmullRom.h"
+#include "../Classes/Transformations/Header/CatmullRom.h"
 const std::string dir = "../../files/";
 
 using namespace tinyxml2;

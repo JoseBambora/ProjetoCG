@@ -1,6 +1,6 @@
 #include "../Header/CatmullRom.h"
 #include <GL/glut.h>
-#include "../Header/MatrixOperations.h"
+#include "../../EngineClasses/Header/MatrixOperations.h"
 #include <cmath>
 
 CatmullRom::CatmullRom(std::vector<float> *points,float time, bool align)
