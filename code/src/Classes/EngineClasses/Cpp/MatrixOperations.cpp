@@ -180,6 +180,7 @@ void bezierCalculate(float u[4],float v[4],float px[4][4],float py[4][4],float p
  */
 void bezierGeraPatch(std::vector<std::vector<float>> *patch,float px[4][4],float py[4][4],float pz[4][4],float m[4][4],int lim)
 {
+    float tx = 0, ty = 0;
     int iteracoes = lim+1;
     float uvalor = 0;
     float u[4], uDerivada[4];
@@ -203,17 +204,21 @@ void bezierGeraPatch(std::vector<std::vector<float>> *patch,float px[4][4],float
 
             normalizecrossnormalize(derivv.data(),derivu.data(),normal);
 
-            // to do : guardar aqui em point os valores da normal.
-            // Depois no render ir buscar as componentes [4] [5] e [6]
-            // x y z, nx, ny, nz
             point.push_back(normal[0]);
             point.push_back(normal[1]);
             point.push_back(normal[2]);
 
+            point.push_back(tx);
+            point.push_back(ty);
+
+
             patch->push_back(point);
             vvalor += aumento;
+            tx += aumento;
         }
         uvalor += aumento;
+        ty += aumento;
+        tx = 0;
     }
     delete []normal;
 }

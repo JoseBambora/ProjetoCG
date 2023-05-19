@@ -11,6 +11,7 @@ public:
     unsigned int *vbos;
     unsigned int verticeCount;
     int texturaID;
+    std::string fileText;
     static const int codPlane = 0;
     static const int codBox = 2;
     static const int codCone = 3;
@@ -19,11 +20,11 @@ public:
     static const int codCylinder = 5;
     static const int codBezierPatch = 6;
     std::vector<float>* ambient,*specular,*diffuse,*emissive;
-    std::vector<float> normaisvetor;
+    std::vector<float> normaisvetor,texturasCoords;
     float shininnes;
 
     static Figure* Build(int argc, char** argv);
-    static Figure* ReadFile(const std::string& name, std::vector<float>* diffusecolor, std::vector<float>*ambientcolor, std::vector<float>*specularcolor, std::vector<float>*emissivecolor, float shininessvalue,int texture);
+    static Figure* ReadFile(const std::string& name, std::vector<float>* diffusecolor, std::vector<float>*ambientcolor, std::vector<float>*specularcolor, std::vector<float>*emissivecolor, float shininessvalue,std::string fileText);
     virtual std::string toString() override = 0;
     virtual ~Figure()=default;
     virtual void drawFigure();

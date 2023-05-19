@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include "../Header/World.h"
 #include "../Header/Camera.h"
 #include "../Header/Group.h"
@@ -86,6 +87,10 @@ void initGL() {
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glewInit();
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 
@@ -105,7 +110,6 @@ void World::drawWorld() {
     glutDisplayFunc(renderAllScene);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     initGL();
-
     for(int i = 0; i < World::instance->ligths->size(); i++)
     {
         World::instance->ligths->at(i)->initLight();

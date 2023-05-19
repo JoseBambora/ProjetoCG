@@ -32,18 +32,43 @@ void trataRGB(XMLElement *xml,std::vector<float>*color)
 
 void trataColor(XMLElement *color, std::vector<float>*diffusecolor,std::vector<float>*ambientcolor,std::vector<float>*specularcolor,std::vector<float>*emissivecolor,float *shininessvalue)
 {
-    XMLElement *diffuse = color->FirstChildElement("diffuse");
-    XMLElement *ambient = color->FirstChildElement("ambient");
-    XMLElement *specular = color->FirstChildElement("specular");
-    XMLElement *emissive = color->FirstChildElement("emissive");
-    XMLElement *shininess = color->FirstChildElement("shininess");
-    trataRGB(diffuse,diffusecolor);
-    trataRGB(ambient,ambientcolor);
-    trataRGB(specular,specularcolor);
-    trataRGB(emissive,emissivecolor);
-    *shininessvalue = std::stof(shininess->Attribute("value"));
+    if(color)
+    {
+        XMLElement *diffuse = color->FirstChildElement("diffuse");
+        XMLElement *ambient = color->FirstChildElement("ambient");
+        XMLElement *specular = color->FirstChildElement("specular");
+        XMLElement *emissive = color->FirstChildElement("emissive");
+        XMLElement *shininess = color->FirstChildElement("shininess");
+        trataRGB(diffuse,diffusecolor);
+        trataRGB(ambient,ambientcolor);
+        trataRGB(specular,specularcolor);
+        trataRGB(emissive,emissivecolor);
+        *shininessvalue = std::stof(shininess->Attribute("value"));
+    }
+    else
+    {
+        diffusecolor->push_back(200);
+        diffusecolor->push_back(200);
+        diffusecolor->push_back(200);
+        ambientcolor->push_back(50);
+        ambientcolor->push_back(50);
+        ambientcolor->push_back(50);
+        specularcolor->push_back(0);
+        specularcolor->push_back(0);
+        specularcolor->push_back(0);
+        emissivecolor->push_back(0);
+        emissivecolor->push_back(0);
+        emissivecolor->push_back(0);
+        *shininessvalue = 0;
+    }
 }
-
+std::string trataTextura(XMLElement *textura)
+{
+    if (textura)
+         return textura->Attribute("file");
+    else
+        return "";
+}
 void trataModels(XMLElement *models , ListTree * tree)
 {
     XMLElement *model = models->FirstChildElement("model");
@@ -52,9 +77,10 @@ void trataModels(XMLElement *models , ListTree * tree)
         std::vector<float> ambient,specular,diffuse,emissive;
         float shininnes;
         trataColor(model->FirstChildElement("color"),&diffuse,&ambient,&specular,&emissive,&shininnes);
+        std::string textura = trataTextura(model->FirstChildElement("texture"));
         std::string nameFile = model->Attribute("file");
         // TO DO loadTexture
-        Figure *figura = Figure::ReadFile(nameFile,&diffuse,&ambient,&specular,&emissive,shininnes,0);
+        Figure *figura = Figure::ReadFile(nameFile,&diffuse,&ambient,&specular,&emissive,shininnes,textura);
         tree->addNode(figura);
         model = model->NextSiblingElement("model");
         //printf("Model: %s\n",nameFile.c_str());

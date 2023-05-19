@@ -12,8 +12,10 @@ void connectSideFora(std::vector<float>* allPoints,std::vector<float> cbaixo,std
 void connectSideForaV2(std::vector<float>* allPoints,std::vector<float> cbaixo,std::vector<float> ccima,std::vector<float>*normais,float cx, float cy,float cz,float cx1,float cy1,float cz1);
 unsigned int* saveInfoPlacaGrafica(std::vector<float>* allPoints);
 unsigned int* saveInfoPlacaGraficaIluminacao(std::vector<float> *allPoints, std::vector<float> *normais);
+unsigned int* saveInfoPlacaGraficaIluminacaoTextura(std::vector<float> *allPoints, std::vector<float> *normais,std::vector<float> *texturas );
 void drawVBO(unsigned int vertices, unsigned int verticeCount, float red, float green, float blue);
 void drawVBOIluminacao(unsigned int *vbos, unsigned int verticeCount);
+void drawVBOIluminacaoTextura(unsigned int *vbos, unsigned int verticeCount);
 void materialLighting(std::vector<float> *ambient, std::vector<float> *diffuse, std::vector<float> *specular, std::vector<float> *emission,float shininess);
 void calculaNormaisCircunferencia(std::vector<float>* allPoints, float x, float y, float z,std::vector<float>* normais);
 int loadTexture(std::string s);

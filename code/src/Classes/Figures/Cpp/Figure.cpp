@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <utility>
 #include "../Header/Figure.h"
 #include "../Header/Cone.h"
 #include "../Header/Sphere.h"
@@ -42,7 +43,7 @@ Figure *Figure::Build(int argc, char **argv) {
 // CAN BE NULL
 Figure *Figure::ReadFile(const std::string& name, std::vector<float> *diffusecolor, std::vector<float> *ambientcolor,
                          std::vector<float> *specularcolor, std::vector<float> *emissivecolor, float shininessvalue,
-                         int texture) {
+                         std::string texturefile) {
     int cod;
     Figure *res;
     std::ifstream file;
@@ -76,7 +77,7 @@ Figure *Figure::ReadFile(const std::string& name, std::vector<float> *diffusecol
     }
     if(res)
     {
-        res->texturaID = texture;
+        res->fileText = std::move(texturefile);
         res->diffuse = new std::vector<float>(*diffusecolor);
         res->emissive = new std::vector<float>(*emissivecolor);
         res->specular = new std::vector<float>(*specularcolor);
@@ -88,15 +89,27 @@ Figure *Figure::ReadFile(const std::string& name, std::vector<float> *diffusecol
 
 void Figure::drawFigure() {
     // drawVBO(vertices,verticeCount,1.0f,1.0f,1.0f);
-    materialLighting(ambient,diffuse,specular,emissive,shininnes);
-    glBindTexture(GL_TEXTURE_2D, this->texturaID);
-    drawVBOIluminacao(vbos,verticeCount);
+    if(this->texturaID != 0)
+        glBindTexture(GL_TEXTURE_2D, this->texturaID);
+    else
+        materialLighting(ambient,diffuse,specular,emissive,shininnes);
+    drawVBOIluminacaoTextura(vbos,verticeCount);
 }
 void Figure::apply() {
     drawFigure();
 }
 void Figure::undo() {}
 void Figure::load() {
+    if (this->fileText != "")
+    {
+        std::cout << "Figura com textura\n";
+        this->texturaID = loadTexture(this->fileText);
+    }
+    else
+    {
+        std::cout << "Figura sem textura\n";
+        this->texturaID = 0;
+    }
     loadVBO();
 }
 void Figure::loadVBO() {}

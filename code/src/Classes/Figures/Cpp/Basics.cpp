@@ -409,6 +409,20 @@ GLuint* saveInfoPlacaGraficaIluminacao(std::vector<float> *allPoints, std::vecto
     return res;
 }
 
+
+GLuint* saveInfoPlacaGraficaIluminacaoTextura(std::vector<float> *allPoints, std::vector<float> *normais,std::vector<float> *texturas )
+{
+    auto * res = new GLuint[2];
+    glGenBuffers(2, res);
+    glBindBuffer(GL_ARRAY_BUFFER, res[0]);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(float) * allPoints->size(), allPoints->data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, res[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * normais->size(), normais->data(),GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, res[2]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * texturas->size() , texturas->data(), GL_STATIC_DRAW);
+    return res;
+}
+
 void drawVBO(GLuint vertices, GLuint verticeCount, float red, float green, float blue)
 {
     glColor3f(red,green,blue);
@@ -426,6 +440,21 @@ void drawVBOIluminacao(GLuint *vbos, GLuint verticeCount)
 
     glBindBuffer(GL_ARRAY_BUFFER,vbos[1]);
     glNormalPointer(GL_FLOAT,0,0);
+
+    glDrawArrays(GL_TRIANGLES, 0, verticeCount);
+}
+
+
+void drawVBOIluminacaoTextura(GLuint *vbos, GLuint verticeCount)
+{
+    glBindBuffer(GL_ARRAY_BUFFER,vbos[0]);
+    glVertexPointer(3,GL_FLOAT,0,0);
+
+    glBindBuffer(GL_ARRAY_BUFFER,vbos[1]);
+    glNormalPointer(GL_FLOAT,0,0);
+
+    glBindBuffer(GL_ARRAY_BUFFER,vbos[2]);
+    glTexCoordPointer(2,GL_FLOAT,0,0);
 
     glDrawArrays(GL_TRIANGLES, 0, verticeCount);
 }

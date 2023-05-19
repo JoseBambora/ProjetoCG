@@ -210,13 +210,13 @@ void Bezier::loadAllPoints(std::vector<std::vector<std::vector<float>>>* allPoin
     int num = this->lim + 1;
     int numlinhas = this->lim * allPoints->size();
     this->verticeCount = (this->lim+1)*2;
-    this->allVertices = new GLuint[numlinhas*2];
-    glGenBuffers(numlinhas*2, this->allVertices);
-    this->sizeVertices = numlinhas*2;
+    this->allVertices = new GLuint[numlinhas*3];
+    glGenBuffers(numlinhas*3, this->allVertices);
+    this->sizeVertices = numlinhas*3;
     int index = 0;
     for(auto patch : *allPoints)
     {
-        std::vector<float> points, normais;
+        std::vector<float> points, normais, texturas;
         for(int j = 0; j < patch.size(); j++)
         {
             std::vector<float>point = patch[j];
@@ -227,16 +227,25 @@ void Bezier::loadAllPoints(std::vector<std::vector<std::vector<float>>>* allPoin
             normais.push_back(point[3]);
             normais.push_back(point[4]);
             normais.push_back(point[5]);
+
+            texturas.push_back(point[6]);
+            texturas.push_back(point[7]);
             if(j%2 != 0 && j % num == num-1)
             {
-                // to do: bind buffer das normais
                 glBindBuffer(GL_ARRAY_BUFFER, this->allVertices[index]);
                 glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(float), points.data(), GL_STATIC_DRAW);
+
                 glBindBuffer(GL_ARRAY_BUFFER, this->allVertices[index+1]);
                 glBufferData(GL_ARRAY_BUFFER, normais.size() * sizeof(float) , normais.data(),GL_STATIC_DRAW);
+
+                glBindBuffer(GL_ARRAY_BUFFER, this->allVertices[index+2]);
+                glBufferData(GL_ARRAY_BUFFER, texturas.size() * sizeof(float), texturas.data(), GL_STATIC_DRAW);
+
                 points.clear();
                 normais.clear();
-                index+=2;
+                texturas.clear();
+
+                index+=3;
             }
         }
     }
@@ -254,9 +263,11 @@ Bezier::Bezier() {
 }
 
 void Bezier::drawFigure() {
-    materialLighting(ambient,diffuse,specular,emissive,shininnes);
+    if (this->texturaID == 0)
+        materialLighting(ambient,diffuse,specular,emissive,shininnes);
     glPushMatrix();
-    for(int i = 0; i < sizeVertices; i+=2)
+    glBindTexture(GL_TEXTURE_2D, this->texturaID);
+    for(int i = 0; i < sizeVertices; i+=3)
     {
         glBindBuffer(GL_ARRAY_BUFFER, allVertices[i]);
         glVertexPointer(3, GL_FLOAT, 0, 0);
@@ -264,7 +275,11 @@ void Bezier::drawFigure() {
         glBindBuffer(GL_ARRAY_BUFFER,allVertices[i+1]);
         glNormalPointer(GL_FLOAT,0,0);
 
+        glBindBuffer(GL_ARRAY_BUFFER,allVertices[i+2]);
+        glTexCoordPointer(2,GL_FLOAT,0,0);
+
         glDrawArrays(GL_TRIANGLE_STRIP, 0, verticeCount);
     }
+    glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
 }
