@@ -1,6 +1,7 @@
 #include <cmath>
 #include <fstream>
 #include <vector>
+#include <iostream>
 #include "../Header/Sphere.h"
 #include "../Header/Basics.h"
 #ifdef WIN32
@@ -103,15 +104,28 @@ void Sphere::loadVBO() {
     {
         std::vector<float> c = this->superficielateral[i];
         if(i > 0)
-            connectSideFora(allPoints,anterior,c);
+            connectSideFora(allPoints,anterior,c,&normaisvetor,0,0,0);
         else
             primeira = c;
         anterior = c;
     }
-    connectPyramid(allPoints,anterior,this->verticesuperior[0],this->verticesuperior[1],this->verticesuperior[2], false);
-    connectPyramid(allPoints,primeira,this->verticeinferior[0],this->verticeinferior[1],this->verticeinferior[2], true);
-    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    connectPyramid(allPoints,anterior,this->verticesuperior[0],this->verticesuperior[1],this->verticesuperior[2], false,&normaisvetor,
+                   false,0,0,0);
+    connectPyramid(allPoints,primeira,this->verticeinferior[0],this->verticeinferior[1],this->verticeinferior[2], true,&normaisvetor,
+                   false,0,0,0);
+    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
+    //this->loadVertices(saveInfoPlacaGrafica(allPoints));
     delete allPoints;
+}
+
+void Sphere::loadNormais() {
+    for(int i = 0; i < this->superficielateral.size();i++)
+    {
+        std::vector<float>  circ = this->superficielateral.at(i);
+        calculaNormaisCircunferencia(&circ,0,0,0,&this->normaisvetor);
+    }
+    calculaNormalBases(true,&this->normaisvetor);
+    calculaNormalBases(false,&this->normaisvetor);
 }
 
 Sphere::~Sphere() = default;

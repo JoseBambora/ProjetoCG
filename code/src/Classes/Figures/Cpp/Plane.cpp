@@ -178,19 +178,24 @@ std::vector<float> Plane::getPointsFrontal(int d, float l, int direcao, int nq, 
                 res.push_back(n2);
                 res.push_back(ori);
 
+
                 // Triangulo de cima
 
                 res.push_back(cxi);
                 res.push_back(cyi);
                 res.push_back(ori);
 
+
+
                 res.push_back(n1);
                 res.push_back(cyi);
                 res.push_back(ori);
 
+
                 res.push_back(n1);
                 res.push_back(n2);
                 res.push_back(ori);
+
                 break;
         }
         cyi = n2;
@@ -221,9 +226,12 @@ std::vector<float> Plane::getPointsPerfil(int d, float l, int direcao, int nq, f
                 res.push_back(cyi);
                 res.push_back(czi);
 
+
+
                 res.push_back(ori);
                 res.push_back(n2);
                 res.push_back(czi);
+
 
                 res.push_back(ori);
                 res.push_back(n2);
@@ -234,6 +242,7 @@ std::vector<float> Plane::getPointsPerfil(int d, float l, int direcao, int nq, f
                 res.push_back(ori);
                 res.push_back(cyi);
                 res.push_back(czi);
+
 
                 res.push_back(ori);
                 res.push_back(n2);
@@ -317,8 +326,11 @@ void Plane::loadVBO() {
         allPoints->push_back(points[i]);
         allPoints->push_back(points[i+1]);
         allPoints->push_back(points[i+2]);
+        normaisvetor.push_back(0);
+        normaisvetor.push_back(1);
+        normaisvetor.push_back(0);
     }
-    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
     delete allPoints;
 }
 

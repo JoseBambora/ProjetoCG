@@ -80,6 +80,66 @@ tinyxml2::XMLElement* createCamera()
     return camera;
 }
 
+
+tinyxml2::XMLElement* createLightPoint(float x, float y, float z)
+{
+    tinyxml2::XMLElement* light = doc.NewElement("light");
+    light->SetAttribute("type","point");
+    light->SetAttribute("posx",x);
+    light->SetAttribute("posy",y);
+    light->SetAttribute("posz",z);
+    return light;
+}
+
+
+tinyxml2::XMLElement* createLightDir(float x, float y, float z)
+{
+    tinyxml2::XMLElement* light = doc.NewElement("light");
+    light->SetAttribute("type","directional");
+    light->SetAttribute("dirx",x);
+    light->SetAttribute("diry",y);
+    light->SetAttribute("dirz",z);
+    return light;
+}
+
+tinyxml2::XMLElement* createLightSL(float x, float y, float z,float dx,float dy,float dz, float co)
+{
+    tinyxml2::XMLElement* light = doc.NewElement("light");
+    light->SetAttribute("type","spotlight");
+    light->SetAttribute("posx",x);
+    light->SetAttribute("posy",y);
+    light->SetAttribute("posz",z);
+    light->SetAttribute("dirx",dx);
+    light->SetAttribute("diry",dy);
+    light->SetAttribute("dirz",dz);
+    light->SetAttribute("cutoff",co);
+    return light;
+}
+
+
+
+tinyxml2::XMLElement* createLight()
+{
+    tinyxml2::XMLElement* lights = doc.NewElement("lights");
+    float aux = 120;
+    tinyxml2::XMLElement* light0 = createLightPoint(0,0,0);
+
+    tinyxml2::XMLElement* light1 = createLightSL(aux,0,0,-aux,0,0,90);
+    tinyxml2::XMLElement* light2 = createLightSL(0,aux,0,0,-aux,0,90);
+    tinyxml2::XMLElement* light3 = createLightSL(0,0,aux,0,0,-aux,90);
+    tinyxml2::XMLElement* light4 = createLightSL(-aux,0,0,aux,0,0,90);
+    tinyxml2::XMLElement* light5 = createLightSL(0,-aux,0,0,aux,0,90);
+    tinyxml2::XMLElement* light6 = createLightSL(0,0,-aux,0,0,aux,90);
+    lights->InsertEndChild(light0);
+    lights->InsertEndChild(light1);
+    lights->InsertEndChild(light2);
+    lights->InsertEndChild(light3);
+    lights->InsertEndChild(light4);
+    lights->InsertEndChild(light5);
+    lights->InsertEndChild(light6);
+    return lights;
+}
+
 tinyxml2::XMLElement* createTransform(const std::vector<std::string>& transformations, float sx, float sy, float sz, int tx, int ty, int tz, int angle, int rx, int ry, int rz, bool time)
 {
     tinyxml2::XMLElement* transform = doc.NewElement("transform");
@@ -117,6 +177,72 @@ tinyxml2::XMLElement* createTransform(const std::vector<std::string>& transforma
     return transform;
 }
 
+tinyxml2::XMLElement* createColor(std::string elemento)
+{
+    tinyxml2::XMLElement* color = doc.NewElement("color");
+    tinyxml2::XMLElement* diffuse = doc.NewElement("diffuse");
+    if(elemento == "Sol")
+    {
+        diffuse->SetAttribute("R",254);
+        diffuse->SetAttribute("G",221);
+        diffuse->SetAttribute("B",0);
+    }
+    else if (elemento == "Moon" || elemento == "Cometa" || elemento == "Mercurio")
+    {
+        diffuse->SetAttribute("R",100);
+        diffuse->SetAttribute("G",100);
+        diffuse->SetAttribute("B",100);
+    }
+    else if ( elemento == "Terra" || elemento == "Urano" || elemento == "Neptuno")
+    {
+        diffuse->SetAttribute("R",0);
+        diffuse->SetAttribute("G",0);
+        diffuse->SetAttribute("B",100);
+    }
+    else if(elemento == "Marte")
+    {
+        diffuse->SetAttribute("R",100);
+        diffuse->SetAttribute("G",0);
+        diffuse->SetAttribute("B",0);
+    }
+    else if(elemento == "Jupiter" || elemento == "Saturno" || elemento == "Venus")
+    {
+        diffuse->SetAttribute("R",154);
+        diffuse->SetAttribute("G",121);
+        diffuse->SetAttribute("B",0);
+    }
+    tinyxml2::XMLElement* ambient = doc.NewElement("ambient");
+    ambient->SetAttribute("R",0);
+    ambient->SetAttribute("G",0);
+    ambient->SetAttribute("B",0);
+    tinyxml2::XMLElement* specular = doc.NewElement("specular");
+    specular->SetAttribute("R",0);
+    specular->SetAttribute("G",0);
+    specular->SetAttribute("B",0);
+    tinyxml2::XMLElement* emissive = doc.NewElement("emissive");
+    if(elemento == "Sol")
+    {
+        emissive->SetAttribute("R",254);
+        emissive->SetAttribute("G",221);
+        emissive->SetAttribute("B",0);
+    }
+    else
+    {
+        emissive->SetAttribute("R",0);
+        emissive->SetAttribute("G",0);
+        emissive->SetAttribute("B",0);
+
+    }
+    tinyxml2::XMLElement* shininess = doc.NewElement("shininess");
+    shininess->SetAttribute("value",0);
+    color->InsertEndChild(diffuse);
+    color->InsertEndChild(ambient);
+    color->InsertEndChild(specular);
+    color->InsertEndChild(emissive);
+    color->InsertEndChild(shininess);
+    return color;
+}
+
 tinyxml2::XMLElement* createModel(std::string name)
 {
     tinyxml2::XMLComment* comment = doc.NewComment(("generator sphere 1 15 15 ../files/sphere.3d " + name).c_str());
@@ -124,6 +250,7 @@ tinyxml2::XMLElement* createModel(std::string name)
     tinyxml2::XMLElement* planet = doc.NewElement("model");
     planet->SetAttribute("file", modelsphre.c_str());
     planet->LinkEndChild(comment);
+    planet->InsertEndChild(createColor(name));
     models->InsertEndChild(planet);
     return models;
 }
@@ -177,6 +304,7 @@ tinyxml2::XMLElement* createAnel()
     tinyxml2::XMLComment* comment = doc.NewComment("generator donut 1.5 1.75 15 5 ../files/donut.3d");
     anel->SetAttribute("file", modeldonut.c_str());
     anel->LinkEndChild(comment);
+    anel->InsertEndChild(createColor("Moon"));
     models->InsertEndChild(anel);
     group->InsertEndChild(scale);
     group->InsertEndChild(models);
@@ -197,6 +325,7 @@ void createComets(float tx,tinyxml2::XMLElement*planets)
         tinyxml2::XMLComment* comment = doc.NewComment("generator patch ../teapot.patch 10 ../files/teapot.3d");
         model->SetAttribute("file", modelComet.c_str());
         model->LinkEndChild(comment);
+        model->InsertEndChild(createColor("Cometa"));
         models->InsertEndChild(model);
         group->InsertEndChild(transform);
         group->InsertEndChild(models);
@@ -237,6 +366,7 @@ tinyxml2::XMLElement* createWorld()
     int j = 0;
     int tx = 60, tz = 60,ty = 0;
     int time = 5;
+    std::string planetas[8] = {"Mercurio", "Venus", "Terra", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno"};
     for(int i = 1; i < 9; i++)
     {
         // tinyxml2::XMLElement* transform = createTransform(t1,0,0,0,0,0,0,time,0,1,0);
@@ -252,7 +382,7 @@ tinyxml2::XMLElement* createWorld()
             planetTransform = createTransform(t6,scales[j],scales[j+1],scales[j+2],0,0,0,90,0,0,1, false);
 
         tinyxml2::XMLElement *planet = doc.NewElement("group");
-        tinyxml2::XMLElement* planetModel = createModel("Planeta");
+        tinyxml2::XMLElement* planetModel = createModel(planetas[i-1]);
 
         planet->InsertEndChild(planetTransform);
         planet->InsertEndChild(planetModel);
@@ -328,6 +458,7 @@ int main()
     doc.InsertEndChild(world);
     world->InsertEndChild(createWindow());
     world->InsertEndChild(createCamera());
+    world->InsertEndChild(createLight());
     world->InsertEndChild(createWorld());
     doc.SaveFile("../xmlFiles/SolarSystemEx.xml");
     return 0;

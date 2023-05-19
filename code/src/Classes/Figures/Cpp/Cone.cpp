@@ -1,5 +1,6 @@
 #include <fstream>
 #include <vector>
+#include <iostream>
 #include "../Header/Cone.h"
 #include "GL/glut.h"
 #include "../Header/Basics.h"
@@ -81,16 +82,18 @@ std::string Cone::toString() {
 
 void Cone::loadVBO() {
     auto * allPoints = new std::vector<float>();
-    connectPyramid(allPoints,base,0,0,0, true);
+    float cx = 0, cy =0 ,cz = 0;
+    connectPyramid(allPoints,base,0,0,0, true,&normaisvetor, true,0,0,0);
     std::vector<float> anterior = base;
+    std::vector<float> topo = this->superficielateral[this->superficielateral.size()-1];
+    float aumento = topo[1] / this->superficielateral.size();
     for(int i = 0; i < this->superficielateral.size()-1; i++)
     {
-        connectSideFora(allPoints,anterior,superficielateral[i]);
+        connectSideFora(allPoints,anterior,superficielateral[i],&normaisvetor,cx,cy,cz);
         anterior = superficielateral[i];
     }
-    std::vector<float> topo = this->superficielateral[this->superficielateral.size()-1];
-    connectPyramid(allPoints,anterior,topo[0],topo[1],topo[2], false);
-    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    connectPyramid(allPoints,anterior,topo[0],topo[1],topo[2], false,&normaisvetor, false,cx,cy,cz);
+    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
     delete allPoints;
 }
 

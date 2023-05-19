@@ -20,6 +20,7 @@ void Group::load()
 {
     glewInit();
     glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
     this->tree->loadInfo();
 }
 

@@ -3,17 +3,20 @@
 
 #include <cstdio>
 #include <string>
-
+#include <vector>
 class Camera;
 class Group;
 class ListTree;
+class Lights;
+
 class World{
 public:
     float width;
     float height;
     Camera *camera;
     Group *group;
-    World(float , float, float, float, float, float, float, float, float, float, float, float, float, float, ListTree*);
+    std::vector<Lights*> *ligths;
+    World(float , float, float, float, float, float, float, float, float, float, float, float, float, float, ListTree*,std::vector<Lights*> *);
     std::string toString();
     ~World();
     void drawWorld();

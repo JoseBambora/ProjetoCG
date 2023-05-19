@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include "../Header/Figure.h"
 #include "../Header/Cone.h"
 #include "../Header/Sphere.h"
@@ -39,7 +40,9 @@ Figure *Figure::Build(int argc, char **argv) {
 
 // Reads the content from a binary file. It will create a figure, based on the file information.
 // CAN BE NULL
-Figure *Figure::ReadFile(const std::string& name) {
+Figure *Figure::ReadFile(const std::string& name, std::vector<float> *diffusecolor, std::vector<float> *ambientcolor,
+                         std::vector<float> *specularcolor, std::vector<float> *emissivecolor, float shininessvalue,
+                         int texture) {
     int cod;
     Figure *res;
     std::ifstream file;
@@ -71,18 +74,35 @@ Figure *Figure::ReadFile(const std::string& name) {
             printf("Invalid file. Result figure = nullptr\n");
             res = nullptr;
     }
+    if(res)
+    {
+        res->texturaID = texture;
+        res->diffuse = new std::vector<float>(*diffusecolor);
+        res->emissive = new std::vector<float>(*emissivecolor);
+        res->specular = new std::vector<float>(*specularcolor);
+        res->ambient = new std::vector<float>(*ambientcolor);
+        res->shininnes = shininessvalue;
+    }
     return res;
 }
 
 void Figure::drawFigure() {
-    drawVBO(vertices,verticeCount,1.0f,1.0f,1.0f);
+    // drawVBO(vertices,verticeCount,1.0f,1.0f,1.0f);
+    materialLighting(ambient,diffuse,specular,emissive,shininnes);
+    glBindTexture(GL_TEXTURE_2D, this->texturaID);
+    drawVBOIluminacao(vbos,verticeCount);
 }
-void Figure::apply() {drawFigure();}
+void Figure::apply() {
+    drawFigure();
+}
 void Figure::undo() {}
-void Figure::load() { loadVBO();}
+void Figure::load() {
+    loadVBO();
+}
 void Figure::loadVBO() {}
 
-void Figure::loadVertices(unsigned int * res) {
-    this->verticeCount = res[0];
-    this->vertices = res[1];
+void Figure::loadVertices(unsigned int * res,int vc) {
+    this->verticeCount = vc;
+    this->vbos = res;
 }
+

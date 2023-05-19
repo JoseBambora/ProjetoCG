@@ -2,7 +2,9 @@
 #include <cstdio>
 #include <list>
 #include <regex>
+#include <iostream>
 #include "../TinyXML/tinyxml2.h"
+#include "../Classes/EngineClasses/Header/Lights.h"
 #include "../Classes/EngineClasses/Header/World.h"
 #include "../Classes/EngineClasses/Header/ListTree.h"
 #include "../Classes/Transformations/Header/Transformation.h"
@@ -16,13 +18,43 @@ const std::string dir = "../../files/";
 
 using namespace tinyxml2;
 
+void trataRGB(XMLElement *xml,std::vector<float>*color)
+{
+    std::string R, G,B;
+    R = xml->Attribute("R");
+    G = xml->Attribute("G");
+    B = xml->Attribute("B");
+    color->push_back(std::stof(R)/ 256);
+    color->push_back(std::stof(G)/ 256);
+    color->push_back(std::stof(B)/ 256);
+    color->push_back(1.0f);
+}
+
+void trataColor(XMLElement *color, std::vector<float>*diffusecolor,std::vector<float>*ambientcolor,std::vector<float>*specularcolor,std::vector<float>*emissivecolor,float *shininessvalue)
+{
+    XMLElement *diffuse = color->FirstChildElement("diffuse");
+    XMLElement *ambient = color->FirstChildElement("ambient");
+    XMLElement *specular = color->FirstChildElement("specular");
+    XMLElement *emissive = color->FirstChildElement("emissive");
+    XMLElement *shininess = color->FirstChildElement("shininess");
+    trataRGB(diffuse,diffusecolor);
+    trataRGB(ambient,ambientcolor);
+    trataRGB(specular,specularcolor);
+    trataRGB(emissive,emissivecolor);
+    *shininessvalue = std::stof(shininess->Attribute("value"));
+}
+
 void trataModels(XMLElement *models , ListTree * tree)
 {
     XMLElement *model = models->FirstChildElement("model");
     while (model)
     {
+        std::vector<float> ambient,specular,diffuse,emissive;
+        float shininnes;
+        trataColor(model->FirstChildElement("color"),&diffuse,&ambient,&specular,&emissive,&shininnes);
         std::string nameFile = model->Attribute("file");
-        Figure *figura = Figure::ReadFile(nameFile);
+        // TO DO loadTexture
+        Figure *figura = Figure::ReadFile(nameFile,&diffuse,&ambient,&specular,&emissive,shininnes,0);
         tree->addNode(figura);
         model = model->NextSiblingElement("model");
         //printf("Model: %s\n",nameFile.c_str());
@@ -114,6 +146,7 @@ void trataTransform(XMLElement *transform, ListTree *tree)
 void trataGrupo(XMLElement *group, ListTree*tree)
 {
     bool b = true;
+    bool havetransform = false;
     XMLElement *child = group->FirstChildElement();
     while(b)
     {
@@ -121,9 +154,19 @@ void trataGrupo(XMLElement *group, ListTree*tree)
         if(b)
         {
             if(std::string(child->Value()) == "transform")
+            {
                 trataTransform(child,tree);
+                havetransform = true;
+            }
             else if (std::string(child->Value()) == "models")
+            {
+                if(!havetransform)
+                {
+                    tree->addNode(new Transform());
+                    tree->openLevel();
+                }
                 trataModels(child,tree);
+            }
             else if(std::string(child->Value()) == "group")
             {
                 if(tree->empty())
@@ -185,6 +228,61 @@ void trataWindow(XMLElement *window, float *width, float*height)
     }
 }
 
+void trataLuzes(XMLElement *luzes, std::vector<Lights*> *ligths)
+{
+    XMLElement *child = luzes->FirstChildElement();
+    GLenum luzesGLenum[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
+    int i = 0;
+    while(child)
+    {
+        Lights *add;
+        auto *vetor = new std::vector<float>();
+        std::string type = child->Attribute("type");
+        if(type == "point")
+        {
+            float posx = std::stof(child->Attribute("posx"));
+            float posy = std::stof(child->Attribute("posy"));
+            float posz = std::stof(child->Attribute("posz"));
+            vetor->push_back(posx);
+            vetor->push_back(posy);
+            vetor->push_back(posz);
+            add = new Lights(Lights::point,luzesGLenum[i],vetor);
+        }
+        else if (type == "directional")
+        {
+            float dirx = std::stof(child->Attribute("dirx"));
+            float diry = std::stof(child->Attribute("diry"));
+            float dirz = std::stof(child->Attribute("dirz"));
+            vetor->push_back(dirx);
+            vetor->push_back(diry);
+            vetor->push_back(dirz);
+            add = new Lights(Lights::directional,luzesGLenum[i],vetor);
+        }
+        else
+        {
+            float posx = std::stof(child->Attribute("posx"));
+            float posy = std::stof(child->Attribute("posy"));
+            float posz = std::stof(child->Attribute("posz"));
+            float dirx = std::stof(child->Attribute("dirx"));
+            float diry = std::stof(child->Attribute("diry"));
+            float dirz = std::stof(child->Attribute("dirz"));
+            float cutoff = std::stof(child->Attribute("cutoff"));
+            vetor->push_back(posx);
+            vetor->push_back(posy);
+            vetor->push_back(posz);
+            vetor->push_back(dirx);
+            vetor->push_back(diry);
+            vetor->push_back(dirz);
+            vetor->push_back(cutoff);
+            add = new Lights(Lights::spotlight,luzesGLenum[i],vetor);
+        }
+        i++;
+        // delete vetor;
+        ligths->push_back(add);
+        child = child->NextSiblingElement();
+    }
+}
+
 int main(int argc, char** argv)
 {
     if(argc == 2)
@@ -195,17 +293,20 @@ int main(int argc, char** argv)
         doc.LoadFile((name).c_str());
         XMLElement *pRootElement = doc.RootElement();
         float width = 0, height = 0, px = 0, py = 0,pz = 0,lx = 0,ly = 0,lz = 0, cx = 0,cy=0,cz=0, fov=0, near=0, far = 0;
+        auto *ligths = new std::vector<Lights*>();
         if (pRootElement != nullptr)
         {
             XMLElement *window = pRootElement->FirstChildElement("window");
             trataWindow(window,&width,&height);
             XMLElement *camera = pRootElement->FirstChildElement("camera");
             trataCamara(camera,&px,&py,&pz,&lx,&ly,&lz,&cx,&cy,&cz,&fov,&near,&far);
+            XMLElement *luzes = pRootElement->FirstChildElement("lights");
+            trataLuzes(luzes,ligths);
             XMLElement *group = pRootElement->FirstChildElement("group");
             trataGrupo(group,tree);
         }
         doc.Clear();
-        auto *w = new World(width,height,px,py,pz,lx,ly,lz,cx,cy,cz,fov,near,far,tree);
+        auto *w = new World(width,height,px,py,pz,lx,ly,lz,cx,cy,cz,fov,near,far,tree,ligths);
         printf("%s\n",w->toString().c_str());
         w->drawWorld();
         delete w;

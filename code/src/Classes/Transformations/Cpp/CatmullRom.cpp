@@ -111,7 +111,7 @@ void CatmullRom::applyTransformations() {
 }
 
 void CatmullRom::apply() {
-    this->renderCatmullRomCurve();
+    // this->renderCatmullRomCurve();
     this->applyTransformations();
 }
 

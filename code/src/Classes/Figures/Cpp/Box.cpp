@@ -41,6 +41,7 @@ void Box::calculatePoints(float length, int dimension) {
     float lb = length/2;
     float ls = (-1) * length/2;
     this->points = std::vector<std::vector<float>>();
+    std::vector<std::vector<float>> aux;
     points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::horizontal,Plane::negativo,lb));
     points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::horizontal,Plane::positivo,ls));
     points.push_back(Plane::calculatePointsStatic(length,dimension,Plane::frontal,Plane::positivo,lb));
@@ -52,6 +53,7 @@ void Box::calculatePoints(float length, int dimension) {
 
 void Box::loadVBO() {
     auto * allPoints = new std::vector<float>();
+    float nx = 0, ny = 1,nz = 0;
     for(int j = 0; j < points.size(); j++)
     {
         std::vector<float> drawPoints = this->points[j];
@@ -60,9 +62,32 @@ void Box::loadVBO() {
             allPoints->push_back(drawPoints[i]);
             allPoints->push_back(drawPoints[i+1]);
             allPoints->push_back(drawPoints[i+2]);
+
+            normaisvetor.push_back(nx);
+            normaisvetor.push_back(ny);
+            normaisvetor.push_back(nz);
         }
+        // Horizontal
+        if (nx == 0 && ny == 1 && nz == 0)
+            ny = -1;
+        else if (nx == 0 && ny == -1 && nz == 0)
+        {
+            ny = 0;
+            nz = 1;
+        }
+        // Frontal
+        else if (nx == 0 && ny == 0 && nz == 1)
+            nz = -1;
+        else if (nx == 0 && ny == 0 && nz == -1)
+        {
+            nx = 1;
+            nz = 0;
+        }
+        // Perfil
+        else if (nx == 1 && ny == 0 && nz == 0)
+            nx = -1;
     }
-    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
     delete allPoints;
 
 }

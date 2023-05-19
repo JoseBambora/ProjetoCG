@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <fstream>
+#include <iostream>
 #include "../Header/Cylinder.h"
 #include "../Header/Basics.h"
 #include "GL/glut.h"
@@ -77,9 +78,9 @@ void Cylinder::calculatePoints(float radius, float height, int slices)
 
 void Cylinder::loadVBO() {
     auto * allPoints = new std::vector<float>();
-    connectPyramid(allPoints,basecima,centrocima[0],centrocima[1],centrocima[2], false);
-    connectPyramid(allPoints,basebaixo,0,0,0, true);
-    connectSideFora(allPoints,basebaixo,basecima);
-    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    connectPyramid(allPoints,basecima,centrocima[0],centrocima[1],centrocima[2], false,&normaisvetor, true,0,0,0);
+    connectPyramid(allPoints,basebaixo,0,0,0, true,&normaisvetor,true,0,0,0);
+    connectSideForaV2(allPoints,basebaixo,basecima,&normaisvetor,0,0,0,centrocima[0],centrocima[1],centrocima[2]);
+    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
     delete allPoints;
 }

@@ -80,11 +80,11 @@ void Donut::loadVBO() {
     {
         std::vector<float> cint = this->superficielateral[i];
         std::vector<float> cext = this->superficielateral[i+1];
-        connectSideDentro(allPoints,anteriorint,cint);
-        connectSideFora(allPoints,anteriorext,cext);
+        connectSideDentro(allPoints,anteriorint,cint,&normaisvetor,0,0,0);
+        connectSideFora(allPoints,anteriorext,cext,&normaisvetor,0,0,0);
         anteriorint = cint;
         anteriorext = cext;
     }
-    this->loadVertices(saveInfoPlacaGrafica(allPoints));
+    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
     delete allPoints;
 }

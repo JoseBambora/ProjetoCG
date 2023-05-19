@@ -1,10 +1,10 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
-#include <cmath>
 #include <GL/glew.h>
-#include "../Header/Basics.h"
+#include <iostream>
 #include "../Header/Bezier.h"
+#include "../Header/Basics.h"
 #include "../../EngineClasses/Header/MatrixOperations.h"
 
 const int Figure::codBezierPatch;
@@ -85,24 +85,9 @@ void Bezier:: desenhaPatch(std::vector<std::vector<float>> patch)
     glEnd();
     glPopMatrix();
 }
-/*
- * separar em x y z
- * seila = M * V (4x4 * 4x1 = 4x1)
- * seila2x = px * seila (4x4 * 4x1 = 4x1)
- * seila2y = py * seila (4x4 * 4x1 = 4x1)
- * seila2z = pz * seila (4x4 * 4x1 = 4x1)
- * seila2x = M * seila2x (4x4 * 4x1 = 4x1)
- * seila2y = M * seila2y (4x4 * 4x1 = 4x1)
- * seila2z = M * seila2z (4x4 * 4x1 = 4x1)
- * resx = U * seila2x = (1x4 * 4x1 = 1)
- * resy = U * seila2y = (1x4 * 4x1 = 1)
- * resz = U * seila2z = (1x4 * 4x1 = 1)
- * res = (resx, resy, resz)
- * this->pointsConnections->push_back(res)
- * Pescorrer os pontos e desenhar strips
- * this->pointsConnections = new std::vector<std::vector<float>>();
- */
+
 void Bezier::calculaPoints( std::vector<std::vector<int>> indices, std::vector<std::vector<float>> points) {
+
     float px[4][4];
     float py[4][4];
     float pz[4][4];
@@ -110,12 +95,8 @@ void Bezier::calculaPoints( std::vector<std::vector<int>> indices, std::vector<s
     bezierMatrixM(m);
     for(int i = 0; i < indices.size(); i++)
     {
-        std::vector<std::vector<float>> patch;
         std::vector<int> indexline = indices[i];
-        std::vector<std::vector<float>> p0;
-        std::vector<std::vector<float>> p1;
-        std::vector<std::vector<float>> p2;
-        std::vector<std::vector<float>> p3;
+        std::vector<std::vector<float>> p0, p1,p2,p3;
         for(int j = 0; j < 4; j++)
         {
             p0.push_back(points[indexline[j]]);
@@ -124,43 +105,8 @@ void Bezier::calculaPoints( std::vector<std::vector<int>> indices, std::vector<s
             p3.push_back(points[indexline[j+12]]);
         }
         bezierMatrixPoints(p0,p1,p2,p3,px,py,pz);
-        float uvalor = 0;
-        float u[4];
-        int iteracoes = this->lim+1;
-        for(int primeiras = 0; primeiras < iteracoes; primeiras++)
-        {
-            float vvalor = 0;
-            float v[4];
-            bezierMatrixUV(uvalor,u);
-            for(int segundas = 0; segundas < iteracoes; segundas++)
-            {
-                bezierMatrixUV(vvalor,v);
-                float res1[4];
-                multMatrixVector(m,v,res1);
-                float resx1[4];
-                float resy1[4];
-                float resz1[4];
-                multMatrixVector(px,res1,resx1);
-                multMatrixVector(py,res1,resy1);
-                multMatrixVector(pz,res1,resz1);
-                float resx2[4];
-                float resy2[4];
-                float resz2[4];
-                multMatrixVector(m,resx1,resx2);
-                multMatrixVector(m,resy1,resy2);
-                multMatrixVector(m,resz1,resz2);
-                float resx3 = multiplicaVetores(u,resx2);
-                float resy3 = multiplicaVetores(u,resy2);
-                float resz3 = multiplicaVetores(u,resz2);
-                std::vector<float> point;
-                point.push_back(resx3);
-                point.push_back(resy3);
-                point.push_back(resz3);
-                patch.push_back(point);
-                vvalor += (float) 1/this->lim;
-            }
-            uvalor += (float) 1/this->lim;
-        }
+        std::vector<std::vector<float>> patch;
+        bezierGeraPatch(&patch,px,py,pz,m,this->lim);
         this->pointsCurve->push_back(patch);
     }
 }
@@ -264,26 +210,33 @@ void Bezier::loadAllPoints(std::vector<std::vector<std::vector<float>>>* allPoin
     int num = this->lim + 1;
     int numlinhas = this->lim * allPoints->size();
     this->verticeCount = (this->lim+1)*2;
-    this->allVertices = new GLuint[numlinhas];
-    glGenBuffers(numlinhas, this->allVertices);
-    this->sizeVertices = numlinhas;
+    this->allVertices = new GLuint[numlinhas*2];
+    glGenBuffers(numlinhas*2, this->allVertices);
+    this->sizeVertices = numlinhas*2;
     int index = 0;
-    for(int i = 0; i < allPoints->size(); i++)
+    for(auto patch : *allPoints)
     {
-        std::vector<std::vector<float>> patch = allPoints->at(i);
-        std::vector<float> points;
+        std::vector<float> points, normais;
         for(int j = 0; j < patch.size(); j++)
         {
             std::vector<float>point = patch[j];
             points.push_back(point[0]);
             points.push_back(point[1]);
             points.push_back(point[2]);
+            // to do: point irá conter a normal também, acumular no vetor normais
+            normais.push_back(point[3]);
+            normais.push_back(point[4]);
+            normais.push_back(point[5]);
             if(j%2 != 0 && j % num == num-1)
             {
+                // to do: bind buffer das normais
                 glBindBuffer(GL_ARRAY_BUFFER, this->allVertices[index]);
                 glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(float), points.data(), GL_STATIC_DRAW);
+                glBindBuffer(GL_ARRAY_BUFFER, this->allVertices[index+1]);
+                glBufferData(GL_ARRAY_BUFFER, normais.size() * sizeof(float) , normais.data(),GL_STATIC_DRAW);
                 points.clear();
-                index++;
+                normais.clear();
+                index+=2;
             }
         }
     }
@@ -301,14 +254,16 @@ Bezier::Bezier() {
 }
 
 void Bezier::drawFigure() {
+    materialLighting(ambient,diffuse,specular,emissive,shininnes);
     glPushMatrix();
-    glRotatef(-90,1,0,0);
-    glColor3f(1,1,1);
-    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    for(int i = 0; i < sizeVertices; i++)
+    for(int i = 0; i < sizeVertices; i+=2)
     {
         glBindBuffer(GL_ARRAY_BUFFER, allVertices[i]);
         glVertexPointer(3, GL_FLOAT, 0, 0);
+
+        glBindBuffer(GL_ARRAY_BUFFER,allVertices[i+1]);
+        glNormalPointer(GL_FLOAT,0,0);
+
         glDrawArrays(GL_TRIANGLE_STRIP, 0, verticeCount);
     }
     glPopMatrix();
