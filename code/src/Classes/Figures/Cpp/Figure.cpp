@@ -94,6 +94,7 @@ void Figure::drawFigure() {
     else
         materialLighting(ambient,diffuse,specular,emissive,shininnes);
     drawVBOIluminacaoTextura(vbos,verticeCount);
+    glBindTexture(GL_TEXTURE_2D,0);
 }
 void Figure::apply() {
     drawFigure();

@@ -412,8 +412,8 @@ GLuint* saveInfoPlacaGraficaIluminacao(std::vector<float> *allPoints, std::vecto
 
 GLuint* saveInfoPlacaGraficaIluminacaoTextura(std::vector<float> *allPoints, std::vector<float> *normais,std::vector<float> *texturas )
 {
-    auto * res = new GLuint[2];
-    glGenBuffers(2, res);
+    auto * res = new GLuint[3];
+    glGenBuffers(3, res);
     glBindBuffer(GL_ARRAY_BUFFER, res[0]);
     glBufferData(GL_ARRAY_BUFFER,sizeof(float) * allPoints->size(), allPoints->data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, res[1]);

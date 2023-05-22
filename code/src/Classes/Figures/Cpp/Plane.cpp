@@ -320,17 +320,56 @@ std::vector<float> Plane::calculatePointsStatic(float length, int dimension,int 
 }
 
 void Plane::loadVBO() {
+
     auto * allPoints = new std::vector<float>();
+    float aux,aux2;
+    int quadrado = 1;
     for (int i = 0; i < points.size(); i+=3)
     {
+        switch(quadrado){
+            case 1:
+                aux = 1;
+                aux2= 0;
+                break;
+            case 2:
+                aux = 0;
+                aux2= 1;
+                break;
+            case 3:
+                aux = 0;
+                aux2= 0;
+                break;
+            case 4:
+                aux = 1;
+                aux2 = 0;
+                break;
+            case 5:
+                aux = 1;
+                aux2= 1;
+                break;
+            case 6:
+                aux = 0;
+                aux2 = 1;
+                break;
+            default:
+                break;
+        }
         allPoints->push_back(points[i]);
         allPoints->push_back(points[i+1]);
         allPoints->push_back(points[i+2]);
         normaisvetor.push_back(0);
         normaisvetor.push_back(1);
         normaisvetor.push_back(0);
+        texturasCoords.push_back(aux);
+        texturasCoords.push_back(aux2);
+
+        if(quadrado == 6){
+            quadrado = 0;
+        }
+        quadrado+=1;
+        //printf("%d",quadrado);
     }
-    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
+    this->loadVertices(saveInfoPlacaGraficaIluminacaoTextura(allPoints,&normaisvetor,&texturasCoords),allPoints->size()/3);
     delete allPoints;
 }
 
