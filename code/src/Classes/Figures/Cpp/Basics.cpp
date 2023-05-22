@@ -6,7 +6,6 @@
 #include <fstream>
 #include "../Header/Basics.h"
 #include <GL/glew.h>
-#include <GL/glut.h>
 #include <iostream>
 #include <IL/il.h>
 #include "../../EngineClasses/Header/MatrixOperations.h"
@@ -38,104 +37,6 @@ std::vector<float> getPointsCircumference(float x, float y, float z, float radiu
         angle += rotation;
     }
     return res;
-}
-
-// Draws a pyramid, independently of the format of its base
-// x y and z are the coordinates of the top of the pyramid.
-void drawPyramid(std::vector<float> base, float x, float y, float z, bool direcao,  float cred, float cgreen, float cblue)
-{
-    glBegin(GL_TRIANGLES);
-    glColor3f(cred, cgreen, cblue);
-    for(int i = 0; i < base.size()-3; i++)
-    {
-        float px1 = base.at(i);
-        float py1 = base.at(i + 1);
-        float pz1 = base.at(i + 2);
-        float px2 = base.at(i + 3);
-        float py2 = base.at(i + 4);
-        float pz2 = base.at(i + 5);
-        if(direcao)
-        {
-            glVertex3f(x,y,z);
-            glVertex3f(px1,py1,pz1);
-            glVertex3f(px2,py2,pz2);
-        }
-        else
-        {
-            glVertex3f(x,y,z);
-            glVertex3f(px2,py2,pz2);
-            glVertex3f(px1,py1,pz1);
-        }
-        i+=2;
-    }
-    glEnd();
-}
-
-
-void drawSide(std::vector<float> cbaixo,std::vector<float> ccima, float cred, float cgreen, float cblue, bool dentro)
-{
-    glBegin(GL_TRIANGLES);
-    glColor3f(cred, cgreen, cblue);
-    for(int i = 0; i < cbaixo.size(); i++)
-    {
-        float px1 = cbaixo.at(i);
-        float py1 = cbaixo.at(i+1);
-        float pz1 = cbaixo.at(i+2);
-
-        float px2 = ccima.at(i);
-        float py2 = ccima.at(i+1);
-        float pz2 = ccima.at(i+2);
-        float px3 = px2;
-        float py3 = py2;
-        float pz3 = pz2;
-
-        float px4 = px3;
-        float py4 = py3;
-        float pz4 = pz3;
-        if(i+3 < cbaixo.size()){
-            px3 = cbaixo.at(i+3);
-            py3 = cbaixo.at(i+4);
-            pz3 = cbaixo.at(i+5);
-            px4 = ccima.at(i+3);
-            py4 = ccima.at(i+4);
-            pz4 = ccima.at(i+5);
-        }
-        if(!dentro)
-        {
-            glVertex3f(px1,py1,pz1);
-            glVertex3f(px3,py3,pz3);
-            glVertex3f(px2,py2,pz2);
-
-            glVertex3f(px4,py4,pz4);
-            glVertex3f(px2,py2,pz2);
-            glVertex3f(px3,py3,pz3);
-        }
-        else
-        {
-            glVertex3f(px1,py1,pz1);
-            glVertex3f(px2,py2,pz2);
-            glVertex3f(px3,py3,pz3);
-
-            glVertex3f(px4,py4,pz4);
-            glVertex3f(px3,py3,pz3);
-            glVertex3f(px2,py2,pz2);
-        }
-        i += 2;
-    }
-    glEnd();
-}
-
-
-// Draw the connection between 2 circunference (basically 2 triangles).
-// s1 and s2 have the coordinates of the points of both circunference.
-void drawSideFora(std::vector<float> cbaixo,std::vector<float> ccima, float cred, float cgreen, float cblue)
-{
-    drawSide(cbaixo,ccima,cred,cgreen,cblue, false);
-}
-
-void drawSideDentro(std::vector<float> cbaixo,std::vector<float> ccima, float cred, float cgreen, float cblue)
-{
-    drawSide(cbaixo,ccima,cred,cgreen,cblue, true);
 }
 
 std::vector<std::vector<float>> readPoints(std::ifstream file)
@@ -175,7 +76,7 @@ void writePoints(std::vector<std::vector<float>> circunferences, const std::stri
     myfile.close();
 }
 
-
+// REMOVER
 void addPointsAndNormais(std::vector<float> *allPoints,std::vector<float> *normais,float x, float y, float z, float cx, float cy, float cz)
 {
     allPoints->push_back(x);
@@ -184,6 +85,7 @@ void addPointsAndNormais(std::vector<float> *allPoints,std::vector<float> *norma
     calculaNormaisCircunferenciaV2(x,y,z,cx,cy,cz,normais);
 }
 
+// REMOVER
 void addPointsAndNormaisV2(std::vector<float> *allPoints,std::vector<float> *normais,float x, float y, float z,bool booleano)
 {
     allPoints->push_back(x);
@@ -192,7 +94,31 @@ void addPointsAndNormaisV2(std::vector<float> *allPoints,std::vector<float> *nor
     calculaNormalBases(booleano,normais);
 }
 
+// tx, ty -> coordenadas de textura relativamente ao centro da circunferencia
+// raio da circunferência na textura
+// angle para determinar ponto da circunferência
+void addPointsAndNormaisTexturas(std::vector<float> *allPoints,std::vector<float> *normais, std::vector<float> *texturas,float x, float y, float z, float cx, float cy, float cz,float angle,float tx, float ty, float traio)
+{
+    allPoints->push_back(x);
+    allPoints->push_back(y);
+    allPoints->push_back(z);
+    calculaNormaisCircunferenciaV2(x,y,z,cx,cy,cz,normais);
+    texturas->push_back(tx + traio * cosf(angle));
+    texturas->push_back(ty + traio * sinf(angle));
+}
 
+// Mesma coisa que a função anterior
+void addPointsAndNormaisTexturasV2(std::vector<float> *allPoints,std::vector<float> *normais, std::vector<float> *texturas,float x, float y, float z,bool booleano,float angle, float traio,float tx, float ty)
+{
+    allPoints->push_back(x);
+    allPoints->push_back(y);
+    allPoints->push_back(z);
+    calculaNormalBases(booleano,normais);
+    texturas->push_back(tx + traio * sinf(angle));
+    texturas->push_back(ty + traio * cosf(angle));
+}
+
+// REMOVER
 void connectPyramid(std::vector<float> *allPoints,std::vector<float> base, float x, float y, float z, bool direcao, std::vector<float>*normais,bool plana,float cx,float cy,float cz)
 {
     for (int i = 0; i < base.size() - 3; i+=3) {
@@ -237,6 +163,64 @@ void connectPyramid(std::vector<float> *allPoints,std::vector<float> base, float
     }
 }
 
+// trabalhar com angulos
+// aumento:
+// 2.0pi / numero de pontos será o aumento a fazer ao angulo a cada iteração
+// base.size / 3 = número de pontos (base contem coordenadas x y e z)
+// 2.0pi / base.size / 3 = 2.0 * pi * 3 / base.size = 6.0 * pi / base.size
+// igual à função que temos das normais, só que adicionamos texturas
+void connectPyramidTexturas(std::vector<float> *allPoints,std::vector<float>*normais,std::vector<float>*texturas,std::vector<float> base, float x, float y, float z, bool direcao, bool plana,float cx,float cy,float cz,float tx, float ty, float traio)
+{
+    float angle = 0;
+    float aumento = 6.0f * M_PI / (float) base.size();
+    for (int i = 0; i < base.size() - 3; i+=3)
+    {
+        float angle1 = angle;
+        float angle2 = angle + aumento;
+        float px1 = base.at(i);
+        float py1 = base.at(i + 1);
+        float pz1 = base.at(i + 2);
+        float px2 = base.at(i + 3);
+        float py2 = base.at(i + 4);
+        float pz2 = base.at(i + 5);
+        allPoints->push_back(x);
+        allPoints->push_back(y);
+        allPoints->push_back(z);
+        texturas->push_back(tx);
+        texturas->push_back(ty);
+        calculaNormalBases(!direcao,normais);
+        if (direcao)
+        {
+            // baixo
+            if(plana)
+            {
+                addPointsAndNormaisTexturasV2(allPoints,normais,texturas,px2,py2,pz2,false,angle2,traio,tx,ty);
+                addPointsAndNormaisTexturasV2(allPoints,normais,texturas,px1,py1,pz1,false,angle1,traio,tx,ty);
+            }
+            else
+            {
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,angle2,traio,tx,ty);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,angle1,traio,tx,ty);
+            }
+        }
+        else
+        {
+            if(plana)
+            {
+                addPointsAndNormaisTexturasV2(allPoints,normais,texturas,px1,py1,pz1,true,angle1,traio,tx,ty);
+                addPointsAndNormaisTexturasV2(allPoints,normais,texturas,px2,py2,pz2,true,angle2,traio,tx,ty);
+            }
+            else
+            {
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,angle1,traio,tx,ty);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,angle2,traio,tx,ty);
+            }
+        }
+        angle += aumento;
+    }
+}
+
+// REMOVER
 void connectSide(std::vector<float> *allPoints,std::vector<float> b1,std::vector<float> b2, bool dentro, float cx, float cy, float cz, std::vector<float>*normais)
 {
     for(int i = 0; i < b1.size(); i+=3)
@@ -283,9 +267,21 @@ void connectSide(std::vector<float> *allPoints,std::vector<float> b1,std::vector
     }
 }
 
-
-void connectSideV2(std::vector<float> *allPoints,std::vector<float> b1,std::vector<float> b2, bool dentro, float cx, float cy, float cz,float cx1,float cy1,float cz1, std::vector<float>*normais)
+// Conecta 2 circunferências, calculando as normais e as texturas
+// damos o y da textura da circunferência de baixo e mesmo para a de cima
+// esses y's irão ser fixos
+// tx irá variar de 0 a 1, a cada iteração aumentar 1 / numero de pontos (base / 3 = numero de pontos)
+// exemplo:
+// |      | -> intervalo do tx
+// +------+
+// |      | -> y2
+// |      | -> y1
+// |      |
+// +------+
+void connectSideTexturas(std::vector<float> *allPoints,std::vector<float>*normais,std::vector<float>*texturas,std::vector<float> b1,std::vector<float> b2, bool dentro, float cx, float cy, float cz,float cx1, float cy1, float cz1,float ty1,float ty2)
 {
+    float tx = 0;
+    float aumento = 3.0f / b1.size();
     for(int i = 0; i < b1.size(); i+=3)
     {
         if(i+3 < b1.size())
@@ -307,45 +303,54 @@ void connectSideV2(std::vector<float> *allPoints,std::vector<float> b1,std::vect
             float pz4 = b2.at(i+5);
             if(!dentro)
             {
-                addPointsAndNormais(allPoints,normais,px1,py1,pz1,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px3,py3,pz3,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px2,py2,pz2,cx,cy,cz);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,tx,ty1,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px3,py3,pz3,cx,cy,cz,0,tx+aumento,ty1,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx1,cy1,cz1,0,tx,ty2,0);
 
-                addPointsAndNormais(allPoints,normais,px4,py4,pz4,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px2,py2,pz2,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px3,py3,pz3,cx,cy,cz);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px4,py4,pz4,cx1,cy1,cz1,0,tx+aumento,ty2,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx1,cy1,cz1,0,tx,ty2,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px3,py3,pz3,cx,cy,cz,0,tx+aumento,ty1,0);
             }
             else
             {
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,tx,ty1,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx1,cy1,cz1,0,tx,ty2,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px3,py3,pz3,cx,cy,cz,0,tx+aumento,ty1,0);
 
-                addPointsAndNormais(allPoints,normais,px1,py1,pz1,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px2,py2,pz2,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px3,py3,pz3,cx,cy,cz);
-
-                addPointsAndNormais(allPoints,normais,px4,py4,pz4,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px3,py3,pz3,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px2,py2,pz2,cx,cy,cz);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px4,py4,pz4,cx1,cy1,cz1,0,tx+aumento,ty2,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px3,py3,pz3,cx,cy,cz,0,tx+aumento,ty1,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx1,cy1,cz1,0,tx,ty2,0);
             }
         }
+        tx += aumento;
     }
 }
 
-
+// REMOVER
 void connectSideFora(std::vector<float>* allPoints,std::vector<float> cbaixo,std::vector<float> ccima,std::vector<float>*normais,float cx, float cy,float cz)
 {
     connectSide(allPoints,cbaixo,ccima,false,cx,cy,cz,normais);
 }
 
-
-void connectSideForaV2(std::vector<float>* allPoints,std::vector<float> cbaixo,std::vector<float> ccima,std::vector<float>*normais,float cx, float cy,float cz,float cx1,float cy1,float cz1)
-{
-    connectSideV2(allPoints,cbaixo,ccima,false,cx,cy,cz,cx1,cy1,cz1,normais);
-}
-
-
+// REMOVER
 void connectSideDentro(std::vector<float>* allPoints,std::vector<float> cbaixo,std::vector<float> ccima,std::vector<float>*normais,float cx, float cy,float cz)
 {
     connectSide(allPoints,cbaixo,ccima,true,cx,cy,cz,normais);
+}
+
+void connectSideForaTexturas(std::vector<float>* allPoints,std::vector<float> cbaixo,std::vector<float> ccima,std::vector<float>*normais,float cx, float cy,float cz, std::vector<float> *texturas,float ty1, float ty2)
+{
+    connectSideTexturas(allPoints,normais,texturas,cbaixo,ccima,false,cx,cy,cz,cx,cy,cz,ty1,ty2);
+}
+
+void connectSideForaV2Texturas(std::vector<float>* allPoints,std::vector<float> cbaixo,std::vector<float> ccima,std::vector<float>*normais,float cx, float cy,float cz,float cx1,float cy1,float cz1,std::vector<float> *texturas,float ty1, float ty2)
+{
+    connectSideTexturas(allPoints,normais,texturas,cbaixo,ccima,false,cx,cy,cz,cx1,cy1,cz1,ty1,ty2);
+}
+
+void connectSideDentroTexturas(std::vector<float>* allPoints,std::vector<float> cbaixo,std::vector<float> ccima,std::vector<float>*normais,float cx, float cy,float cz, std::vector<float> *texturas,float ty1, float ty2)
+{
+    connectSideTexturas(allPoints,normais,texturas,cbaixo,ccima,true,cx,cy,cz,cx,cy,cz,ty1,ty2);
 }
 
 void calculaNormaisCircunferencia(std::vector<float>* allPoints, float x, float y, float z,std::vector<float>* normais)
@@ -375,29 +380,8 @@ void calculaNormalBases(bool cima, std::vector<float> *res)
         add3Floats(res,0,-1,0);
 }
 
-void calculaNormalSideYAngle(float delta,float deltay,std::vector<float> *res)
-{
-    add3Floats(res,sinf(delta),sinf(deltay),cosf(delta));
-}
 
-void calculaNormalSideY0(float delta,std::vector<float> *res)
-{
-    calculaNormalSideYAngle(delta,0,res);
-}
-
-GLuint* saveInfoPlacaGrafica(std::vector<float> *allPoints)
-{
-    GLuint verticeCount = allPoints->size() / 3;
-    GLuint vertices;
-    glGenBuffers(1, &vertices);
-    glBindBuffer(GL_ARRAY_BUFFER, vertices);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(float) * allPoints->size(), allPoints->data(), GL_STATIC_DRAW);
-    auto * res = new GLuint[2];
-    res[0] = verticeCount;
-    res[1] = vertices;
-    return res;
-}
-
+// REMOVER
 GLuint* saveInfoPlacaGraficaIluminacao(std::vector<float> *allPoints, std::vector<float> *normais)
 {
     auto * res = new GLuint[2];
@@ -422,28 +406,6 @@ GLuint* saveInfoPlacaGraficaIluminacaoTextura(std::vector<float> *allPoints, std
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * texturas->size() , texturas->data(), GL_STATIC_DRAW);
     return res;
 }
-
-void drawVBO(GLuint vertices, GLuint verticeCount, float red, float green, float blue)
-{
-    glColor3f(red,green,blue);
-    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
-    glBindBuffer(GL_ARRAY_BUFFER, vertices);
-    glVertexPointer(3, GL_FLOAT, 0, 0);
-    glDrawArrays(GL_TRIANGLES, 0, verticeCount);
-}
-
-
-void drawVBOIluminacao(GLuint *vbos, GLuint verticeCount)
-{
-    glBindBuffer(GL_ARRAY_BUFFER,vbos[0]);
-    glVertexPointer(3,GL_FLOAT,0,0);
-
-    glBindBuffer(GL_ARRAY_BUFFER,vbos[1]);
-    glNormalPointer(GL_FLOAT,0,0);
-
-    glDrawArrays(GL_TRIANGLES, 0, verticeCount);
-}
-
 
 void drawVBOIluminacaoTextura(GLuint *vbos, GLuint verticeCount)
 {
