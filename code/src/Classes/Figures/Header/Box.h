@@ -14,7 +14,12 @@ public:
     static Box* Read_File(std::ifstream file);
     std::string toString() override;
     ~Box() override;
+    void textHorizPerf(int quadrado, float *tx, float * ty,bool);
+    void textFront(int quadrado, float *tx, float * ty,bool);
     void loadVBO() override;
+
+
+
 };
 
 #endif

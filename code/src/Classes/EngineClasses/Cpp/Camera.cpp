@@ -12,9 +12,6 @@
 #include <iostream>
 
 Camera* Camera::instance;
-
-double Camera::beta = 0;
-double Camera::alfa = 0;
 float Camera::profar;
 float Camera::pronear;
 float Camera::profov;

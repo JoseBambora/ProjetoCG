@@ -328,28 +328,28 @@ void Plane::loadVBO() {
     {
         switch(quadrado){
             case 1:
-                aux = 1;
-                aux2= 0;
-                break;
-            case 2:
                 aux = 0;
                 aux2= 1;
                 break;
-            case 3:
+            case 2:
                 aux = 0;
+                aux2= 0;
+                break;
+            case 3:
+                aux = 1;
                 aux2= 0;
                 break;
             case 4:
                 aux = 1;
-                aux2 = 0;
+                aux2 = 1;
                 break;
             case 5:
-                aux = 1;
+                aux = 0;
                 aux2= 1;
                 break;
             case 6:
-                aux = 0;
-                aux2 = 1;
+                aux = 1;
+                aux2 = 0;
                 break;
             default:
                 break;
