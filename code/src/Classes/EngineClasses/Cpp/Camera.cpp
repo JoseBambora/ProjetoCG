@@ -218,10 +218,6 @@ void Camera::processKeys(unsigned char key, int xx, int yy) {
 
 
 void Camera::posicionaCamara(int w, int h) const {
-    // int t = 500;
-    // gluLookAt(t*cos(beta)*sin(alfa), t*sin(beta), t*cos(beta)*cos(alfa),
-    //           this->lax, this->lay, this->laz,
-    //           this->upx, this->upy, this->upz);
     gluLookAt(this->posx, this->posy, this->posz,
               this->lax, this->lay, this->laz,
               this->upx, this->upy, this->upz);

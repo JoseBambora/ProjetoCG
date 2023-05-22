@@ -22,8 +22,6 @@ public:
     static float profov;
     static float pronear;
     static float profar;
-    static double beta;
-    static double alfa;
     static Camera *instance;
     std::string toString() const;
     void posicionaCamara(int w, int h) const;
