@@ -222,3 +222,18 @@ void bezierGeraPatch(std::vector<std::vector<float>> *patch,float px[4][4],float
     }
     delete []normal;
 }
+
+
+void vetorPontos (float *p1, float *p2, float *res)
+{
+    for (int i = 0; i < 3; i++)
+        res[i] = p2[i] - p1[i];
+    normalize(res);
+}
+
+//  (u2v3 - u3v2, u3v1 - u1v3, u1v2 - u2v1)
+void multVetor (float *v1, float *v2, float *res)
+{
+    cross(v1,v2,res);
+    normalize(res);
+}

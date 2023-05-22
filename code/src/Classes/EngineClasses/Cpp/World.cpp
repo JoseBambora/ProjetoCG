@@ -105,6 +105,7 @@ void World::drawWorld() {
     glutInitWindowSize(this->width, this->height);
     glutCreateWindow("Projeto CG - Grupo 20");
     glutSpecialFunc(Camera::processSpecialKeys);
+    glutKeyboardFunc(Camera::processKeys);
     glutReshapeFunc(Camera::changeSize);
     glutIdleFunc(renderAllScene);
     glutDisplayFunc(renderAllScene);

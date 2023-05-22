@@ -3,11 +3,15 @@
 //
 
 #include "../Header/Camera.h"
+#include "../Header/MatrixOperations.h"
 #include "GL/glut.h"
 #ifdef WIN32
 #define _USE_MATH_DEFINES
 #endif
 #include <cmath>
+#include <iostream>
+
+Camera* Camera::instance;
 
 double Camera::beta = 0;
 double Camera::alfa = 0;
@@ -31,6 +35,7 @@ Camera::Camera(float posx,float posy, float posz,
     profov = fov;
     pronear = near;
     profar = far;
+    instance = this;
 }
 
 std::string Camera::toString() const {
@@ -67,24 +72,147 @@ std::string Camera::toString() const {
     return res;
 }
 
+
+void getVetorDirecaoAndUp(float *d, float *u)
+{
+    auto *p = new float[3];
+    p[0] = Camera::instance->posx;
+    p[1] = Camera::instance->posy;
+    p[2] = Camera::instance->posz;
+    auto *l = new float[3];
+    l[0] = Camera::instance->lax;
+    l[1] = Camera::instance->lay;
+    l[2] = Camera::instance->laz;
+    u[0] = Camera::instance->upx;
+    u[1] = Camera::instance->upy;
+    u[2] = Camera::instance->upz;
+    vetorPontos(p,l,d);
+    delete []l;
+    delete []p;
+}
+
+void esquerda(float *u,float *d,float *final)
+{
+    // multiplicar up com d -> esquerda
+    // normalizar
+    multVetor(u,d,final);
+}
+
+void direita(float *u,float *d,float *final)
+{
+    // multiplicar d com up -> direita
+    // normalizar
+    multVetor(d,u,final);
+}
+
+void frente(float *d, float *final)
+{
+    // d
+    final[0] = d[0];
+    final[1] = d[1];
+    final[2] = d[2];
+}
+
+void traz(float *d, float *final)
+{
+    // o simétrico de d
+    final[0] = -d[0];
+    final[1] = -d[1];
+    final[2] = -d[2];
+}
+
+void sobe(float *u, float *d, float *final)
+{
+    auto aux = new float[3];
+    // multiplicar up com d -> esquerda
+    // normalizar
+    // multiplicar d com esquerda -> cima
+    // normalizar
+    multVetor(u,d,aux);
+    multVetor(d,aux,final);
+    delete []aux;
+}
+
+
+void baixo(float *u, float *d, float *final)
+{
+    auto aux = new float[3];
+    // multiplicar up com d -> esquerda
+    // normalizar
+    // multiplicar d com esquerda -> cima
+    // normalizar
+    multVetor(u,d,aux);
+    multVetor(aux,d,final);
+    delete []aux;
+}
+
 void Camera::processSpecialKeys(int key, int xx, int yy) {
-    double c = M_PI / 18;
-    switch (key) {
-        case GLUT_KEY_LEFT:
-            alfa -= c;
+    auto *d = new float[3];
+    auto *u = new float[3];
+    getVetorDirecaoAndUp(d,u);
+    auto *final = new float[3];
+    if (key == 114)
+    {
+        baixo(u,d,final);
+        Camera::instance->atualiza(final);
+    }
+    else
+    {
+        switch (key)
+        {
+            case GLUT_KEY_LEFT:
+                esquerda(u,d,final);
+                break;
+            case GLUT_KEY_RIGHT:
+                direita(u,d,final);
+                break;
+            case GLUT_KEY_UP:
+                sobe(u,d,final);
+                break;
+            case GLUT_KEY_DOWN:
+                baixo(u,d,final);
+                break;
+        }
+        Camera::instance->atualizaLA(final);
+    }
+    delete []final;
+    delete []d;
+    delete []u;
+    glutPostRedisplay();
+}
+
+
+void Camera::processKeys(unsigned char key, int xx, int yy) {
+    auto *d = new float[3];
+    auto *u = new float[3];
+    getVetorDirecaoAndUp(d,u);
+    auto *final = new float[3];
+    switch (key)
+    {
+        // sobe
+        case ' ':
+            sobe(u,d,final);
             break;
-        case GLUT_KEY_RIGHT:
-            alfa += c;
+        // frente
+        case 'w':
+            frente(d,final);
             break;
-        case GLUT_KEY_UP:
-            beta += c;
-            if (beta > M_PI / 2) beta = M_PI_2;
+        // esquerda
+        case 'a':
+            esquerda(u,d,final);
             break;
-        case GLUT_KEY_DOWN:
-            beta -= c;
-            if (beta < (-1) * M_PI / 2) beta = (-1) * M_PI_2;
+        // direita
+        case 'd':
+            direita(u,d,final);
+            break;
+        // baixo
+        case 's':
+            traz(d,final);
             break;
     }
+    Camera::instance->atualiza(final);
+    delete []final;
+    delete []d;
     glutPostRedisplay();
 }
 
@@ -108,5 +236,26 @@ void Camera::changeSize(int w, int h) {
     glViewport(0, 0, w, h);
     gluPerspective(profov, ratio, pronear, profar);
     glMatrixMode(GL_MODELVIEW);
+}
+
+void Camera::atualiza(float *movimento) {
+    movimento[0] /= 2;
+    movimento[1] /= 2;
+    movimento[2] /= 2;
+    this->posx += movimento[0];
+    this->posy += movimento[1];
+    this->posz += movimento[2];
+    this->lax += movimento[0];
+    this->lay += movimento[1];
+    this->laz += movimento[2];
+}
+
+void Camera::atualizaLA(float *movimento) {
+    movimento[0] /= 3;
+    movimento[1] /= 3;
+    movimento[2] /= 3;
+    this->lax += movimento[0];
+    this->lay += movimento[1];
+    this->laz += movimento[2];
 }
 
