@@ -78,8 +78,8 @@ void Cylinder::calculatePoints(float radius, float height, int slices)
 
 void Cylinder::loadVBO() {
     auto * allPoints = new std::vector<float>();
-    connectPyramidTexturas(allPoints,&normaisvetor,&texturasCoords,basecima,centrocima[0],centrocima[1],centrocima[2], false, true,0,0,0,0.4375f,0.1875f,0.1875f);
-    connectPyramidTexturas(allPoints,&normaisvetor,&texturasCoords,basebaixo,0,0,0, true,true,0,0,0,0.8125f,0.1875f,0.1875f);
+    connectPyramidTexturasCirculo(allPoints,&normaisvetor,&texturasCoords,basecima,centrocima[0],centrocima[1],centrocima[2], false, true,0,0,0,0.4375f,0.1875f,0.1875f);
+    connectPyramidTexturasCirculo(allPoints,&normaisvetor,&texturasCoords,basebaixo,0,0,0, true,true,0,0,0,0.8125f,0.1875f,0.1875f);
     connectSideForaV2Texturas(allPoints,basebaixo,basecima,&normaisvetor,0,0,0,centrocima[0],centrocima[1],centrocima[2],&texturasCoords,0.375f,1);
     this->loadVertices(saveInfoPlacaGraficaIluminacaoTextura(allPoints,&normaisvetor,&texturasCoords),allPoints->size()/3);
     delete allPoints;

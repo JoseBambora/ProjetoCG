@@ -169,7 +169,7 @@ void connectPyramid(std::vector<float> *allPoints,std::vector<float> base, float
 // base.size / 3 = número de pontos (base contem coordenadas x y e z)
 // 2.0pi / base.size / 3 = 2.0 * pi * 3 / base.size = 6.0 * pi / base.size
 // igual à função que temos das normais, só que adicionamos texturas
-void connectPyramidTexturas(std::vector<float> *allPoints,std::vector<float>*normais,std::vector<float>*texturas,std::vector<float> base, float x, float y, float z, bool direcao, bool plana,float cx,float cy,float cz,float tx, float ty, float traio)
+void connectPyramidTexturasCirculo(std::vector<float> *allPoints,std::vector<float>*normais,std::vector<float>*texturas,std::vector<float> base, float x, float y, float z, bool direcao, bool plana,float cx,float cy,float cz,float tx, float ty, float traio)
 {
     float angle = 0;
     float aumento = 6.0f * M_PI / (float) base.size();
@@ -217,6 +217,57 @@ void connectPyramidTexturas(std::vector<float> *allPoints,std::vector<float>*nor
             }
         }
         angle += aumento;
+    }
+}
+
+
+
+void connectPyramidTexturasLinhas(std::vector<float> *allPoints,std::vector<float>*normais,std::vector<float>*texturas,std::vector<float> base, float x, float y, float z, bool direcao, bool plana,float cx,float cy,float cz,float tybase, float tycentro)
+{
+    float tx = 0;
+    float aumento = 3.0f / base.size();
+    for (int i = 0; i < base.size() - 3; i+=3)
+    {
+        float px1 = base.at(i);
+        float py1 = base.at(i + 1);
+        float pz1 = base.at(i + 2);
+        float px2 = base.at(i + 3);
+        float py2 = base.at(i + 4);
+        float pz2 = base.at(i + 5);
+        allPoints->push_back(x);
+        allPoints->push_back(y);
+        allPoints->push_back(z);
+        texturas->push_back(tx);
+        texturas->push_back(tycentro);
+        calculaNormalBases(!direcao,normais);
+        if (direcao)
+        {
+            // baixo
+            if(plana)
+            {
+                addPointsAndNormaisTexturasV2(allPoints,normais,texturas,px2,py2,pz2,false,0,0,tx+aumento,tybase);
+                addPointsAndNormaisTexturasV2(allPoints,normais,texturas,px1,py1,pz1,false,0,0,tx,tybase);
+            }
+            else
+            {
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,0,0,tx+aumento,tybase);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,0,tx,tybase);
+            }
+        }
+        else
+        {
+            if(plana)
+            {
+                addPointsAndNormaisTexturasV2(allPoints,normais,texturas,px1,py1,pz1,true,0,0,tx,tybase);
+                addPointsAndNormaisTexturasV2(allPoints,normais,texturas,px2,py2,pz2,true,0,0,tx+aumento,tybase);
+            }
+            else
+            {
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,0,tx,tybase);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,0,0,tx+aumento,tybase);
+            }
+        }
+        tx += aumento;
     }
 }
 
