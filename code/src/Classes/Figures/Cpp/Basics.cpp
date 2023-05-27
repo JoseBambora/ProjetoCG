@@ -199,8 +199,8 @@ void connectPyramidTexturasCirculo(std::vector<float> *allPoints,std::vector<flo
             }
             else
             {
-                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,angle2,traio,tx,ty);
-                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,angle1,traio,tx,ty);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,angle2,tx,ty,traio);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,angle1,tx,ty,traio);
             }
         }
         else
@@ -212,8 +212,8 @@ void connectPyramidTexturasCirculo(std::vector<float> *allPoints,std::vector<flo
             }
             else
             {
-                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,angle1,traio,tx,ty);
-                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,angle2,traio,tx,ty);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,angle1,tx,ty,traio);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,angle2,tx,ty,traio);
             }
         }
         angle += aumento;
@@ -250,8 +250,8 @@ void connectPyramidTexturasLinhas(std::vector<float> *allPoints,std::vector<floa
             }
             else
             {
-                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,0,0,tx+aumento,tybase);
-                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,0,tx,tybase);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,0,tx+aumento,tybase,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,tx,tybase,0);
             }
         }
         else
@@ -263,8 +263,8 @@ void connectPyramidTexturasLinhas(std::vector<float> *allPoints,std::vector<floa
             }
             else
             {
-                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,0,tx,tybase);
-                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,0,0,tx+aumento,tybase);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,tx,tybase,0);
+                addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx,cy,cz,0,tx+aumento,tybase,0);
             }
         }
         tx += aumento;
@@ -347,7 +347,7 @@ void connectSideTexturas(std::vector<float> *allPoints,std::vector<float>*normai
 
             float px3 = b1.at(i+3);
             float py3 = b1.at(i+4);
-            float pz3 = b1.at(i+5);
+a            float pz3 = b1.at(i+5);
 
             float px4 = b2.at(i+3);
             float py4 = b2.at(i+4);

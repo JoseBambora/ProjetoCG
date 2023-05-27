@@ -83,17 +83,24 @@ std::string Cone::toString() {
 void Cone::loadVBO() {
     auto * allPoints = new std::vector<float>();
     float cx = 0, cy =0 ,cz = 0;
-    connectPyramid(allPoints,base,0,0,0, true,&normaisvetor, true,0,0,0);
+    connectPyramidTexturasCirculo(allPoints,&normaisvetor,&texturasCoords,base,0,0,0, true,true,cx,cy,cz,0.0f,0.1875f,0.1875f);
     std::vector<float> anterior = base;
     std::vector<float> topo = this->superficielateral[this->superficielateral.size()-1];
-    float aumento = topo[1] / this->superficielateral.size();
+    float aumento = topo[1]/this->superficielateral.size();
+    float aumentoTextura = 1.0f/this->superficielateral.size();
+    float yTexura = 0.0f;
     for(int i = 0; i < this->superficielateral.size()-1; i++)
     {
-        connectSideFora(allPoints,anterior,superficielateral[i],&normaisvetor,cx,cy,cz);
+
+        connectSideForaV2Texturas(allPoints,anterior,superficielateral[i],&normaisvetor,cx,cy,cz,cx,cy+aumento,cz,&texturasCoords,yTexura,yTexura+aumentoTextura);
         anterior = superficielateral[i];
+        std::cout << i << "\n";
+        yTexura += aumentoTextura;
+        cy+=aumento;
+
     }
-    connectPyramid(allPoints,anterior,topo[0],topo[1],topo[2], false,&normaisvetor, false,cx,cy,cz);
-    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
+    connectPyramidTexturasLinhas(allPoints,&normaisvetor,&texturasCoords,base,topo[0],topo[1],topo[2], false,false,cx,cy,cz,yTexura,1);
+    this->loadVertices(saveInfoPlacaGraficaIluminacaoTextura(allPoints,&normaisvetor,&texturasCoords),allPoints->size()/3);
     delete allPoints;
 }
 
