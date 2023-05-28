@@ -354,19 +354,6 @@ void connectSideTexturas(std::vector<float> *allPoints,std::vector<float>*normai
             float pz4 = b2.at(i+5);
             if(!dentro)
             {
-                /*
-                addPointsAndNormais(allPoints,normais,px1,py1,pz1,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px3,py3,pz3,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px2,py2,pz2,cx,cy,cz);
-
-                addPointsAndNormais(allPoints,normais,px4,py4,pz4,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px2,py2,pz2,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px3,py3,pz3,cx,cy,cz);
-                 */
-                // std::cout << '(' << px1 << ',' << py1 << ',' << pz1 << ')' << '(' << px3 << ',' << py3 << ',' << pz3 << ')' << '\n';
-                // std::cout << '(' << px2 << ',' << py2 << ',' << pz2 << ')' << '(' << px4 << ',' << py4 << ',' << pz4 << ')' << '\n';
-                // std::cout << "===================================" << '\n';
-
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,tx,ty1,0);
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px3,py3,pz3,cx,cy,cz,0,tx+aumento,ty1,0);
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx1,cy1,cz1,0,tx,ty2,0);
@@ -377,15 +364,6 @@ void connectSideTexturas(std::vector<float> *allPoints,std::vector<float>*normai
             }
             else
             {
-                /*
-                addPointsAndNormais(allPoints,normais,px1,py1,pz1,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px2,py2,pz2,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px3,py3,pz3,cx,cy,cz);
-
-                addPointsAndNormais(allPoints,normais,px4,py4,pz4,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px3,py3,pz3,cx,cy,cz);
-                addPointsAndNormais(allPoints,normais,px2,py2,pz2,cx,cy,cz);
-                 */
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px1,py1,pz1,cx,cy,cz,0,tx,ty1,0);
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx1,cy1,cz1,0,tx,ty2,0);
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px3,py3,pz3,cx,cy,cz,0,tx+aumento,ty1,0);
