@@ -76,15 +76,18 @@ void Donut::loadVBO() {
     auto * allPoints = new std::vector<float>();
     std::vector<float> anteriorint = this->superficielateral[0];
     std::vector<float> anteriorext = this->superficielateral[0];
+    float ty = 0;
+    float aumento = 2.0f / float(this->superficielateral.size()-1);
     for(int i = 1; i < this->superficielateral.size(); i+=2)
     {
         std::vector<float> cint = this->superficielateral[i];
         std::vector<float> cext = this->superficielateral[i+1];
-        connectSideDentro(allPoints,anteriorint,cint,&normaisvetor,0,0,0);
-        connectSideFora(allPoints,anteriorext,cext,&normaisvetor,0,0,0);
+        connectSideDentroTexturas(allPoints,anteriorint,cint,&normaisvetor,0,0,0,&texturasCoords,ty,ty+aumento);
+        connectSideForaTexturas(allPoints,anteriorext,cext,&normaisvetor,0,0,0,&texturasCoords,ty,ty+aumento);
         anteriorint = cint;
         anteriorext = cext;
+        ty += aumento;
     }
-    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
+    this->loadVertices(saveInfoPlacaGraficaIluminacaoTextura(allPoints,&normaisvetor,&texturasCoords),allPoints->size()/3);
     delete allPoints;
 }

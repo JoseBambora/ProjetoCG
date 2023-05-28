@@ -242,9 +242,6 @@ void Camera::changeSize(int w, int h) {
 }
 
 void Camera::atualiza(float *movimento) {
-    movimento[0] /= 2;
-    movimento[1] /= 2;
-    movimento[2] /= 2;
     this->posx += movimento[0];
     this->posy += movimento[1];
     this->posz += movimento[2];
@@ -254,9 +251,6 @@ void Camera::atualiza(float *movimento) {
 }
 
 void Camera::atualizaLA(float *movimento) {
-    movimento[0] /= 3;
-    movimento[1] /= 3;
-    movimento[2] /= 3;
     this->lax += movimento[0];
     this->lay += movimento[1];
     this->laz += movimento[2];

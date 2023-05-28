@@ -233,6 +233,12 @@ void trataCamara(XMLElement *camera, float *px, float *py, float *pz, float *lx,
             *cz = std::stof(up->Attribute("z"));
             //printf("Up: x=%d y=%d z=%d\n",cx,cy,cz);
         }
+        else
+        {
+            *cx = 0;
+            *cy = 1;
+            *cz = 0;
+        }
         XMLElement *projection = camera->FirstChildElement("projection");
         if (position != nullptr)
         {
@@ -240,6 +246,12 @@ void trataCamara(XMLElement *camera, float *px, float *py, float *pz, float *lx,
             *near = std::stof(projection->Attribute("near"));
             *far = std::stof(projection->Attribute("far"));
             //printf("Projection: fov=%d near=%d far=%d\n",fov,near,far);
+        }
+        else
+        {
+            *fov = 60;
+            *near = 1;
+            *far = 1000;
         }
     }
 }

@@ -1,5 +1,6 @@
 #include "../TinyXML/tinyxml2.h"
 #include <string>
+#include <utility>
 #include <vector>
 
 tinyxml2::XMLDocument doc;
@@ -177,6 +178,14 @@ tinyxml2::XMLElement* createTransform(const std::vector<std::string>& transforma
     return transform;
 }
 
+tinyxml2::XMLElement* createTexture(std::string elemento)
+{
+    tinyxml2::XMLElement* texture = doc.NewElement("texture");
+    std::string name = "../images/"+elemento + ".jpg";
+    texture->SetAttribute("file",name.c_str());
+    return texture;
+}
+
 tinyxml2::XMLElement* createColor(std::string elemento)
 {
     tinyxml2::XMLElement* color = doc.NewElement("color");
@@ -243,13 +252,14 @@ tinyxml2::XMLElement* createColor(std::string elemento)
     return color;
 }
 
-tinyxml2::XMLElement* createModel(std::string name)
+tinyxml2::XMLElement* createModel(std::string name,std::string namefiletexture)
 {
     tinyxml2::XMLComment* comment = doc.NewComment(("generator sphere 1 15 15 ../files/sphere.3d " + name).c_str());
     tinyxml2::XMLElement* models = doc.NewElement("models");
     tinyxml2::XMLElement* planet = doc.NewElement("model");
     planet->SetAttribute("file", modelsphre.c_str());
     planet->LinkEndChild(comment);
+    planet->InsertEndChild(createTexture(std::move(namefiletexture)));
     planet->InsertEndChild(createColor(name));
     models->InsertEndChild(planet);
     return models;
@@ -289,11 +299,11 @@ tinyxml2::XMLElement* createMoon(float sx, float sy, float sz)
                                                           true);
     // moonTransform->InsertEndChild(GenerateCatmullRomCircle(3*sx/4,100));
     moon->InsertEndChild(moonTransform);
-    moon->InsertEndChild(createModel("Moon"));
+    moon->InsertEndChild(createModel("Moon","moon"));
     return moon;
 }
 
-tinyxml2::XMLElement* createAnel()
+tinyxml2::XMLElement* createAnel(std::string planet)
 {
     std::vector<std::string> scaleVector = std::vector<std::string>();
     scaleVector.emplace_back("scale");
@@ -304,6 +314,7 @@ tinyxml2::XMLElement* createAnel()
     tinyxml2::XMLComment* comment = doc.NewComment("generator donut 1.5 1.75 15 5 ../files/donut.3d");
     anel->SetAttribute("file", modeldonut.c_str());
     anel->LinkEndChild(comment);
+    anel->InsertEndChild(createTexture(planet+ "ring"));
     anel->InsertEndChild(createColor("Moon"));
     models->InsertEndChild(anel);
     group->InsertEndChild(scale);
@@ -325,6 +336,7 @@ void createComets(float tx,tinyxml2::XMLElement*planets)
         tinyxml2::XMLComment* comment = doc.NewComment("generator patch ../teapot.patch 10 ../files/teapot.3d");
         model->SetAttribute("file", modelComet.c_str());
         model->LinkEndChild(comment);
+        model->InsertEndChild(createTexture("moon"));
         model->InsertEndChild(createColor("Cometa"));
         models->InsertEndChild(model);
         group->InsertEndChild(transform);
@@ -360,13 +372,14 @@ tinyxml2::XMLElement* createWorld()
     tinyxml2::XMLElement* sun = doc.NewElement("group");
     tinyxml2::XMLElement* planets = doc.NewElement("group");
     sun->InsertEndChild(createTransform(t2,50,50,50,0,0,0,10,0,1,0, true));
-    sun->InsertEndChild(createModel("Sol"));
+    sun->InsertEndChild(createModel("Sol","sun"));
     mainGroup->InsertEndChild(sun);
     mainGroup->InsertEndChild(planets);
     int j = 0;
     int tx = 60, tz = 60,ty = 0;
     int time = 5;
     std::string planetas[8] = {"Mercurio", "Venus", "Terra", "Marte", "Jupiter", "Saturno", "Urano", "Neptuno"};
+    std::string names[8] = {"mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune"};
     for(int i = 1; i < 9; i++)
     {
         // tinyxml2::XMLElement* transform = createTransform(t1,0,0,0,0,0,0,time,0,1,0);
@@ -382,12 +395,12 @@ tinyxml2::XMLElement* createWorld()
             planetTransform = createTransform(t6,scales[j],scales[j+1],scales[j+2],0,0,0,90,0,0,1, false);
 
         tinyxml2::XMLElement *planet = doc.NewElement("group");
-        tinyxml2::XMLElement* planetModel = createModel(planetas[i-1]);
+        tinyxml2::XMLElement* planetModel = createModel(planetas[i-1],names[i-1]);
 
         planet->InsertEndChild(planetTransform);
         planet->InsertEndChild(planetModel);
         if(i == 6 || i == 7)
-            planet->InsertEndChild(createAnel());
+            planet->InsertEndChild(createAnel(names[i-1]));
 
         planetGroup->InsertEndChild(planetGroupTranslate);
         if (i > 2)

@@ -1,57 +1,839 @@
 <world>
-    <window width="1000" height="1000" />
+    <window width="1000" height="1000"/>
     <camera>
-        <position x="-120" y="120" z="120" />
-        <lookAt x="0" y="0" z="0" />
-        <up x="0" y="1" z="0" />
-        <projection fov="60" near="1" far="1000" />
+        <position x="600" y="600" z="600"/>
+        <lookat x="0" y="0" z="0"/>
+        <up x="0" y="1" z="0"/>
+        <projection fov="60" near="1" far="1750"/>
     </camera>
+    <lights>
+        <light type="point" posx="0" posy="0" posz="0"/>
+        <light type="spotlight" posx="120" posy="0" posz="0" dirx="-120" diry="0" dirz="0" cutoff="90"/>
+        <light type="spotlight" posx="0" posy="120" posz="0" dirx="0" diry="-120" dirz="0" cutoff="90"/>
+        <light type="spotlight" posx="0" posy="0" posz="120" dirx="0" diry="0" dirz="-120" cutoff="90"/>
+        <light type="spotlight" posx="-120" posy="0" posz="0" dirx="120" diry="0" dirz="0" cutoff="90"/>
+        <light type="spotlight" posx="0" posy="-120" posz="0" dirx="0" diry="120" dirz="0" cutoff="90"/>
+        <light type="spotlight" posx="0" posy="0" posz="-120" dirx="0" diry="0" dirz="120" cutoff="90"/>
+    </lights>
     <group>
         <group>
             <transform>
-                <scale x="10" y="10" z="10"/>
+                <rotate time="10" x="0" y="1" z="0"/>
+                <translate x="0" y="0" z="0"/>
+                <scale x="50" y="50" z="50"/>
             </transform>
             <models>
-                <model file="../files/sphere.3d"/> <!-- generator sphere 1 15 15 ../files/sphere.3d -->
+                <model file="../files/sphere.3d">
+                    <!--generator sphere 1 15 15 ../files/sphere.3d Sol-->
+                    <texture file="../images/sun.jpg"/>
+                    <color>
+                        <diffuse R="254" G="221" B="0"/>
+                        <ambient R="0" G="0" B="0"/>
+                        <specular R="0" G="0" B="0"/>
+                        <emissive R="254" G="221" B="0"/>
+                        <shininess value="0"/>
+                    </color>
+                </model>
             </models>
         </group>
         <group>
-            <transform>
-                <rotate angle="30" x="0" y="1" z="1"/>
-                <translate x="10" y="0" z="10"/>
-            </transform>
             <group>
                 <transform>
-                </transform>
-                <models>
-                    <model file="../files/sphere.3d"/> <!-- generator sphere 1 15 15 ../files/sphere.3d -->
-                </models>
-            </group>
-            <group>
-                <transform>
-                    <rotate angle="30" x="0" y="1" z="1"/>
-                    <translate x="10" y="0" z="10"/>
+                    <rotate time="5" x="0" y="1" z="0"/>
+                    <translate x="60" y="0" z="60"/>
+                    <rotate time="5" x="0" y="1" z="0"/>
                 </transform>
                 <group>
                     <transform>
-                        <scale x="3" y="3" z="3"/>
+                        <scale x="1" y="1" z="1"/>
                     </transform>
                     <models>
-                        <model file="../files/sphere.3d"/> <!-- generator sphere 1 15 15 ../files/sphere.3d -->
+                        <model file="../files/sphere.3d">
+                            <!--generator sphere 1 15 15 ../files/sphere.3d Mercurio-->
+                            <texture file="../images/mercury.jpg"/>
+                            <color>
+                                <diffuse R="100" G="100" B="100"/>
+                                <ambient R="0" G="0" B="0"/>
+                                <specular R="0" G="0" B="0"/>
+                                <emissive R="0" G="0" B="0"/>
+                                <shininess value="0"/>
+                            </color>
+                        </model>
                     </models>
                 </group>
+            </group>
+            <group>
                 <group>
                     <transform>
-                        <rotate angle="30" x="0" y="1" z="1"/>
-                        <translate x="15" y="0" z="15"/>
+                        <rotate time="7" x="0" y="1" z="0"/>
+                        <translate x="110" y="0" z="110"/>
+                        <rotate time="7" x="0" y="1" z="0"/>
                     </transform>
                     <group>
                         <transform>
-                            <scale x="4" y="4" z="4"/>
+                            <scale x="3" y="3" z="3"/>
                         </transform>
                         <models>
-                            <model file="../files/sphere.3d"/> <!-- generator sphere 1 15 15 ../files/sphere.3d -->
+                            <model file="../files/sphere.3d">
+                                <!--generator sphere 1 15 15 ../files/sphere.3d Venus-->
+                                <texture file="../images/venus.jpg"/>
+                                <color>
+                                    <diffuse R="154" G="121" B="0"/>
+                                    <ambient R="0" G="0" B="0"/>
+                                    <specular R="0" G="0" B="0"/>
+                                    <emissive R="0" G="0" B="0"/>
+                                    <shininess value="0"/>
+                                </color>
+                            </model>
                         </models>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <transform>
+                            <rotate time="9" x="0" y="1" z="0"/>
+                            <translate x="160" y="0" z="160"/>
+                            <rotate time="9" x="0" y="1" z="0"/>
+                        </transform>
+                        <group>
+                            <transform>
+                                <rotate time="40" x="0" y="1" z="0"/>
+                                <translate x="5" y="5" z="5"/>
+                                <scale x="1" y="1" z="1"/>
+                            </transform>
+                            <models>
+                                <model file="../files/sphere.3d">
+                                    <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                    <texture file="../images/moon.jpg"/>
+                                    <color>
+                                        <diffuse R="100" G="100" B="100"/>
+                                        <ambient R="0" G="0" B="0"/>
+                                        <specular R="0" G="0" B="0"/>
+                                        <emissive R="0" G="0" B="0"/>
+                                        <shininess value="0"/>
+                                    </color>
+                                </model>
+                            </models>
+                        </group>
+                        <group>
+                            <transform>
+                                <scale x="4" y="4" z="4"/>
+                            </transform>
+                            <models>
+                                <model file="../files/sphere.3d">
+                                    <!--generator sphere 1 15 15 ../files/sphere.3d Terra-->
+                                    <texture file="../images/earth.jpg"/>
+                                    <color>
+                                        <diffuse R="0" G="0" B="100"/>
+                                        <ambient R="0" G="0" B="0"/>
+                                        <specular R="0" G="0" B="0"/>
+                                        <emissive R="0" G="0" B="0"/>
+                                        <shininess value="0"/>
+                                    </color>
+                                </model>
+                            </models>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <transform>
+                                <rotate time="11" x="0" y="1" z="0"/>
+                                <translate x="210" y="0" z="210"/>
+                                <rotate time="11" x="0" y="1" z="0"/>
+                            </transform>
+                            <group>
+                                <transform>
+                                    <rotate time="20" x="0" y="1" z="0"/>
+                                    <translate x="2" y="2" z="2"/>
+                                    <scale x="0.5" y="0.5" z="0.5"/>
+                                </transform>
+                                <models>
+                                    <model file="../files/sphere.3d">
+                                        <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                        <texture file="../images/moon.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="100" B="100"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                            <group>
+                                <transform>
+                                    <rotate time="-20" x="0" y="1" z="0"/>
+                                    <translate x="-2" y="2" z="2"/>
+                                    <scale x="0.5" y="0.5" z="0.5"/>
+                                </transform>
+                                <models>
+                                    <model file="../files/sphere.3d">
+                                        <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                        <texture file="../images/moon.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="100" B="100"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                            <group>
+                                <transform>
+                                    <scale x="2" y="2" z="2"/>
+                                </transform>
+                                <models>
+                                    <model file="../files/sphere.3d">
+                                        <!--generator sphere 1 15 15 ../files/sphere.3d Marte-->
+                                        <texture file="../images/mars.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="0" B="0"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <transform>
+                                    <translate time="5" align="True">
+                                        <point x="-125" y="0" z="0"/>
+                                        <point x="-103.125" y="0" z="103.125"/>
+                                        <point x="0" y="0" z="250"/>
+                                        <point x="103.125" y="0" z="103.125"/>
+                                        <point x="125" y="0" z="0"/>
+                                        <point x="103.125" y="0" z="-103.125"/>
+                                        <point x="0" y="0" z="-250"/>
+                                        <point x="-103.125" y="0" z="-103.125"/>
+                                    </translate>
+                                </transform>
+                                <models>
+                                    <model file="../files/teapot.3d">
+                                        <!--generator patch ../teapot.patch 10 ../files/teapot.3d-->
+                                        <texture file="../images/moon.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="100" B="100"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                            <group>
+                                <transform>
+                                    <translate time="7" align="True">
+                                        <point x="-126.5" y="0" z="0"/>
+                                        <point x="-104.3625" y="0" z="104.3625"/>
+                                        <point x="0" y="0" z="253"/>
+                                        <point x="104.3625" y="0" z="104.3625"/>
+                                        <point x="126.5" y="0" z="0"/>
+                                        <point x="104.3625" y="0" z="-104.3625"/>
+                                        <point x="0" y="0" z="-253"/>
+                                        <point x="-104.3625" y="0" z="-104.3625"/>
+                                    </translate>
+                                </transform>
+                                <models>
+                                    <model file="../files/teapot.3d">
+                                        <!--generator patch ../teapot.patch 10 ../files/teapot.3d-->
+                                        <texture file="../images/moon.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="100" B="100"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                            <group>
+                                <transform>
+                                    <translate time="9" align="True">
+                                        <point x="-128" y="0" z="0"/>
+                                        <point x="-105.6" y="0" z="105.6"/>
+                                        <point x="0" y="0" z="256"/>
+                                        <point x="105.6" y="0" z="105.6"/>
+                                        <point x="128" y="0" z="0"/>
+                                        <point x="105.6" y="0" z="-105.6"/>
+                                        <point x="0" y="0" z="-256"/>
+                                        <point x="-105.6" y="0" z="-105.6"/>
+                                    </translate>
+                                </transform>
+                                <models>
+                                    <model file="../files/teapot.3d">
+                                        <!--generator patch ../teapot.patch 10 ../files/teapot.3d-->
+                                        <texture file="../images/moon.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="100" B="100"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                            <group>
+                                <transform>
+                                    <translate time="11" align="True">
+                                        <point x="-129.5" y="0" z="0"/>
+                                        <point x="-106.8375" y="0" z="106.8375"/>
+                                        <point x="0" y="0" z="259"/>
+                                        <point x="106.8375" y="0" z="106.8375"/>
+                                        <point x="129.5" y="0" z="0"/>
+                                        <point x="106.8375" y="0" z="-106.8375"/>
+                                        <point x="0" y="0" z="-259"/>
+                                        <point x="-106.8375" y="0" z="-106.8375"/>
+                                    </translate>
+                                </transform>
+                                <models>
+                                    <model file="../files/teapot.3d">
+                                        <!--generator patch ../teapot.patch 10 ../files/teapot.3d-->
+                                        <texture file="../images/moon.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="100" B="100"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                            <group>
+                                <transform>
+                                    <translate time="13" align="True">
+                                        <point x="-131" y="0" z="0"/>
+                                        <point x="-108.075" y="0" z="108.075"/>
+                                        <point x="0" y="0" z="262"/>
+                                        <point x="108.075" y="0" z="108.075"/>
+                                        <point x="131" y="0" z="0"/>
+                                        <point x="108.075" y="0" z="-108.075"/>
+                                        <point x="0" y="0" z="-262"/>
+                                        <point x="-108.075" y="0" z="-108.075"/>
+                                    </translate>
+                                </transform>
+                                <models>
+                                    <model file="../files/teapot.3d">
+                                        <!--generator patch ../teapot.patch 10 ../files/teapot.3d-->
+                                        <texture file="../images/moon.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="100" B="100"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                            <group>
+                                <transform>
+                                    <translate time="15" align="True">
+                                        <point x="-132.5" y="0" z="0"/>
+                                        <point x="-109.3125" y="0" z="109.3125"/>
+                                        <point x="0" y="0" z="265"/>
+                                        <point x="109.3125" y="0" z="109.3125"/>
+                                        <point x="132.5" y="0" z="0"/>
+                                        <point x="109.3125" y="0" z="-109.3125"/>
+                                        <point x="0" y="0" z="-265"/>
+                                        <point x="-109.3125" y="0" z="-109.3125"/>
+                                    </translate>
+                                </transform>
+                                <models>
+                                    <model file="../files/teapot.3d">
+                                        <!--generator patch ../teapot.patch 10 ../files/teapot.3d-->
+                                        <texture file="../images/moon.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="100" B="100"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                            <group>
+                                <transform>
+                                    <translate time="17" align="True">
+                                        <point x="-134" y="0" z="0"/>
+                                        <point x="-110.55" y="0" z="110.55"/>
+                                        <point x="0" y="0" z="268"/>
+                                        <point x="110.55" y="0" z="110.55"/>
+                                        <point x="134" y="0" z="0"/>
+                                        <point x="110.55" y="0" z="-110.55"/>
+                                        <point x="0" y="0" z="-268"/>
+                                        <point x="-110.55" y="0" z="-110.55"/>
+                                    </translate>
+                                </transform>
+                                <models>
+                                    <model file="../files/teapot.3d">
+                                        <!--generator patch ../teapot.patch 10 ../files/teapot.3d-->
+                                        <texture file="../images/moon.jpg"/>
+                                        <color>
+                                            <diffuse R="100" G="100" B="100"/>
+                                            <ambient R="0" G="0" B="0"/>
+                                            <specular R="0" G="0" B="0"/>
+                                            <emissive R="0" G="0" B="0"/>
+                                            <shininess value="0"/>
+                                        </color>
+                                    </model>
+                                </models>
+                            </group>
+                            <group>
+                                <transform>
+                                    <rotate time="13" x="0" y="1" z="0"/>
+                                    <translate x="280" y="0" z="280"/>
+                                    <rotate time="13" x="0" y="1" z="0"/>
+                                </transform>
+                                <group>
+                                    <transform>
+                                        <rotate time="112" x="0" y="1" z="0"/>
+                                        <translate x="14" y="14" z="14"/>
+                                        <scale x="2.8025" y="2.8025" z="2.8025"/>
+                                    </transform>
+                                    <models>
+                                        <model file="../files/sphere.3d">
+                                            <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                            <texture file="../images/moon.jpg"/>
+                                            <color>
+                                                <diffuse R="100" G="100" B="100"/>
+                                                <ambient R="0" G="0" B="0"/>
+                                                <specular R="0" G="0" B="0"/>
+                                                <emissive R="0" G="0" B="0"/>
+                                                <shininess value="0"/>
+                                            </color>
+                                        </model>
+                                    </models>
+                                </group>
+                                <group>
+                                    <transform>
+                                        <rotate time="-112" x="0" y="1" z="0"/>
+                                        <translate x="-14" y="-14" z="14"/>
+                                        <scale x="2.8025" y="2.8025" z="2.8025"/>
+                                    </transform>
+                                    <models>
+                                        <model file="../files/sphere.3d">
+                                            <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                            <texture file="../images/moon.jpg"/>
+                                            <color>
+                                                <diffuse R="100" G="100" B="100"/>
+                                                <ambient R="0" G="0" B="0"/>
+                                                <specular R="0" G="0" B="0"/>
+                                                <emissive R="0" G="0" B="0"/>
+                                                <shininess value="0"/>
+                                            </color>
+                                        </model>
+                                    </models>
+                                </group>
+                                <group>
+                                    <transform>
+                                        <rotate time="112" x="0" y="1" z="0"/>
+                                        <translate x="14" y="14" z="-14"/>
+                                        <scale x="2.8025" y="2.8025" z="2.8025"/>
+                                    </transform>
+                                    <models>
+                                        <model file="../files/sphere.3d">
+                                            <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                            <texture file="../images/moon.jpg"/>
+                                            <color>
+                                                <diffuse R="100" G="100" B="100"/>
+                                                <ambient R="0" G="0" B="0"/>
+                                                <specular R="0" G="0" B="0"/>
+                                                <emissive R="0" G="0" B="0"/>
+                                                <shininess value="0"/>
+                                            </color>
+                                        </model>
+                                    </models>
+                                </group>
+                                <group>
+                                    <transform>
+                                        <rotate time="112" x="0" y="1" z="0"/>
+                                        <translate x="14" y="-14" z="14"/>
+                                        <scale x="2.8025" y="2.8025" z="2.8025"/>
+                                    </transform>
+                                    <models>
+                                        <model file="../files/sphere.3d">
+                                            <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                            <texture file="../images/moon.jpg"/>
+                                            <color>
+                                                <diffuse R="100" G="100" B="100"/>
+                                                <ambient R="0" G="0" B="0"/>
+                                                <specular R="0" G="0" B="0"/>
+                                                <emissive R="0" G="0" B="0"/>
+                                                <shininess value="0"/>
+                                            </color>
+                                        </model>
+                                    </models>
+                                </group>
+                                <group>
+                                    <transform>
+                                        <rotate time="-112" x="0" y="1" z="0"/>
+                                        <translate x="-14" y="-14" z="-14"/>
+                                        <scale x="2.8025" y="2.8025" z="2.8025"/>
+                                    </transform>
+                                    <models>
+                                        <model file="../files/sphere.3d">
+                                            <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                            <texture file="../images/moon.jpg"/>
+                                            <color>
+                                                <diffuse R="100" G="100" B="100"/>
+                                                <ambient R="0" G="0" B="0"/>
+                                                <specular R="0" G="0" B="0"/>
+                                                <emissive R="0" G="0" B="0"/>
+                                                <shininess value="0"/>
+                                            </color>
+                                        </model>
+                                    </models>
+                                </group>
+                                <group>
+                                    <transform>
+                                        <scale x="11.21" y="11.21" z="11.21"/>
+                                    </transform>
+                                    <models>
+                                        <model file="../files/sphere.3d">
+                                            <!--generator sphere 1 15 15 ../files/sphere.3d Jupiter-->
+                                            <texture file="../images/jupiter.jpg"/>
+                                            <color>
+                                                <diffuse R="154" G="121" B="0"/>
+                                                <ambient R="0" G="0" B="0"/>
+                                                <specular R="0" G="0" B="0"/>
+                                                <emissive R="0" G="0" B="0"/>
+                                                <shininess value="0"/>
+                                            </color>
+                                        </model>
+                                    </models>
+                                </group>
+                            </group>
+                            <group>
+                                <group>
+                                    <transform>
+                                        <rotate time="15" x="0" y="1" z="0"/>
+                                        <translate x="330" y="0" z="330"/>
+                                        <rotate time="15" x="0" y="1" z="0"/>
+                                    </transform>
+                                    <group>
+                                        <transform>
+                                            <rotate time="94" x="0" y="1" z="0"/>
+                                            <translate x="12" y="12" z="12"/>
+                                            <scale x="2.3625" y="2.3625" z="2.3625"/>
+                                        </transform>
+                                        <models>
+                                            <model file="../files/sphere.3d">
+                                                <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                <texture file="../images/moon.jpg"/>
+                                                <color>
+                                                    <diffuse R="100" G="100" B="100"/>
+                                                    <ambient R="0" G="0" B="0"/>
+                                                    <specular R="0" G="0" B="0"/>
+                                                    <emissive R="0" G="0" B="0"/>
+                                                    <shininess value="0"/>
+                                                </color>
+                                            </model>
+                                        </models>
+                                    </group>
+                                    <group>
+                                        <transform>
+                                            <rotate time="-94" x="0" y="1" z="0"/>
+                                            <translate x="-12" y="12" z="-12"/>
+                                            <scale x="2.3625" y="2.3625" z="2.3625"/>
+                                        </transform>
+                                        <models>
+                                            <model file="../files/sphere.3d">
+                                                <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                <texture file="../images/moon.jpg"/>
+                                                <color>
+                                                    <diffuse R="100" G="100" B="100"/>
+                                                    <ambient R="0" G="0" B="0"/>
+                                                    <specular R="0" G="0" B="0"/>
+                                                    <emissive R="0" G="0" B="0"/>
+                                                    <shininess value="0"/>
+                                                </color>
+                                            </model>
+                                        </models>
+                                    </group>
+                                    <group>
+                                        <transform>
+                                            <rotate time="94" x="0" y="1" z="0"/>
+                                            <translate x="12" y="12" z="-12"/>
+                                            <scale x="2.3625" y="2.3625" z="2.3625"/>
+                                        </transform>
+                                        <models>
+                                            <model file="../files/sphere.3d">
+                                                <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                <texture file="../images/moon.jpg"/>
+                                                <color>
+                                                    <diffuse R="100" G="100" B="100"/>
+                                                    <ambient R="0" G="0" B="0"/>
+                                                    <specular R="0" G="0" B="0"/>
+                                                    <emissive R="0" G="0" B="0"/>
+                                                    <shininess value="0"/>
+                                                </color>
+                                            </model>
+                                        </models>
+                                    </group>
+                                    <group>
+                                        <transform>
+                                            <rotate time="94" x="0" y="1" z="0"/>
+                                            <translate x="12" y="-12" z="12"/>
+                                            <scale x="2.3625" y="2.3625" z="2.3625"/>
+                                        </transform>
+                                        <models>
+                                            <model file="../files/sphere.3d">
+                                                <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                <texture file="../images/moon.jpg"/>
+                                                <color>
+                                                    <diffuse R="100" G="100" B="100"/>
+                                                    <ambient R="0" G="0" B="0"/>
+                                                    <specular R="0" G="0" B="0"/>
+                                                    <emissive R="0" G="0" B="0"/>
+                                                    <shininess value="0"/>
+                                                </color>
+                                            </model>
+                                        </models>
+                                    </group>
+                                    <group>
+                                        <transform>
+                                            <scale x="9.4499998" y="9.4499998" z="9.4499998"/>
+                                        </transform>
+                                        <models>
+                                            <model file="../files/sphere.3d">
+                                                <!--generator sphere 1 15 15 ../files/sphere.3d Saturno-->
+                                                <texture file="../images/saturn.jpg"/>
+                                                <color>
+                                                    <diffuse R="154" G="121" B="0"/>
+                                                    <ambient R="0" G="0" B="0"/>
+                                                    <specular R="0" G="0" B="0"/>
+                                                    <emissive R="0" G="0" B="0"/>
+                                                    <shininess value="0"/>
+                                                </color>
+                                            </model>
+                                        </models>
+                                        <group>
+                                            <transform>
+                                                <scale x="1" y="0.0099999998" z="1"/>
+                                            </transform>
+                                            <models>
+                                                <model file="../files/donut.3d">
+                                                    <!--generator donut 1.5 1.75 15 5 ../files/donut.3d-->
+                                                    <texture file="../images/saturnring.jpg"/>
+                                                    <color>
+                                                        <diffuse R="100" G="100" B="100"/>
+                                                        <ambient R="0" G="0" B="0"/>
+                                                        <specular R="0" G="0" B="0"/>
+                                                        <emissive R="0" G="0" B="0"/>
+                                                        <shininess value="0"/>
+                                                    </color>
+                                                </model>
+                                            </models>
+                                        </group>
+                                    </group>
+                                </group>
+                                <group>
+                                    <group>
+                                        <transform>
+                                            <rotate time="17" x="0" y="1" z="0"/>
+                                            <translate x="380" y="0" z="380"/>
+                                            <rotate time="17" x="0" y="1" z="0"/>
+                                        </transform>
+                                        <group>
+                                            <transform>
+                                                <rotate time="60" x="0" y="1" z="0"/>
+                                                <translate x="7" y="-7" z="7"/>
+                                                <scale x="1.5" y="1.5" z="1.5"/>
+                                            </transform>
+                                            <models>
+                                                <model file="../files/sphere.3d">
+                                                    <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                    <texture file="../images/moon.jpg"/>
+                                                    <color>
+                                                        <diffuse R="100" G="100" B="100"/>
+                                                        <ambient R="0" G="0" B="0"/>
+                                                        <specular R="0" G="0" B="0"/>
+                                                        <emissive R="0" G="0" B="0"/>
+                                                        <shininess value="0"/>
+                                                    </color>
+                                                </model>
+                                            </models>
+                                        </group>
+                                        <group>
+                                            <transform>
+                                                <rotate time="-60" x="0" y="1" z="0"/>
+                                                <translate x="-7" y="7" z="7"/>
+                                                <scale x="1.5" y="1.5" z="1.5"/>
+                                            </transform>
+                                            <models>
+                                                <model file="../files/sphere.3d">
+                                                    <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                    <texture file="../images/moon.jpg"/>
+                                                    <color>
+                                                        <diffuse R="100" G="100" B="100"/>
+                                                        <ambient R="0" G="0" B="0"/>
+                                                        <specular R="0" G="0" B="0"/>
+                                                        <emissive R="0" G="0" B="0"/>
+                                                        <shininess value="0"/>
+                                                    </color>
+                                                </model>
+                                            </models>
+                                        </group>
+                                        <group>
+                                            <transform>
+                                                <rotate time="60" x="0" y="1" z="0"/>
+                                                <translate x="7" y="7" z="-7"/>
+                                                <scale x="1.5" y="1.5" z="1.5"/>
+                                            </transform>
+                                            <models>
+                                                <model file="../files/sphere.3d">
+                                                    <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                    <texture file="../images/moon.jpg"/>
+                                                    <color>
+                                                        <diffuse R="100" G="100" B="100"/>
+                                                        <ambient R="0" G="0" B="0"/>
+                                                        <specular R="0" G="0" B="0"/>
+                                                        <emissive R="0" G="0" B="0"/>
+                                                        <shininess value="0"/>
+                                                    </color>
+                                                </model>
+                                            </models>
+                                        </group>
+                                        <group>
+                                            <transform>
+                                                <rotate angle="90" x="0" y="0" z="1"/>
+                                                <scale x="6" y="6" z="6"/>
+                                            </transform>
+                                            <models>
+                                                <model file="../files/sphere.3d">
+                                                    <!--generator sphere 1 15 15 ../files/sphere.3d Urano-->
+                                                    <texture file="../images/uranus.jpg"/>
+                                                    <color>
+                                                        <diffuse R="0" G="0" B="100"/>
+                                                        <ambient R="0" G="0" B="0"/>
+                                                        <specular R="0" G="0" B="0"/>
+                                                        <emissive R="0" G="0" B="0"/>
+                                                        <shininess value="0"/>
+                                                    </color>
+                                                </model>
+                                            </models>
+                                            <group>
+                                                <transform>
+                                                    <scale x="1" y="0.0099999998" z="1"/>
+                                                </transform>
+                                                <models>
+                                                    <model file="../files/donut.3d">
+                                                        <!--generator donut 1.5 1.75 15 5 ../files/donut.3d-->
+                                                        <texture file="../images/uranusring.jpg"/>
+                                                        <color>
+                                                            <diffuse R="100" G="100" B="100"/>
+                                                            <ambient R="0" G="0" B="0"/>
+                                                            <specular R="0" G="0" B="0"/>
+                                                            <emissive R="0" G="0" B="0"/>
+                                                            <shininess value="0"/>
+                                                        </color>
+                                                    </model>
+                                                </models>
+                                            </group>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <group>
+                                            <transform>
+                                                <rotate time="19" x="0" y="1" z="0"/>
+                                                <translate x="430" y="0" z="430"/>
+                                                <rotate time="19" x="0" y="1" z="0"/>
+                                            </transform>
+                                            <group>
+                                                <transform>
+                                                    <rotate time="50" x="0" y="1" z="0"/>
+                                                    <translate x="6" y="-6" z="6"/>
+                                                    <scale x="1.25" y="1.25" z="1.25"/>
+                                                </transform>
+                                                <models>
+                                                    <model file="../files/sphere.3d">
+                                                        <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                        <texture file="../images/moon.jpg"/>
+                                                        <color>
+                                                            <diffuse R="100" G="100" B="100"/>
+                                                            <ambient R="0" G="0" B="0"/>
+                                                            <specular R="0" G="0" B="0"/>
+                                                            <emissive R="0" G="0" B="0"/>
+                                                            <shininess value="0"/>
+                                                        </color>
+                                                    </model>
+                                                </models>
+                                            </group>
+                                            <group>
+                                                <transform>
+                                                    <rotate time="-50" x="0" y="1" z="0"/>
+                                                    <translate x="-6" y="6" z="6"/>
+                                                    <scale x="1.25" y="1.25" z="1.25"/>
+                                                </transform>
+                                                <models>
+                                                    <model file="../files/sphere.3d">
+                                                        <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                        <texture file="../images/moon.jpg"/>
+                                                        <color>
+                                                            <diffuse R="100" G="100" B="100"/>
+                                                            <ambient R="0" G="0" B="0"/>
+                                                            <specular R="0" G="0" B="0"/>
+                                                            <emissive R="0" G="0" B="0"/>
+                                                            <shininess value="0"/>
+                                                        </color>
+                                                    </model>
+                                                </models>
+                                            </group>
+                                            <group>
+                                                <transform>
+                                                    <rotate time="50" x="0" y="1" z="0"/>
+                                                    <translate x="6" y="6" z="-6"/>
+                                                    <scale x="1.25" y="1.25" z="1.25"/>
+                                                </transform>
+                                                <models>
+                                                    <model file="../files/sphere.3d">
+                                                        <!--generator sphere 1 15 15 ../files/sphere.3d Moon-->
+                                                        <texture file="../images/moon.jpg"/>
+                                                        <color>
+                                                            <diffuse R="100" G="100" B="100"/>
+                                                            <ambient R="0" G="0" B="0"/>
+                                                            <specular R="0" G="0" B="0"/>
+                                                            <emissive R="0" G="0" B="0"/>
+                                                            <shininess value="0"/>
+                                                        </color>
+                                                    </model>
+                                                </models>
+                                            </group>
+                                            <group>
+                                                <transform>
+                                                    <scale x="5" y="5" z="5"/>
+                                                </transform>
+                                                <models>
+                                                    <model file="../files/sphere.3d">
+                                                        <!--generator sphere 1 15 15 ../files/sphere.3d Neptuno-->
+                                                        <texture file="../images/neptune.jpg"/>
+                                                        <color>
+                                                            <diffuse R="0" G="0" B="100"/>
+                                                            <ambient R="0" G="0" B="0"/>
+                                                            <specular R="0" G="0" B="0"/>
+                                                            <emissive R="0" G="0" B="0"/>
+                                                            <shininess value="0"/>
+                                                        </color>
+                                                    </model>
+                                                </models>
+                                            </group>
+                                        </group>
+                                    </group>
+                                </group>
+                            </group>
+                        </group>
                     </group>
                 </group>
             </group>
