@@ -332,7 +332,7 @@ void connectSide(std::vector<float> *allPoints,std::vector<float> b1,std::vector
 void connectSideTexturas(std::vector<float> *allPoints,std::vector<float>*normais,std::vector<float>*texturas,std::vector<float> b1,std::vector<float> b2, bool dentro, float cx, float cy, float cz,float cx1, float cy1, float cz1,float ty1,float ty2)
 {
     float tx = 0;
-    float aumento = 3.0f / b1.size();
+    float aumento = 3.0f / float(b1.size()-3);
     for(int i = 0; i < b1.size(); i+=3)
     {
         if(i+3 < b1.size())
@@ -361,6 +361,7 @@ void connectSideTexturas(std::vector<float> *allPoints,std::vector<float>*normai
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px4,py4,pz4,cx1,cy1,cz1,0,tx+aumento,ty2,0);
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx1,cy1,cz1,0,tx,ty2,0);
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px3,py3,pz3,cx,cy,cz,0,tx+aumento,ty1,0);
+
             }
             else
             {
@@ -373,6 +374,8 @@ void connectSideTexturas(std::vector<float> *allPoints,std::vector<float>*normai
                 addPointsAndNormaisTexturas(allPoints,normais,texturas,px2,py2,pz2,cx1,cy1,cz1,0,tx,ty2,0);
             }
         }
+
+
         tx += aumento;
     }
 }

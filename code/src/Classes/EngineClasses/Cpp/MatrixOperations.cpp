@@ -204,7 +204,7 @@ void bezierGeraPatch(std::vector<std::vector<float>> *patch,float px[4][4],float
 
             normalizecrossnormalize(derivv.data(),derivu.data(),normal);
 
-            if(normal[0] <= 0.0000001 && normal[1] <= 0.0000001 && normal[2] <= 0.0000001)
+            if((normal[0] < 0.0000001 || normal[0] > -0.0000001) && (normal[1] < 0.0000001 || normal[1] > -0.0000001) && (normal[2] < 0.0000001 || normal[2] > -0.0000001))
             {
                 normal[0] = 0;
                 normal[1] = 1;

@@ -100,20 +100,40 @@ void Sphere::loadVBO() {
     auto * allPoints = new std::vector<float>();
     std::vector<float> anterior;
     std::vector<float> primeira;
+    float circ_height;
+
+
+    float inc_Y = 1.0f / float(this->superficielateral.size()+1);
+    float text_Y = inc_Y;
+
     for(int i = 0; i < this->superficielateral.size();i++)
     {
         std::vector<float> c = this->superficielateral[i];
         if(i > 0)
-            connectSideFora(allPoints,anterior,c,&normaisvetor,0,0,0);
+        {
+            connectSideForaTexturas(allPoints,anterior,c,&normaisvetor,0,0,0,&texturasCoords,text_Y,text_Y + inc_Y);
+            text_Y += inc_Y;
+        }
         else
             primeira = c;
         anterior = c;
+
     }
-    connectPyramid(allPoints,anterior,this->verticesuperior[0],this->verticesuperior[1],this->verticesuperior[2], false,&normaisvetor,
-                   false,0,0,0);
-    connectPyramid(allPoints,primeira,this->verticeinferior[0],this->verticeinferior[1],this->verticeinferior[2], true,&normaisvetor,
-                   false,0,0,0);
-    this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
+    connectPyramidTexturasLinhas(allPoints, &normaisvetor, &texturasCoords, anterior, this->verticesuperior[0], this->verticesuperior[1], this->verticesuperior[2], false, false, 0, 0, 0,
+                                 1.0f - inc_Y, 1.0f);
+
+    //connectPyramid(allPoints,anterior,this->verticesuperior[0],this->verticesuperior[1],this->verticesuperior[2], false,&normaisvetor,
+    //               false,0,0,0);
+
+    connectPyramidTexturasLinhas(allPoints, &normaisvetor, &texturasCoords, primeira, this->verticeinferior[0], this->verticeinferior[1], this->verticeinferior[2], true, false, 0, 0, 0,
+                                  inc_Y, 0);
+
+    //connectPyramid(allPoints,primeira,this->verticeinferior[0],this->verticeinferior[1],this->verticeinferior[2], true,&normaisvetor,
+    //               false,0,0,0);
+
+    //this->loadVertices(saveInfoPlacaGraficaIluminacao(allPoints,&normaisvetor),allPoints->size()/3);
+    this->loadVertices(saveInfoPlacaGraficaIluminacaoTextura(allPoints, &normaisvetor, &texturasCoords), allPoints->size()/3);
+
     //this->loadVertices(saveInfoPlacaGrafica(allPoints));
     delete allPoints;
 }
