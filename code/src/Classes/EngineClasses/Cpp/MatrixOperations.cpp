@@ -204,6 +204,13 @@ void bezierGeraPatch(std::vector<std::vector<float>> *patch,float px[4][4],float
 
             normalizecrossnormalize(derivv.data(),derivu.data(),normal);
 
+            if(normal[0] <= 0.0000001 && normal[1] <= 0.0000001 && normal[2] <= 0.0000001)
+            {
+                normal[0] = 0;
+                normal[1] = 1;
+                normal[2] = 0;
+            }
+
             point.push_back(normal[0]);
             point.push_back(normal[1]);
             point.push_back(normal[2]);

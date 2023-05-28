@@ -155,6 +155,7 @@ void Camera::processSpecialKeys(int key, int xx, int yy) {
     }
     else
     {
+        bool aux = true;
         switch (key)
         {
             case GLUT_KEY_LEFT:
@@ -169,8 +170,12 @@ void Camera::processSpecialKeys(int key, int xx, int yy) {
             case GLUT_KEY_DOWN:
                 baixo(u,d,final);
                 break;
+            default:
+                aux = false;
+                break;
         }
-        Camera::instance->atualizaLA(final);
+        if(aux)
+            Camera::instance->atualizaLA(final);
     }
     delete []final;
     delete []d;
@@ -184,6 +189,7 @@ void Camera::processKeys(unsigned char key, int xx, int yy) {
     auto *u = new float[3];
     getVetorDirecaoAndUp(d,u);
     auto *final = new float[3];
+    bool aux = true;
     switch (key)
     {
         // sobe
@@ -206,8 +212,12 @@ void Camera::processKeys(unsigned char key, int xx, int yy) {
         case 's':
             traz(d,final);
             break;
+        default:
+            aux = false;
+            break;
     }
-    Camera::instance->atualiza(final);
+    if(aux)
+        Camera::instance->atualiza(final);
     delete []final;
     delete []d;
     glutPostRedisplay();

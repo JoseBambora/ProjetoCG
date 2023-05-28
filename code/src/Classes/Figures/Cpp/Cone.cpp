@@ -91,15 +91,13 @@ void Cone::loadVBO() {
     float yTexura = 0.0f;
     for(int i = 0; i < this->superficielateral.size()-1; i++)
     {
-
         connectSideForaV2Texturas(allPoints,anterior,superficielateral[i],&normaisvetor,cx,cy,cz,cx,cy+aumento,cz,&texturasCoords,yTexura,yTexura+aumentoTextura);
         anterior = superficielateral[i];
-        std::cout << i << "\n";
         yTexura += aumentoTextura;
         cy+=aumento;
 
     }
-    connectPyramidTexturasLinhas(allPoints,&normaisvetor,&texturasCoords,base,topo[0],topo[1],topo[2], false,false,cx,cy,cz,yTexura,1);
+    connectPyramidTexturasLinhas(allPoints,&normaisvetor,&texturasCoords,anterior,topo[0],topo[1],topo[2], false,false,cx,cy,cz,yTexura,1);
     this->loadVertices(saveInfoPlacaGraficaIluminacaoTextura(allPoints,&normaisvetor,&texturasCoords),allPoints->size()/3);
     delete allPoints;
 }
