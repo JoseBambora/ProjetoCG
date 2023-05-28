@@ -473,6 +473,6 @@ int main()
     world->InsertEndChild(createCamera());
     world->InsertEndChild(createLight());
     world->InsertEndChild(createWorld());
-    doc.SaveFile("../xmlFiles/SolarSystemEx.xml");
+    doc.SaveFile("../xmlFiles/sistemasolar.xml");
     return 0;
 }
