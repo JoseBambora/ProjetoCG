@@ -85,8 +85,7 @@ void Cone::loadVBO() {
     float cx = 0, cy =0 ,cz = 0;
     connectPyramidTexturasCirculo(allPoints,&normaisvetor,&texturasCoords,base,0,0,0, true,true,cx,cy,cz,0.0f,0.1875f,0.1875f);
     std::vector<float> anterior = base;
-    std::vector<float> topo = this->superficielateral[this->superficielateral.size()-1];
-    float aumento = topo[1]/this->superficielateral.size();
+    float aumento = this->coordsTopo[1]/this->superficielateral.size();
     float aumentoTextura = 1.0f/this->superficielateral.size();
     float yTexura = 0.0f;
     for(int i = 0; i < this->superficielateral.size()-1; i++)
@@ -97,7 +96,7 @@ void Cone::loadVBO() {
         cy+=aumento;
 
     }
-    connectPyramidTexturasLinhas(allPoints,&normaisvetor,&texturasCoords,anterior,topo[0],topo[1],topo[2], false,false,cx,cy,cz,yTexura,1);
+    connectPyramidTexturasLinhas(allPoints,&normaisvetor,&texturasCoords,anterior,this->coordsTopo[0],this->coordsTopo[1],this->coordsTopo[2], false,false,cx,cy,cz,yTexura,1);
     this->loadVertices(saveInfoPlacaGraficaIluminacaoTextura(allPoints,&normaisvetor,&texturasCoords),allPoints->size()/3);
     delete allPoints;
 }
