@@ -138,14 +138,4 @@ void Sphere::loadVBO() {
     delete allPoints;
 }
 
-void Sphere::loadNormais() {
-    for(int i = 0; i < this->superficielateral.size();i++)
-    {
-        std::vector<float>  circ = this->superficielateral.at(i);
-        calculaNormaisCircunferencia(&circ,0,0,0,&this->normaisvetor);
-    }
-    calculaNormalBases(true,&this->normaisvetor);
-    calculaNormalBases(false,&this->normaisvetor);
-}
-
 Sphere::~Sphere() = default;

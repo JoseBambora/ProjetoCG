@@ -17,7 +17,6 @@ public:
     static Sphere* Read_File(std::ifstream);
     std::string toString() override;
     ~Sphere() override;
-    void loadNormais();
     void loadVBO() override;
 };
 

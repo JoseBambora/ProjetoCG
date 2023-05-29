@@ -83,7 +83,7 @@ void Donut::loadVBO() {
         std::vector<float> cint = this->superficielateral[i];
         std::vector<float> cext = this->superficielateral[i+1];
         connectSideDentroTexturas(allPoints,anteriorint,cint,&normaisvetor,0,0,0,&texturasCoords,ty,ty+aumento);
-        connectSideForaTexturas(allPoints,anteriorext,cext,&normaisvetor,0,0,0,&texturasCoords,ty,ty+aumento);
+        connectSideForaInversoTexturas(allPoints,anteriorext,cext,&normaisvetor,0,0,0,&texturasCoords,ty,ty+aumento);
         anteriorint = cint;
         anteriorext = cext;
         ty += aumento;
