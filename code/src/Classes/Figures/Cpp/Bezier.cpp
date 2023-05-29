@@ -265,7 +265,6 @@ Bezier::Bezier() {
 void Bezier::drawFigure() {
     if (this->texturaID == 0)
         materialLighting(ambient,diffuse,specular,emissive,shininnes);
-    glPushMatrix();
     glBindTexture(GL_TEXTURE_2D, this->texturaID);
     for(int i = 0; i < sizeVertices; i+=3)
     {
@@ -281,5 +280,4 @@ void Bezier::drawFigure() {
         glDrawArrays(GL_TRIANGLE_STRIP, 0, verticeCount);
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
 }
