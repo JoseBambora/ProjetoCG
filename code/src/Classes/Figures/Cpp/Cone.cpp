@@ -83,7 +83,7 @@ std::string Cone::toString() {
 void Cone::loadVBO() {
     auto * allPoints = new std::vector<float>();
     float cx = 0, cy =0 ,cz = 0;
-    connectPyramidTexturasCirculo(allPoints,&normaisvetor,&texturasCoords,base,0,0,0, true,true,cx,cy,cz,0.0f,0.1875f,0.1875f);
+    connectPyramidTexturasCirculo(allPoints,&normaisvetor,&texturasCoords,base,0,0,0, true,true,cx,cy,cz,0.8125f,0.1875f,0.1875f);
     std::vector<float> anterior = base;
     float aumento = this->coordsTopo[1]/this->superficielateral.size();
     float aumentoTextura = 1.0f/this->superficielateral.size();
